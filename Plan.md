@@ -30,16 +30,16 @@
   - [x] `git push origin main`
 
 #### 1.2 配置开发工具
-- [ ] 安装 shadcn/ui 组件库
-- [ ] 配置 Husky Git Hooks
-- [ ] 配置 lint-staged
-- [ ] 创建 .env.example 文件
-- [ ] 配置 VS Code 工作区设置
-- [ ] **代码审查**：审查开发工具配置
-- [ ] **Git 提交**：提交开发工具配置
-  - [ ] `git add .`
-  - [ ] `git commit -m "chore: 配置开发工具（shadcn/ui、Husky、lint-staged）"`
-  - [ ] `git push origin main`
+- [x] 安装 shadcn/ui 组件库
+- [x] 配置 Husky Git Hooks
+- [x] 配置 lint-staged
+- [x] 创建 .env.example 文件
+- [x] 配置 VS Code 工作区设置
+- [x] **代码审查**：审查开发工具配置
+- [x] **Git 提交**：提交开发工具配置
+  - [x] `git add .`
+  - [x] `git commit -m "chore: 配置开发工具（shadcn/ui、Husky、lint-staged）"`
+  - [x] `git push origin master`
 
 #### 1.3 配置 Supabase
 - [ ] 创建 Supabase 项目
