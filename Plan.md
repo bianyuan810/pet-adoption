@@ -234,73 +234,73 @@
 ### 步骤 5：收养申请系统
 
 #### 5.1 实现提交申请功能
-- [ ] **创建新分支**：`git checkout -b feature/application-submit`
-- [ ] 创建申请表单组件
-- [ ] 实现表单验证
-- [ ] 创建提交申请 API（app/api/applications/route.ts）
-- [ ] 实现申请创建逻辑
-- [ ] 验证申请条件（同一宠物只能申请一次）
-- [ ] 添加成功提示
-- [ ] 添加错误处理
-- [ ] **代码审查**：审查申请逻辑和业务规则
-- [ ] **Git 提交**：提交提交申请功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现提交申请功能（申请表单、API 路由、业务规则验证）"`
+- [x] **创建新分支**：`git checkout -b feature/application-submit`
+- [x] 创建申请表单组件
+- [x] 实现表单验证
+- [x] 创建提交申请 API（app/api/applications/route.ts）
+- [x] 实现申请创建逻辑
+- [x] 验证申请条件（同一宠物只能申请一次）
+- [x] 添加成功提示
+- [x] 添加错误处理
+- [x] **代码审查**：审查申请逻辑和业务规则
+- [x] **Git 提交**：提交提交申请功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现提交申请功能（申请表单、API 路由、业务规则验证）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/application-submit`  → `git branch -d feature/application-submit`
+- [x] **合并分支**：`git checkout master` → `git merge feature/application-submit`  → `git branch -d feature/application-submit`
 
 #### 5.2 实现查看申请列表（发布者）
-- [ ] **创建新分支**：`git checkout -b feature/application-list-publisher`
-- [ ] 创建我的申请页面（app/(main)/applications/page.tsx）
-- [ ] 创建 ApplicationList 组件
-- [ ] 创建 ApplicationCard 组件
-- [ ] 创建获取申请列表 API（app/api/applications/route.ts）
-- [ ] 实现申请数据查询（按发布者筛选）
-- [ ] 按宠物分组展示
-- [ ] 实现状态筛选
-- [ ] 添加加载状态
-- [ ] **代码审查**：审查列表查询和分组逻辑
-- [ ] **Git 提交**：提交查看申请列表功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现查看申请列表功能（ApplicationList、ApplicationCard、分组展示）"`
+- [x] **创建新分支**：`git checkout -b feature/application-list-publisher`
+- [x] 创建我的申请页面（app/(main)/applications/page.tsx）
+- [x] 创建 ApplicationList 组件
+- [x] 创建 ApplicationCard 组件
+- [x] 创建获取申请列表 API（app/api/applications/route.ts）
+- [x] 实现申请数据查询（按发布者筛选）
+- [x] 按宠物分组展示
+- [x] 实现状态筛选
+- [x] 添加加载状态
+- [x] **代码审查**：审查列表查询和分组逻辑
+- [x] **Git 提交**：提交查看申请列表功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现查看申请列表功能（ApplicationList、ApplicationCard、分组展示）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/application-list-publisher`  → `git branch -d feature/application-list-publisher`
+- [x] **合并分支**：`git checkout master` → `git merge feature/application-list-publisher`  → `git branch -d feature/application-list-publisher`
 
 #### 5.3 实现审核申请功能
-- [ ] **创建新分支**：`git checkout -b feature/application-review`
-- [ ] 创建申请详情对话框
-- [ ] 创建同意申请 API（app/api/applications/[id]/approve/route.ts）
-- [ ] 实现同意逻辑
-    - [ ] 更新申请状态为已同意
-    - [ ] 更新宠物状态为已收养
-    - [ ] 拒绝其他待审核申请
-- [ ] 创建拒绝申请 API（app/api/applications/[id]/reject/route.ts）
-- [ ] 实现拒绝逻辑
-    - [ ] 更新申请状态为已拒绝
-    - [ ] 发送通知给申请者
-- [ ] 添加确认提示
-- [ ] 添加成功提示
-- [ ] **代码审查**：审查审核逻辑和事务处理
-- [ ] **Git 提交**：提交审核申请功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现审核申请功能（同意/拒绝 API、事务处理、通知）"`
+- [x] **创建新分支**：`git checkout -b feature/application-review`
+- [x] 创建申请详情对话框
+- [x] 创建同意申请 API（app/api/applications/[id]/approve/route.ts）
+- [x] 实现同意逻辑
+    - [x] 更新申请状态为已同意
+    - [x] 更新宠物状态为已收养
+    - [x] 拒绝其他待审核申请
+- [x] 创建拒绝申请 API（app/api/applications/[id]/reject/route.ts）
+- [x] 实现拒绝逻辑
+    - [x] 更新申请状态为已拒绝
+    - [x] 发送通知给申请者
+- [x] 添加确认提示
+- [x] 添加成功提示
+- [x] **代码审查**：审查审核逻辑和事务处理
+- [x] **Git 提交**：提交审核申请功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现审核申请功能（同意/拒绝 API、事务处理、通知）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/application-review`  → `git branch -d feature/application-review`
+- [x] **合并分支**：`git checkout master` → `git merge feature/application-review`  → `git branch -d feature/application-review`
 
 #### 5.4 实现查看申请状态（收养者）
-- [ ] **创建新分支**：`git checkout -b feature/application-list-adopter`
-- [ ] 创建我的申请页面（app/(main)/my-applications/page.tsx）
-- [ ] 实现申请数据查询（按收养者筛选）
-- [ ] 显示申请状态
-- [ ] 显示申请时间
-- [ ] 显示审核结果
-- [ ] 添加加载状态
-- [ ] **代码审查**：审查查询逻辑和权限验证
-- [ ] **Git 提交**：提交查看申请状态功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现查看申请状态功能（收养者申请列表、状态展示）"`
+- [x] **创建新分支**：`git checkout -b feature/application-list-adopter`
+- [x] 创建我的申请页面（app/(main)/my-applications/page.tsx）
+- [x] 实现申请数据查询（按收养者筛选）
+- [x] 显示申请状态
+- [x] 显示申请时间
+- [x] 显示审核结果
+- [x] 添加加载状态
+- [x] **代码审查**：审查查询逻辑和权限验证
+- [x] **Git 提交**：提交查看申请状态功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现查看申请状态功能（收养者申请列表、状态展示）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/application-list-adopter`  → `git branch -d feature/application-list-adopter`
+- [x] **合并分支**：`git checkout master` → `git merge feature/application-list-adopter`  → `git branch -d feature/application-list-adopter`
 
 ### 步骤 6：基础搜索筛选
 
