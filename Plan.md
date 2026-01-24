@@ -56,21 +56,21 @@
 ### 步骤 2：数据库设计和初始化
 
 #### 2.1 设计数据模型
-- [ ] **创建新分支**：`git checkout -b feature/database-design`
-- [ ] 创建 Prisma Schema
-  - [ ] 定义 User 模型
-  - [ ] 定义 Pet 模型
-  - [ ] 定义 PetPhoto 模型
-  - [ ] 定义 Application 模型
-  - [ ] 定义 Message 模型
-  - [ ] 定义枚举类型（UserRole、PetGender、PetStatus、ApplicationStatus）
-- [ ] 配置数据库索引
-- [ ] 配置表关联关系
-- [ ] **代码审查**：审查数据模型设计和索引策略
-- [ ] **Git 提交**：提交数据库模型设计
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 设计数据库模型（User、Pet、PetPhoto、Application、Message）"`
-  - [ ] `git push origin main`
+- [x] **创建新分支**：`git checkout -b feature/database-design`
+- [x] 创建数据库表 SQL 脚本
+  - [x] 定义 User 表
+  - [x] 定义 Pet 表
+  - [x] 定义 PetPhoto 表
+  - [x] 定义 Application 表
+  - [x] 定义 Message 表
+  - [x] 定义枚举类型（UserRole、PetGender、PetStatus、ApplicationStatus）
+- [x] 配置数据库索引
+- [x] 配置表关联关系
+- [x] **代码审查**：审查数据模型设计和索引策略
+- [x] **Git 提交**：提交数据库模型设计
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 设计数据库模型（User、Pet、PetPhoto、Application、Message）"`
+  - [x] `git push origin feature/database-design`
 
 #### 2.2 初始化数据库
 - [ ] 运行 Prisma 迁移
