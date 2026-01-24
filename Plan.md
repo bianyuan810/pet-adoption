@@ -147,21 +147,21 @@
 ### 步骤 4：宠物信息管理
 
 #### 4.1 实现宠物列表页面
-- [ ] **创建新分支**：`git checkout -b feature/pet-list`
-- [ ] 创建宠物列表页面（app/(main)/pets/page.tsx）
-- [ ] 创建 PetCard 组件
-- [ ] 创建 PetList 组件
-- [ ] 实现分页功能
-- [ ] 创建获取宠物列表 API（app/api/pets/route.ts）
-- [ ] 实现宠物数据查询
-- [ ] 添加加载状态
-- [ ] 添加空状态提示
-- [ ] **代码审查**：审查列表组件和 API 查询逻辑
-- [ ] **Git 提交**：提交宠物列表功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现宠物列表页面（PetCard、PetList、分页功能）"`
+- [x] **创建新分支**：`git checkout -b feature/pet-list`
+- [x] 创建宠物列表页面（app/(main)/pets/page.tsx）
+- [x] 创建 PetCard 组件
+- [x] 创建 PetList 组件
+- [x] 实现分页功能
+- [x] 创建获取宠物列表 API（app/api/pets/route.ts）
+- [x] 实现宠物数据查询
+- [x] 添加加载状态
+- [x] 添加空状态提示
+- [x] **代码审查**：审查列表组件和 API 查询逻辑
+- [x] **Git 提交**：提交宠物列表功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现宠物列表页面（PetCard、PetList、分页功能）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-list`  → `git branch -d feature/pet-list`
+- [x] **合并分支**：`git checkout master` → `git merge feature/pet-list`  → `git branch -d feature/pet-list`
 
 #### 4.2 实现宠物详情页面
 - [ ] **创建新分支**：`git checkout -b feature/pet-detail`
