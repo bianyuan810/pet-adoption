@@ -42,16 +42,16 @@
   - [x] `git push origin master`
 
 #### 1.3 配置 Supabase
-- [ ] 创建 Supabase 项目
-- [ ] 获取 Supabase URL 和密钥
-- [ ] 配置环境变量
-- [ ] 安装 Supabase 客户端
-- [ ] 创建 Supabase 客户端配置文件
-- [ ] **代码审查**：审查 Supabase 配置和安全性
-- [ ] **Git 提交**：提交 Supabase 配置
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 配置 Supabase 客户端和环境变量"`
-  - [ ] `git push origin main`
+- [x] 创建 Supabase 项目
+- [x] 获取 Supabase URL 和密钥
+- [x] 配置环境变量
+- [x] 安装 Supabase 客户端
+- [x] 创建 Supabase 客户端配置文件
+- [x] **代码审查**：审查 Supabase 配置和安全性
+- [x] **Git 提交**：提交 Supabase 配置
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 配置 Supabase 客户端和环境变量"`
+  - [x] `git push origin master`
 
 ### 步骤 2：数据库设计和初始化
 
