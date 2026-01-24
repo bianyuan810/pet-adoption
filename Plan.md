@@ -314,11 +314,11 @@
 - [x] 实现组合筛选
 - [x] 更新 API 支持筛选参数
 - [x] **代码审查**：审查筛选逻辑和查询性能
-- [ ] **Git 提交**：提交筛选功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现筛选功能（品种、年龄、性别、地区筛选）"`
+- [x] **Git 提交**：提交筛选功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现筛选功能（品种、年龄、性别、地区筛选）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/filter`  → `git branch -d feature/filter`
+- [x] **合并分支**：`git checkout master` → `git merge feature/filter`  → `git branch -d feature/filter`
 
 #### 6.2 实现搜索功能
 - [x] **创建新分支**：`git checkout -b feature/search`
@@ -328,11 +328,11 @@
 - [x] 实现搜索历史
 - [x] 添加热门搜索推荐
 - [x] **代码审查**：审查搜索逻辑和性能优化
-- [ ] **Git 提交**：提交搜索功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现搜索功能（关键词搜索、搜索历史、热门推荐）"`
+- [x] **Git 提交**：提交搜索功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现搜索功能（关键词搜索、搜索历史、热门推荐）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/search`  → `git branch -d feature/search`
+- [x] **合并分支**：`git checkout master` → `git merge feature/search`  → `git branch -d feature/search`
 
 #### 6.3 实现排序功能
 - [x] **创建新分支**：`git checkout -b feature/sort`
@@ -341,11 +341,11 @@
 - [x] 实现按浏览量排序
 - [x] 更新 API 支持排序参数
 - [x] **代码审查**：审查排序逻辑和数据库查询
-- [ ] **Git 提交**：提交排序功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现排序功能（按时间排序、按浏览量排序）"`
+- [x] **Git 提交**：提交排序功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现排序功能（按时间排序、按浏览量排序）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/sort`  → `git branch -d feature/sort`
+- [x] **合并分支**：`git checkout master` → `git merge feature/sort`  → `git branch -d feature/sort`
 
 ### 步骤 6.5：UI 设计
 
