@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import PhotoCarousel from './PhotoCarousel'
+import ApplicationForm from './ApplicationForm'
 import type { Pet } from '@/types/supabase'
 
 interface PetDetailProps {
@@ -179,7 +180,7 @@ export default function PetDetail({ pet, photos, publisher }: PetDetailProps) {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <svg
             className="w-4 h-4"
             fill="none"
@@ -195,6 +196,37 @@ export default function PetDetail({ pet, photos, publisher }: PetDetailProps) {
           </svg>
           <span>浏览 {pet.view_count} 次</span>
         </div>
+
+        {/* 申请表单 - 仅当不是发布者且宠物可领养时显示 */}
+        {!isOwner && pet.status === 'available' && user && (
+          <div className="mt-6">
+            <ApplicationForm petId={pet.id} />
+          </div>
+        )}
+
+        {/* 登录提示 - 如果用户未登录 */}
+        {!isOwner && pet.status === 'available' && !user && (
+          <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-md p-4">
+            <h3 className="text-sm font-medium text-yellow-800">需要登录</h3>
+            <div className="mt-2 text-sm text-yellow-700">
+              <p>请先登录账号，然后才能提交收养申请。</p>
+              <div className="mt-3 flex gap-2">
+                <button
+                  onClick={() => router.push('/login')}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                >
+                  登录
+                </button>
+                <button
+                  onClick={() => router.push('/register')}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-yellow-600 bg-white hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                >
+                  注册
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {showDeleteDialog && (

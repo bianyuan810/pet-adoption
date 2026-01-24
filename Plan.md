@@ -164,72 +164,72 @@
 - [x] **合并分支**：`git checkout master` → `git merge feature/pet-list`  → `git branch -d feature/pet-list`
 
 #### 4.2 实现宠物详情页面
-- [ ] **创建新分支**：`git checkout -b feature/pet-detail`
-- [ ] 创建宠物详情页面（app/(main)/pets/[id]/page.tsx）
-- [ ] 创建 PetDetail 组件
-- [ ] 创建照片轮播组件
-- [ ] 创建获取宠物详情 API（app/api/pets/[id]/route.ts）
-- [ ] 实现宠物数据查询
-- [ ] 显示发布者信息
-- [ ] 显示联系方式
-- [ ] 添加加载状态
-- [ ] **代码审查**：审查详情组件和数据获取逻辑
-- [ ] **Git 提交**：提交宠物详情功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现宠物详情页面（PetDetail、照片轮播、发布者信息）"`
+- [x] **创建新分支**：`git checkout -b feature/pet-detail`
+- [x] 创建宠物详情页面（app/(main)/pets/[id]/page.tsx）
+- [x] 创建 PetDetail 组件
+- [x] 创建照片轮播组件
+- [x] 创建获取宠物详情 API（app/api/pets/[id]/route.ts）
+- [x] 实现宠物数据查询
+- [x] 显示发布者信息
+- [x] 显示联系方式
+- [x] 添加加载状态
+- [x] **代码审查**：审查详情组件和数据获取逻辑
+- [x] **Git 提交**：提交宠物详情功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现宠物详情页面（PetDetail、照片轮播、发布者信息）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-detail`  → `git branch -d feature/pet-detail`
+- [x] **合并分支**：`git checkout master` → `git merge feature/pet-detail`  → `git branch -d feature/pet-detail`
 
 #### 4.3 实现发布宠物功能
-- [ ] **创建新分支**：`git checkout -b feature/pet-publish`
-- [ ] 创建发布宠物页面（app/(main)/publish/page.tsx）
-- [ ] 创建 PetForm 组件
-- [ ] 实现分步表单
-    - [ ] 第一步：基本信息表单
-    - [ ] 第二步：照片上传
-    - [ ] 第三步：描述填写
-- [ ] 实现表单验证
-- [ ] 创建发布宠物 API（app/api/pets/route.ts）
-- [ ] 实现宠物创建逻辑
-- [ ] 实现照片上传（Supabase Storage）
-- [ ] 添加预览功能
-- [ ] 添加成功提示
-- [ ] **代码审查**：审查表单验证和文件上传安全性
-- [ ] **Git 提交**：提交发布宠物功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现发布宠物功能（PetForm、分步表单、照片上传）"`
+- [x] **创建新分支**：`git checkout -b feature/pet-publish`
+- [x] 创建发布宠物页面（app/(main)/publish/page.tsx）
+- [x] 创建 PetForm 组件
+- [x] 实现分步表单
+    - [x] 第一步：基本信息表单
+    - [x] 第二步：照片上传
+    - [x] 第三步：描述填写
+- [x] 实现表单验证
+- [x] 创建发布宠物 API（app/api/pets/route.ts）
+- [x] 实现宠物创建逻辑
+- [x] 实现照片上传（Supabase Storage）
+- [x] 添加预览功能
+- [x] 添加成功提示
+- [x] **代码审查**：审查表单验证和文件上传安全性
+- [x] **Git 提交**：提交发布宠物功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现发布宠物功能（PetForm、分步表单、照片上传）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-publish`  → `git branch -d feature/pet-publish`
+- [x] **合并分支**：`git checkout master` → `git merge feature/pet-publish`  → `git branch -d feature/pet-publish`
 
 #### 4.4 实现编辑宠物功能
-- [ ] **创建新分支**：`git checkout -b feature/pet-edit`
-- [ ] 创建编辑宠物页面（app/(main)/pets/[id]/edit/page.tsx）
-- [ ] 复用 PetForm 组件
-- [ ] 实现数据预填充
-- [ ] 创建更新宠物 API（app/api/pets/[id]/route.ts）
-- [ ] 实现宠物更新逻辑
-- [ ] 实现照片管理（添加/删除）
-- [ ] 添加成功提示
-- [ ] **代码审查**：审查更新逻辑和权限验证
-- [ ] **Git 提交**：提交编辑宠物功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现编辑宠物功能（数据预填充、照片管理）"`
+- [x] **创建新分支**：`git checkout -b feature/pet-edit`
+- [x] 创建编辑宠物页面（app/(main)/pets/[id]/edit/page.tsx）
+- [x] 复用 PetForm 组件
+- [x] 实现数据预填充
+- [x] 创建更新宠物 API（app/api/pets/[id]/route.ts）
+- [x] 实现宠物更新逻辑
+- [x] 实现照片管理（添加/删除）
+- [x] 添加成功提示
+- [x] **代码审查**：审查更新逻辑和权限验证
+- [x] **Git 提交**：提交编辑宠物功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现编辑宠物功能（数据预填充、照片管理）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-edit`  → `git branch -d feature/pet-edit`
+- [x] **合并分支**：`git checkout master` → `git merge feature/pet-edit`  → `git branch -d feature/pet-edit`
 
 #### 4.5 实现删除宠物功能
-- [ ] **创建新分支**：`git checkout -b feature/pet-delete`
-- [ ] 创建删除确认对话框
-- [ ] 实现删除 API（app/api/pets/[id]/route.ts）
-- [ ] 实现宠物删除逻辑
-- [ ] 添加删除确认
-- [ ] 添加成功提示
-- [ ] **代码审查**：审查删除逻辑和权限验证
-- [ ] **Git 提交**：提交删除宠物功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现删除宠物功能（删除确认、权限验证）"`
+- [x] **创建新分支**：`git checkout -b feature/pet-delete`
+- [x] 创建删除确认对话框
+- [x] 实现删除 API（app/api/pets/[id]/route.ts）
+- [x] 实现宠物删除逻辑
+- [x] 添加删除确认
+- [x] 添加成功提示
+- [x] **代码审查**：审查删除逻辑和权限验证
+- [x] **Git 提交**：提交删除宠物功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现删除宠物功能（删除确认、权限验证）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-delete`  → `git branch -d feature/pet-delete`
+- [x] **合并分支**：`git checkout master` → `git merge feature/pet-delete`  → `git branch -d feature/pet-delete`
 
 ### 步骤 5：收养申请系统
 
