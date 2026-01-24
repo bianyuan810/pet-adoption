@@ -206,3 +206,117 @@ export async function PUT(
     )
   }
 }
+
+// 获取宠物列表，支持筛选
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    
+    // 获取筛选参数、搜索关键词和排序方式
+    const keyword = searchParams.get('keyword')
+    const breed = searchParams.get('breed')
+    const age = searchParams.get('age')
+    const gender = searchParams.get('gender') as 'male' | 'female' | undefined
+    const location = searchParams.get('location')
+    const sortBy = searchParams.get('sortBy')
+
+    // 构建查询
+    let query = supabase
+      .from('pets')
+      .select('id, name, breed, age, gender, location, status, created_at, view_count')
+      .eq('status', 'available') // 只返回可领养状态的宠物
+
+    // 设置排序方式
+    if (sortBy === 'newest') {
+      query = query.order('created_at', { ascending: false })
+    } else if (sortBy === 'oldest') {
+      query = query.order('created_at', { ascending: true })
+    } else if (sortBy === 'most_viewed') {
+      query = query.order('view_count', { ascending: false })
+    } else if (sortBy === 'least_viewed') {
+      query = query.order('view_count', { ascending: true })
+    } else {
+      // 默认按创建时间倒序
+      query = query.order('created_at', { ascending: false })
+    }
+
+    // 添加关键词搜索
+    if (keyword) {
+      const keywordPattern = `%${keyword}%`
+      query = query.or(`name.ilike.${keywordPattern},breed.ilike.${keywordPattern}`)
+    }
+
+    // 添加筛选条件
+    if (breed) {
+      query = query.eq('breed', breed)
+    }
+    
+    if (age) {
+      // 根据年龄范围筛选
+      if (age === '0-1岁') {
+        query = query.lt('age', 1)
+      } else if (age === '1-3岁') {
+        query = query.gte('age', 1).lte('age', 3)
+      } else if (age === '3-5岁') {
+        query = query.gte('age', 3).lte('age', 5)
+      } else if (age === '5岁以上') {
+        query = query.gt('age', 5)
+      }
+    }
+    
+    if (gender) {
+      query = query.eq('gender', gender)
+    }
+    
+    if (location) {
+      query = query.ilike('location', `%${location}%`)
+    }
+
+    // 执行查询
+    const { data: pets, error: petsError } = await query
+
+    if (petsError) {
+      console.error('获取宠物列表时出错:', petsError)
+      return NextResponse.json(
+        { error: '获取宠物列表失败' },
+        { status: 500 }
+      )
+    }
+
+    // 获取每张宠物的照片
+    const petIds = pets.map(pet => pet.id)
+    const { data: photos, error: photosError } = await supabase
+      .from('pet_photos')
+      .select('pet_id, photo_url, is_primary')
+      .in('pet_id', petIds)
+
+    if (photosError) {
+      console.error('获取宠物照片时出错:', photosError)
+    }
+
+    // 整理照片数据
+    const photosByPetId: Record<string, any[]> = {}
+    if (photos) {
+      for (const photo of photos) {
+        if (!photosByPetId[photo.pet_id]) {
+          photosByPetId[photo.pet_id] = []
+        }
+        photosByPetId[photo.pet_id].push(photo)
+      }
+    }
+
+    return NextResponse.json(
+      {
+        pets: pets || [],
+        photos: photosByPetId
+      },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('获取宠物列表接口错误:', error)
+    return NextResponse.json(
+      { error: '服务器错误，请稍后重试' },
+      { status: 500 }
+    )
+  }
+}

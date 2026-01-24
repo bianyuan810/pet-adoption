@@ -6,7 +6,7 @@ import type { Pet } from '@/types/supabase'
 
 interface PetListProps {
   pets: Pet[]
-  photos: Record<string, string[]>
+  photos: Record<string, Array<{ photo_url: string; is_primary: boolean }>>
   isLoading?: boolean
 }
 
