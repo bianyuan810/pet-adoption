@@ -101,22 +101,22 @@
 - [x] **合并分支**：`git checkout master` → `git merge feature/user-register`  → `git branch -d feature/user-register`
 
 #### 3.2 实现用户登录
-- [ ] **创建新分支**：`git checkout -b feature/user-login`
-- [ ] 创建登录页面（app/(auth)/login/page.tsx）
-- [ ] 创建登录表单组件
-- [ ] 实现表单验证
-- [ ] 创建登录 API 路由（app/api/auth/login/route.ts）
-- [ ] 实现密码验证
-- [ ] 实现 JWT Token 生成
-- [ ] 实现 Session 管理
-- [ ] 添加登录成功跳转
-- [ ] 添加错误处理
-- [ ] **代码审查**：审查登录逻辑和 Token 安全性
-- [ ] **Git 提交**：提交用户登录功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现用户登录功能（登录页面、JWT Token、Session 管理）"`
+- [x] **创建新分支**：`git checkout -b feature/user-login`
+- [x] 创建登录页面（app/(auth)/login/page.tsx）
+- [x] 创建登录表单组件
+- [x] 实现表单验证
+- [x] 创建登录 API 路由（app/api/auth/login/route.ts）
+- [x] 实现密码验证
+- [x] 实现 JWT Token 生成
+- [x] 实现 Session 管理
+- [x] 添加登录成功跳转
+- [x] 添加错误处理
+- [x] **代码审查**：审查登录逻辑和 Token 安全性
+- [x] **Git 提交**：提交用户登录功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现用户登录功能（登录页面、JWT Token、Session 管理）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/user-login`  → `git branch -d feature/user-login`
+- [x] **合并分支**：`git checkout master` → `git merge feature/user-login`  → `git branch -d feature/user-login`
 
 #### 3.3 实现认证中间件
 - [ ] **创建新分支**：`git checkout -b feature/auth-middleware`
