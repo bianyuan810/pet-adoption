@@ -132,17 +132,17 @@
 - [x] **合并分支**：`git checkout master` → `git merge feature/auth-middleware`  → `git branch -d feature/auth-middleware`
 
 #### 3.4 实现用户状态管理
-- [ ] **创建新分支**：`git checkout -b feature/user-state`
-- [ ] 创建 Auth Context
-- [ ] 创建 useAuth Hook
-- [ ] 实现用户登录状态持久化
-- [ ] 实现用户信息获取
-- [ ] **代码审查**：审查状态管理逻辑
-- [ ] **Git 提交**：提交用户状态管理
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现用户状态管理（Auth Context、useAuth Hook）"`
+- [x] **创建新分支**：`git checkout -b feature/user-state`
+- [x] 创建 Auth Context
+- [x] 创建 useAuth Hook
+- [x] 实现用户登录状态持久化
+- [x] 实现用户信息获取
+- [x] **代码审查**：审查状态管理逻辑
+- [x] **Git 提交**：提交用户状态管理
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现用户状态管理（Auth Context、useAuth Hook）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/user-state`  → `git branch -d feature/user-state`
+- [x] **合并分支**：`git checkout master` → `git merge feature/user-state`  → `git branch -d feature/user-state`
 
 ### 步骤 4：宠物信息管理
 
