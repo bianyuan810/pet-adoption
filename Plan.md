@@ -27,7 +27,7 @@
 - [x] **Git 提交**：提交项目初始化代码
   - [x] `git add .`
   - [x] `git commit -m "feat: 初始化项目结构，配置 Next.js、TypeScript 和 Tailwind CSS v3.x"`
-  - [x] `git push origin main`
+
 
 #### 1.2 配置开发工具
 - [x] 安装 shadcn/ui 组件库
@@ -39,7 +39,7 @@
 - [x] **Git 提交**：提交开发工具配置
   - [x] `git add .`
   - [x] `git commit -m "chore: 配置开发工具（shadcn/ui、Husky、lint-staged）"`
-  - [x] `git push origin master`
+  
 
 #### 1.3 配置 Supabase
 - [x] 创建 Supabase 项目
@@ -51,7 +51,7 @@
 - [x] **Git 提交**：提交 Supabase 配置
   - [x] `git add .`
   - [x] `git commit -m "feat: 配置 Supabase 客户端和环境变量"`
-  - [x] `git push origin master`
+  
 
 ### 步骤 2：数据库设计和初始化
 
@@ -70,7 +70,7 @@
 - [x] **Git 提交**：提交数据库模型设计
   - [x] `git add .`
   - [x] `git commit -m "feat: 设计数据库模型（User、Pet、PetPhoto、Application、Message）"`
-  - [x] `git push origin feature/database-design`
+
 
 #### 2.2 初始化数据库
 - [x] 创建种子数据脚本
@@ -79,26 +79,26 @@
 - [x] **Git 提交**：提交数据库初始化
   - [x] `git add .`
   - [x] `git commit -m "feat: 初始化数据库，添加种子数据和测试脚本"`
-- [x] **合并分支**：`git checkout main` → `git merge feature/database-design` → `git push origin main` (跳过) → `git branch -d feature/database-design`
+- [x] **合并分支**：`git checkout master` → `git merge feature/database-design` → `git branch -d feature/database-design`
 
 ### 步骤 3：用户认证系统
 
 #### 3.1 实现用户注册
-- [ ] **创建新分支**：`git checkout -b feature/user-register`
-- [ ] 创建注册页面（app/(auth)/register/page.tsx）
-- [ ] 创建注册表单组件
-- [ ] 实现表单验证（Zod）
-- [ ] 创建注册 API 路由（app/api/auth/register/route.ts）
-- [ ] 实现密码加密（bcrypt）
-- [ ] 实现用户创建逻辑
-- [ ] 添加注册成功提示
-- [ ] 添加错误处理
-- [ ] **代码审查**：审查注册逻辑和安全性
-- [ ] **Git 提交**：提交用户注册功能
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现用户注册功能（注册页面、表单验证、API 路由）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/user-register` → `git push origin main` → `git branch -d feature/user-register`
+- [x] **创建新分支**：`git checkout -b feature/user-register`
+- [x] 创建注册页面（app/(auth)/register/page.tsx）
+- [x] 创建注册表单组件
+- [x] 实现表单验证（Zod）
+- [x] 创建注册 API 路由（app/api/auth/register/route.ts）
+- [x] 实现密码加密（bcrypt）
+- [x] 实现用户创建逻辑
+- [x] 添加注册成功提示
+- [x] 添加错误处理
+- [x] **代码审查**：审查注册逻辑和安全性
+- [x] **Git 提交**：提交用户注册功能
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现用户注册功能（注册页面、表单验证、API 路由）"`
+
+- [x] **合并分支**：`git checkout master` → `git merge feature/user-register`  → `git branch -d feature/user-register`
 
 #### 3.2 实现用户登录
 - [ ] **创建新分支**：`git checkout -b feature/user-login`
@@ -115,8 +115,8 @@
 - [ ] **Git 提交**：提交用户登录功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现用户登录功能（登录页面、JWT Token、Session 管理）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/user-login` → `git push origin main` → `git branch -d feature/user-login`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/user-login`  → `git branch -d feature/user-login`
 
 #### 3.3 实现认证中间件
 - [ ] **创建新分支**：`git checkout -b feature/auth-middleware`
@@ -128,8 +128,8 @@
 - [ ] **Git 提交**：提交认证中间件
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现认证中间件（Token 验证、路由保护、角色权限）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/auth-middleware` → `git push origin main` → `git branch -d feature/auth-middleware`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/auth-middleware`  → `git branch -d feature/auth-middleware`
 
 #### 3.4 实现用户状态管理
 - [ ] **创建新分支**：`git checkout -b feature/user-state`
@@ -141,8 +141,8 @@
 - [ ] **Git 提交**：提交用户状态管理
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现用户状态管理（Auth Context、useAuth Hook）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/user-state` → `git push origin main` → `git branch -d feature/user-state`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/user-state`  → `git branch -d feature/user-state`
 
 ### 步骤 4：宠物信息管理
 
@@ -160,8 +160,8 @@
 - [ ] **Git 提交**：提交宠物列表功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现宠物列表页面（PetCard、PetList、分页功能）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/pet-list` → `git push origin main` → `git branch -d feature/pet-list`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-list`  → `git branch -d feature/pet-list`
 
 #### 4.2 实现宠物详情页面
 - [ ] **创建新分支**：`git checkout -b feature/pet-detail`
@@ -177,8 +177,8 @@
 - [ ] **Git 提交**：提交宠物详情功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现宠物详情页面（PetDetail、照片轮播、发布者信息）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/pet-detail` → `git push origin main` → `git branch -d feature/pet-detail`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-detail`  → `git branch -d feature/pet-detail`
 
 #### 4.3 实现发布宠物功能
 - [ ] **创建新分支**：`git checkout -b feature/pet-publish`
@@ -198,8 +198,8 @@
 - [ ] **Git 提交**：提交发布宠物功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现发布宠物功能（PetForm、分步表单、照片上传）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/pet-publish` → `git push origin main` → `git branch -d feature/pet-publish`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-publish`  → `git branch -d feature/pet-publish`
 
 #### 4.4 实现编辑宠物功能
 - [ ] **创建新分支**：`git checkout -b feature/pet-edit`
@@ -214,8 +214,8 @@
 - [ ] **Git 提交**：提交编辑宠物功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现编辑宠物功能（数据预填充、照片管理）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/pet-edit` → `git push origin main` → `git branch -d feature/pet-edit`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-edit`  → `git branch -d feature/pet-edit`
 
 #### 4.5 实现删除宠物功能
 - [ ] **创建新分支**：`git checkout -b feature/pet-delete`
@@ -228,8 +228,8 @@
 - [ ] **Git 提交**：提交删除宠物功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现删除宠物功能（删除确认、权限验证）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/pet-delete` → `git push origin main` → `git branch -d feature/pet-delete`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/pet-delete`  → `git branch -d feature/pet-delete`
 
 ### 步骤 5：收养申请系统
 
@@ -246,8 +246,8 @@
 - [ ] **Git 提交**：提交提交申请功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现提交申请功能（申请表单、API 路由、业务规则验证）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/application-submit` → `git push origin main` → `git branch -d feature/application-submit`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/application-submit`  → `git branch -d feature/application-submit`
 
 #### 5.2 实现查看申请列表（发布者）
 - [ ] **创建新分支**：`git checkout -b feature/application-list-publisher`
@@ -263,8 +263,8 @@
 - [ ] **Git 提交**：提交查看申请列表功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现查看申请列表功能（ApplicationList、ApplicationCard、分组展示）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/application-list-publisher` → `git push origin main` → `git branch -d feature/application-list-publisher`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/application-list-publisher`  → `git branch -d feature/application-list-publisher`
 
 #### 5.3 实现审核申请功能
 - [ ] **创建新分支**：`git checkout -b feature/application-review`
@@ -284,8 +284,8 @@
 - [ ] **Git 提交**：提交审核申请功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现审核申请功能（同意/拒绝 API、事务处理、通知）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/application-review` → `git push origin main` → `git branch -d feature/application-review`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/application-review`  → `git branch -d feature/application-review`
 
 #### 5.4 实现查看申请状态（收养者）
 - [ ] **创建新分支**：`git checkout -b feature/application-list-adopter`
@@ -299,8 +299,8 @@
 - [ ] **Git 提交**：提交查看申请状态功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现查看申请状态功能（收养者申请列表、状态展示）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/application-list-adopter` → `git push origin main` → `git branch -d feature/application-list-adopter`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/application-list-adopter`  → `git branch -d feature/application-list-adopter`
 
 ### 步骤 6：基础搜索筛选
 
@@ -317,8 +317,8 @@
 - [ ] **Git 提交**：提交筛选功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现筛选功能（品种、年龄、性别、地区筛选）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/filter` → `git push origin main` → `git branch -d feature/filter`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/filter`  → `git branch -d feature/filter`
 
 #### 6.2 实现搜索功能
 - [ ] **创建新分支**：`git checkout -b feature/search`
@@ -331,8 +331,8 @@
 - [ ] **Git 提交**：提交搜索功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现搜索功能（关键词搜索、搜索历史、热门推荐）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/search` → `git push origin main` → `git branch -d feature/search`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/search`  → `git branch -d feature/search`
 
 #### 6.3 实现排序功能
 - [ ] **创建新分支**：`git checkout -b feature/sort`
@@ -344,8 +344,8 @@
 - [ ] **Git 提交**：提交排序功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现排序功能（按时间排序、按浏览量排序）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/sort` → `git push origin main` → `git branch -d feature/sort`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/sort`  → `git branch -d feature/sort`
 
 ### 步骤 6.5：UI 设计
 
@@ -483,8 +483,8 @@
 - [ ] **Git 提交**：提交布局组件
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建布局组件（Header、Footer、Sidebar、根布局）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/layout-components` → `git push origin main` → `git branch -d feature/layout-components`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/layout-components`  → `git branch -d feature/layout-components`
 
 #### 7.2 创建通用 UI 组件
 - [ ] **创建新分支**：`git checkout -b feature/ui-components`
@@ -499,8 +499,8 @@
 - [ ] **Git 提交**：提交 UI 组件
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建通用 UI 组件（Button、Input、Card、Modal、Loading、EmptyState、Toast）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/ui-components` → `git push origin main` → `git branch -d feature/ui-components`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/ui-components`  → `git branch -d feature/ui-components`
 
 #### 7.3 创建首页
 - [ ] **创建新分支**：`git checkout -b feature/homepage`
@@ -512,8 +512,8 @@
 - [ ] **Git 提交**：提交首页
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建首页（轮播图、推荐宠物、快速筛选入口）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/homepage` → `git push origin main` → `git branch -d feature/homepage`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/homepage`  → `git branch -d feature/homepage`
 
 ### 步骤 8：测试和优化
 
@@ -595,8 +595,8 @@
 - [ ] **Git 提交**：提交发送消息功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现发送消息功能（消息表单、API 路由、关联宠物）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/message-send` → `git push origin main` → `git branch -d feature/message-send`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/message-send`  → `git branch -d feature/message-send`
 
 #### 10.2 实现接收消息功能
 - [ ] **创建新分支**：`git checkout -b feature/message-list`
@@ -612,8 +612,8 @@
 - [ ] **Git 提交**：提交接收消息功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现接收消息功能（消息列表、分组、未读标记）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/message-list` → `git push origin main` → `git branch -d feature/message-list`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/message-list`  → `git branch -d feature/message-list`
 
 #### 10.3 实现消息详情功能
 - [ ] **创建新分支**：`git checkout -b feature/message-detail`
@@ -627,8 +627,8 @@
 - [ ] **Git 提交**：提交消息详情功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现消息详情功能（消息历史、时间线、已读标记）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/message-detail` → `git push origin main` → `git branch -d feature/message-detail`
+
+- [ ] **合并分支**：`git checkout master` → `git merge feature/message-detail`  → `git branch -d feature/message-detail`
 
 #### 10.4 实现消息通知
 - [ ] **创建新分支**：`git checkout -b feature/message-notification`
@@ -641,8 +641,8 @@
 - [ ] **Git 提交**：提交消息通知功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现消息通知功能（实时订阅、消息推送、未读提示）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/message-notification` → `git push origin main` → `git branch -d feature/message-notification`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/message-notification` → `git branch -d feature/message-notification`
 
 ### 步骤 11：用户信息管理
 
@@ -659,8 +659,8 @@
 - [ ] **Git 提交**：提交个人信息页面
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现个人信息页面（ProfileForm、信息编辑、头像上传）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/profile-page` → `git push origin main` → `git branch -d feature/profile-page`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/profile-page` → `git branch -d feature/profile-page`
 
 #### 11.2 实现密码修改功能
 - [ ] **创建新分支**：`git checkout -b feature/password-change`
@@ -674,8 +674,8 @@
 - [ ] **Git 提交**：提交密码修改功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现密码修改功能（密码修改表单、API 路由、安全性验证）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/password-change` → `git push origin main` → `git branch -d feature/password-change`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/password-change` → `git branch -d feature/password-change`
 
 #### 11.3 实现联系方式绑定
 - [ ] **创建新分支**：`git checkout -b feature/contact-binding`
@@ -689,8 +689,8 @@
 - [ ] **Git 提交**：提交联系方式绑定功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现联系方式绑定功能（电话/微信绑定、表单验证）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/contact-binding` → `git push origin main` → `git branch -d feature/contact-binding`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/contact-binding` → `git branch -d feature/contact-binding`
 
 ### 步骤 12：密码重置功能
 
@@ -706,8 +706,8 @@
 - [ ] **Git 提交**：提交忘记密码功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现忘记密码功能（忘记密码页面、邮件发送）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/forgot-password` → `git push origin main` → `git branch -d feature/forgot-password`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/forgot-password` → `git branch -d feature/forgot-password`
 
 #### 12.2 实现重置密码页面
 - [ ] **创建新分支**：`git checkout -b feature/reset-password`
@@ -722,8 +722,8 @@
 - [ ] **Git 提交**：提交重置密码功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现重置密码功能（重置密码页面、链接验证）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/reset-password` → `git push origin main` → `git branch -d feature/reset-password`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/reset-password` → `git branch -d feature/reset-password`
 
 ### 步骤 13：高级筛选功能
 
@@ -738,8 +738,8 @@
 - [ ] **Git 提交**：提交扩展筛选条件功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现扩展筛选条件（健康状况、疫苗、绝育、状态、年龄区间）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/advanced-filter-conditions` → `git push origin main` → `git branch -d feature/advanced-filter-conditions`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/advanced-filter-conditions` → `git branch -d feature/advanced-filter-conditions`
 
 #### 13.2 优化筛选体验
 - [ ] **创建新分支**：`git checkout -b feature/filter-optimization`
@@ -751,8 +751,8 @@
 - [ ] **Git 提交**：提交筛选体验优化功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现筛选体验优化（条件保存、快速预设、结果计数）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/filter-optimization` → `git push origin main` → `git branch -d feature/filter-optimization`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/filter-optimization` → `git branch -d feature/filter-optimization`
 
 ### 步骤 14：管理员后台
 
@@ -765,8 +765,8 @@
 - [ ] **Git 提交**：提交管理员布局
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建管理员布局（管理员侧边栏、路由保护）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-layout` → `git push origin main` → `git branch -d feature/admin-layout`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-layout` → `git branch -d feature/admin-layout`
 
 #### 14.2 实现用户管理
 - [ ] **创建新分支**：`git checkout -b feature/admin-user-management`
@@ -781,8 +781,8 @@
 - [ ] **Git 提交**：提交用户管理功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现用户管理功能（用户列表、搜索、筛选、分页）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-user-management` → `git push origin main` → `git branch -d feature/admin-user-management`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-user-management` → `git branch -d feature/admin-user-management`
 
 #### 14.3 实现用户封禁功能
 - [ ] **创建新分支**：`git checkout -b feature/admin-user-ban`
@@ -797,8 +797,8 @@
 - [ ] **Git 提交**：提交用户封禁功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现用户封禁功能（封禁/解封 API、原因记录）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-user-ban` → `git push origin main` → `git branch -d feature/admin-user-ban`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-user-ban` → `git branch -d feature/admin-user-ban`
 
 #### 14.4 实现宠物管理
 - [ ] **创建新分支**：`git checkout -b feature/admin-pet-management`
@@ -812,8 +812,8 @@
 - [ ] **Git 提交**：提交宠物管理功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现宠物管理功能（宠物列表、搜索、筛选、分页）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-pet-management` → `git push origin main` → `git branch -d feature/admin-pet-management`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-pet-management` → `git branch -d feature/admin-pet-management`
 
 #### 14.5 实现内容审核功能
 - [ ] **创建新分支**：`git checkout -b feature/admin-content-moderation`
@@ -827,8 +827,8 @@
 - [ ] **Git 提交**：提交内容审核功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现内容审核功能（删除 API、通知机制、原因记录）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-content-moderation` → `git push origin main` → `git branch -d feature/admin-content-moderation`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-content-moderation` → `git branch -d feature/admin-content-moderation`
 
 #### 14.6 实现统计数据
 - [ ] **创建新分支**：`git checkout -b feature/admin-stats`
@@ -843,8 +843,8 @@
 - [ ] **Git 提交**：提交统计数据功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现统计数据功能（统计卡片、用户/宠物/收养统计）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/admin-stats` → `git push origin main` → `git branch -d feature/admin-stats`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/admin-stats` → `git branch -d feature/admin-stats`
 
 ### 步骤 15：第二阶段测试和部署
 
@@ -896,8 +896,8 @@
 - [ ] **Git 提交**：提交收藏列表功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现收藏列表功能（我的收藏页面、收藏列表组件）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/favorite-pets` → `git push origin main` → `git branch -d feature/favorite-pets`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/favorite-pets` → `git branch -d feature/favorite-pets`
 
 ### 步骤 17：收养记录/历史
 
@@ -928,7 +928,7 @@
 - [ ] **Git 提交**：提交评论表设计
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建评论表（Review 模型、数据库迁移）"`
-  - [ ] `git push origin main`
+  
 
 #### 18.2 实现评论功能
 - [ ] 创建评论表单组件
@@ -957,7 +957,7 @@
 - [ ] **Git 提交**：提交健康档案表设计
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建健康档案表（HealthRecord 模型、数据库迁移）"`
-  - [ ] `git push origin main`
+  
 
 #### 19.2 实现健康档案管理
 - [ ] 创建健康档案页面
@@ -986,8 +986,8 @@
 - [ ] **Git 提交**：提交协议签署功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现协议签署功能（签署页面、电子签名、签署记录）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/adoption-agreement` → `git push origin main` → `git branch -d feature/adoption-agreement`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/adoption-agreement` → `git branch -d feature/adoption-agreement`
 
 ### 步骤 21：志愿者系统
 
@@ -1000,7 +1000,7 @@
 - [ ] **Git 提交**：提交志愿者表设计
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建志愿者表（Volunteer 模型、数据库迁移）"`
-  - [ ] `git push origin main`
+  
 
 #### 21.2 实现志愿者功能
 - [ ] 创建志愿者注册页面
@@ -1021,7 +1021,7 @@
 - [ ] **Git 提交**：提交捐赠表设计
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 创建捐赠表（Donation 模型、数据库迁移）"`
-  - [ ] `git push origin main`
+  
 
 #### 22.2 实现捐赠功能
 - [ ] 创建捐赠页面
@@ -1033,8 +1033,8 @@
 - [ ] **Git 提交**：提交捐赠功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现捐赠功能（捐赠页面、表单、支付接口、统计）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/donation-system` → `git push origin main` → `git branch -d feature/donation-system`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/donation-system` → `git branch -d feature/donation-system`
 
 ### 步骤 23：宠物救助地图
 
@@ -1055,8 +1055,8 @@
 - [ ] **Git 提交**：提交地图功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现地图功能（救助地图页面、位置标记、搜索、筛选）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/rescue-map` → `git push origin main` → `git branch -d feature/rescue-map`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/rescue-map` → `git branch -d feature/rescue-map`
 
 ### 步骤 24：第三阶段测试和部署
 
@@ -1103,8 +1103,8 @@
 - [ ] **Git 提交**：提交错误监控功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现错误监控功能（Sentry 集成、错误上报、错误追踪）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/error-monitoring` → `git push origin main` → `git branch -d feature/error-monitoring`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/error-monitoring` → `git branch -d feature/error-monitoring`
 
 #### 25.2 实现性能监控
 - [ ] 集成性能监控服务
@@ -1145,8 +1145,8 @@
 - [ ] **Git 提交**：提交 API 限流功能
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 实现 API 限流功能（限流策略、恶意请求防护、黑名单机制）"`
-  - [ ] `git push origin main`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/api-rate-limit` → `git push origin main` → `git branch -d feature/api-rate-limit`
+  
+- [ ] **合并分支**：`git checkout master` → `git merge feature/api-rate-limit` → `git branch -d feature/api-rate-limit`
 
 ### 步骤 27：文档完善
 
@@ -1186,7 +1186,7 @@
 - [ ] **Git 提交**：提交功能迭代
   - [ ] `git add .`
   - [ ] `git commit -m "feat: 功能迭代（功能优化、问题修复、新功能）"`
-  - [ ] `git push origin main`
+  
 
 #### 28.3 技术升级
 - [ ] 升级依赖包
@@ -1197,7 +1197,7 @@
 - [ ] **Git 提交**：提交技术升级
   - [ ] `git add .`
   - [ ] `git commit -m "chore: 技术升级（依赖包升级、代码结构优化、新技术引入）"`
-  - [ ] `git push origin main`
+  
 
 ---
 
