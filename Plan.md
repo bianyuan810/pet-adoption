@@ -79,7 +79,7 @@
 - [x] **Git 提交**：提交数据库初始化
   - [x] `git add .`
   - [x] `git commit -m "feat: 初始化数据库，添加种子数据和测试脚本"`
-- [ ] **合并分支**：`git checkout main` → `git merge feature/database-design` → `git push origin main` → `git branch -d feature/database-design`
+- [x] **合并分支**：`git checkout main` → `git merge feature/database-design` → `git push origin main` (跳过) → `git branch -d feature/database-design`
 
 ### 步骤 3：用户认证系统
 
