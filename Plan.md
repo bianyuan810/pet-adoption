@@ -56,33 +56,29 @@
 ### 步骤 2：数据库设计和初始化
 
 #### 2.1 设计数据模型
-- [ ] **创建新分支**：`git checkout -b feature/database-design`
-- [ ] 创建 Prisma Schema
-  - [ ] 定义 User 模型
-  - [ ] 定义 Pet 模型
-  - [ ] 定义 PetPhoto 模型
-  - [ ] 定义 Application 模型
-  - [ ] 定义 Message 模型
-  - [ ] 定义枚举类型（UserRole、PetGender、PetStatus、ApplicationStatus）
-- [ ] 配置数据库索引
-- [ ] 配置表关联关系
-- [ ] **代码审查**：审查数据模型设计和索引策略
-- [ ] **Git 提交**：提交数据库模型设计
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 设计数据库模型（User、Pet、PetPhoto、Application、Message）"`
-  - [ ] `git push origin main`
+- [x] **创建新分支**：`git checkout -b feature/database-design`
+- [x] 创建数据库表 SQL 脚本
+  - [x] 定义 User 表
+  - [x] 定义 Pet 表
+  - [x] 定义 PetPhoto 表
+  - [x] 定义 Application 表
+  - [x] 定义 Message 表
+  - [x] 定义枚举类型（UserRole、PetGender、PetStatus、ApplicationStatus）
+- [x] 配置数据库索引
+- [x] 配置表关联关系
+- [x] **代码审查**：审查数据模型设计和索引策略
+- [x] **Git 提交**：提交数据库模型设计
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 设计数据库模型（User、Pet、PetPhoto、Application、Message）"`
+  - [x] `git push origin feature/database-design`
 
 #### 2.2 初始化数据库
-- [ ] 运行 Prisma 迁移
-- [ ] 生成 Prisma 客户端
-- [ ] 创建种子数据脚本
-- [ ] 插入测试数据
-- [ ] 验证数据库连接
-- [ ] **代码审查**：审查迁移脚本和种子数据
-- [ ] **Git 提交**：提交数据库初始化
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 初始化数据库，运行迁移并插入种子数据"`
-  - [ ] `git push origin main`
+- [x] 创建种子数据脚本
+- [x] 创建数据库连接测试脚本
+- [x] **代码审查**：审查种子数据和测试脚本
+- [x] **Git 提交**：提交数据库初始化
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 初始化数据库，添加种子数据和测试脚本"`
 - [ ] **合并分支**：`git checkout main` → `git merge feature/database-design` → `git push origin main` → `git branch -d feature/database-design`
 
 ### 步骤 3：用户认证系统
