@@ -119,17 +119,17 @@
 - [x] **合并分支**：`git checkout master` → `git merge feature/user-login`  → `git branch -d feature/user-login`
 
 #### 3.3 实现认证中间件
-- [ ] **创建新分支**：`git checkout -b feature/auth-middleware`
-- [ ] 创建认证中间件（middleware.ts）
-- [ ] 实现 Token 验证
-- [ ] 实现路由保护
-- [ ] 实现角色权限验证
-- [ ] **代码审查**：审查中间件逻辑和权限控制
-- [ ] **Git 提交**：提交认证中间件
-  - [ ] `git add .`
-  - [ ] `git commit -m "feat: 实现认证中间件（Token 验证、路由保护、角色权限）"`
+- [x] **创建新分支**：`git checkout -b feature/auth-middleware`
+- [x] 创建认证中间件（middleware.ts）
+- [x] 实现 Token 验证
+- [x] 实现路由保护
+- [x] 实现角色权限验证
+- [x] **代码审查**：审查中间件逻辑和权限控制
+- [x] **Git 提交**：提交认证中间件
+  - [x] `git add .`
+  - [x] `git commit -m "feat: 实现认证中间件（Token 验证、路由保护、角色权限）"`
 
-- [ ] **合并分支**：`git checkout master` → `git merge feature/auth-middleware`  → `git branch -d feature/auth-middleware`
+- [x] **合并分支**：`git checkout master` → `git merge feature/auth-middleware`  → `git branch -d feature/auth-middleware`
 
 #### 3.4 实现用户状态管理
 - [ ] **创建新分支**：`git checkout -b feature/user-state`
