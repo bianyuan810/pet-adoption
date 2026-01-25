@@ -27,50 +27,51 @@ const carouselItems = [
     imageUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1200&h=400&fit=crop',
     title: '加入我们的领养计划',
     description: '一起为流浪动物创造更美好的未来',
-    link: '/publish'
+    link: '/pets'
   }
 ];
 
 // 推荐宠物数据
 const recommendedPets = [
   {
-    id: 1,
+    id: '660e8400-e29b-41d4-a716-446655440001',
     name: '小白',
     type: 'dog',
     breed: '金毛',
     age: 2,
     gender: 'male',
-    imageUrl: 'https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800',
     description: '性格温顺，喜欢与人互动'
   },
+  
   {
-    id: 2,
+    id: '660e8400-e29b-41d4-a716-446655440005',
     name: '咪咪',
     type: 'cat',
     breed: '英短',
     age: 1,
     gender: 'female',
-    imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop',
+    imageUrl: 'https://plus.unsplash.com/premium_photo-1675616553658-259d91ec4a16?w=800',
     description: '活泼可爱，喜欢玩耍'
   },
   {
-    id: 3,
+    id: '660e8400-e29b-41d4-a716-446655440002',
     name: '小黑',
     type: 'dog',
     breed: '拉布拉多',
     age: 3,
     gender: 'male',
-    imageUrl: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800',
     description: '聪明伶俐，易于训练'
   },
   {
-    id: 4,
+    id: '660e8400-e29b-41d4-a716-446655440003',
     name: '花花',
     type: 'cat',
     breed: '布偶',
     age: 1,
     gender: 'female',
-    imageUrl: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800',
     description: '温柔可人，喜欢被抚摸'
   }
 ];
