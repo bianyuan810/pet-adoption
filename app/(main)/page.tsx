@@ -3,6 +3,7 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card';
 import { Carousel } from '@/components/ui/Carousel';
 import { Button } from '@/components/ui/Button';
+import Image from 'next/image';
 import Link from 'next/link';
 
 // 轮播图数据
@@ -132,10 +133,11 @@ export default function Home() {
             {recommendedPets.map((pet) => (
               <Card key={pet.id} className="overflow-hidden transition-all duration-300 hover:shadow-md">
                 <div className="relative h-48 overflow-hidden">
-                  <img 
+                  <Image 
                     src={pet.imageUrl} 
                     alt={pet.name} 
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 hover:scale-110"
                   />
                   <div className="absolute top-2 right-2 bg-white text-gray-900 px-2 py-1 rounded-full text-xs font-medium">
                     {pet.type === 'dog' ? '🐕 狗狗' : '🐱 猫咪'}

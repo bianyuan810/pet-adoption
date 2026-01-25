@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -13,11 +13,9 @@ interface ToastProps {
 
 export function Toast({ type, message, duration = 3000, onClose }: ToastProps) {
   const toastRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    setIsVisible(true);
-
     const timer = setTimeout(() => {
       setIsVisible(false);
       const hideTimer = setTimeout(() => {
