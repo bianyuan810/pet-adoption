@@ -9,7 +9,7 @@ import type { Pet } from '@/types/supabase'
 
 export default function PetsPage() {
   const [pets, setPets] = useState<Pet[]>([])
-  const [photos, setPhotos] = useState<Record<string, string[]>>({})
+  const [photos, setPhotos] = useState<Record<string, Array<{ photo_url: string; is_primary: boolean }>>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [filters, setFilters] = useState<FilterValues>({})
   const [keyword, setKeyword] = useState<string>('')

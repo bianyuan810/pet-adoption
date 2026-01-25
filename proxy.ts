@@ -6,7 +6,7 @@ const publicPaths = ['/login', '/register', '/api/auth/login', '/api/auth/regist
 
 const adminPaths = ['/admin']
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (publicPaths.some(path => pathname.startsWith(path))) {

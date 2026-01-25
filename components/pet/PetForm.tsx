@@ -6,11 +6,12 @@ import { z } from 'zod'
 import Image from 'next/image'
 
 const petSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, '请输入宠物名称').max(50, '名称不能超过50个字符'),
   breed: z.string().min(1, '请输入品种').max(50, '品种不能超过50个字符'),
   age: z.number().min(0, '年龄不能为负数').max(30, '年龄不能超过30岁'),
-  gender: z.enum(['male', 'female', 'unknown'], { required_error: '请选择性别' }),
-  status: z.enum(['available', 'adopted', 'pending'], { required_error: '请选择状态' }),
+  gender: z.enum(['male', 'female', 'unknown']).describe('请选择性别'),
+  status: z.enum(['available', 'adopted', 'pending']).describe('请选择状态'),
   description: z.string().min(10, '描述至少需要10个字符').max(1000, '描述不能超过1000个字符'),
   location: z.string().min(1, '请输入位置').max(100, '位置不能超过100个字符'),
   health_status: z.string().optional(),
@@ -21,7 +22,7 @@ const petSchema = z.object({
 type PetFormData = z.infer<typeof petSchema>
 
 interface PetFormProps {
-  initialData?: Partial<PetFormData>
+  initialData?: Partial<PetFormData> & { id?: string }
   isEdit?: boolean
   onSuccess?: () => void
 }

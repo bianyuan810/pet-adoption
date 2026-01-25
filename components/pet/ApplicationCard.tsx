@@ -1,13 +1,41 @@
 'use client'
 
 import Link from 'next/link'
-import type { Application } from '@/types/supabase'
 
-interface ApplicationCardProps {
-  application: Application
+// 定义与 ApplicationList 组件一致的 Application 接口
+interface Application {
+  id: string;
+  pet_id: string;
+  applicant_id: string;
+  publisher_id: string;
+  status: 'pending' | 'approved' | 'rejected';
+  message: string;
+  created_at: string;
+  updated_at: string;
+  pet: {
+    id: string;
+    name: string;
+    breed: string;
+    age: number;
+    gender: 'male' | 'female' | 'unknown';
+    status: 'available' | 'adopted' | 'pending';
+    location: string;
+  };
+  applicant: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    wechat?: string;
+  };
 }
 
-export default function ApplicationCard({ application }: ApplicationCardProps) {
+interface ApplicationCardProps {
+  application: Application;
+  isPublisher: boolean;
+}
+
+export default function ApplicationCard({ application, isPublisher }: ApplicationCardProps) {
   const statusColors = {
     pending: 'bg-yellow-100 text-yellow-800',
     approved: 'bg-green-100 text-green-800',
@@ -26,10 +54,10 @@ export default function ApplicationCard({ application }: ApplicationCardProps) {
         <div>
           <h3 className="text-lg font-semibold text-gray-900">
             <Link href={`/pets/${application.pet_id}`} className="hover:text-orange-500 transition-colors">
-              {application.pet_name}
+              {application.pet.name}
             </Link>
           </h3>
-          <p className="text-sm text-gray-500">申请人：{application.adopter_name}</p>
+          <p className="text-sm text-gray-500">申请人：{application.applicant.name}</p>
         </div>
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[application.status]}`}>
           {statusLabels[application.status]}

@@ -49,6 +49,7 @@ export default function PhotoCarousel({ photos, name }: PhotoCarouselProps) {
         fill
         className="object-cover"
         priority
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 60vw"
       />
 
       {photos.length > 1 && (

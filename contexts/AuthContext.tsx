@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
+      credentials: 'include', // 包含凭证，保存 cookie
     })
 
     const data = await response.json()
@@ -68,7 +69,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
 
-    router.push('/')
+    // 使用 window.location.href 进行完全刷新，确保 cookie 被正确传递给 middleware
+    window.location.href = '/'
   }
 
   const logout = () => {

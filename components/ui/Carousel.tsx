@@ -60,6 +60,8 @@ export function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselPr
               alt={item.title}
               fill
               className="object-cover"
+              loading="eager"
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">

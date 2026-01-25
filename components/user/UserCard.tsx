@@ -39,8 +39,8 @@ export default function UserCard({ user, showActions = false }: UserCardProps) {
             {user.phone && (
               <p className="text-sm text-gray-500">电话：{user.phone}</p>
             )}
-            {user.location && (
-              <p className="text-sm text-gray-500">地点：{user.location}</p>
+            {user.wechat && (
+              <p className="text-sm text-gray-500">微信：{user.wechat}</p>
             )}
           </div>
 

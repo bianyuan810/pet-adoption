@@ -3,14 +3,15 @@ import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
 
 // 拒绝收养申请
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
 
-    const applicationId = params.id;
+    // 在 Next.js 16 中，params 是一个 Promise，需要使用 await 获取实际参数
+    const { id: applicationId } = await params;
 
     // 1. 获取申请信息，验证权限
     const { data: application, error: getAppError } = await supabase
