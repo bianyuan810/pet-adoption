@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ApplicationFormProps {
   petId: string;
@@ -13,9 +15,19 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  
+  // 获取认证状态、token和路由
+  const { isAuthenticated, isLoading, token } = useAuth();
+  const router = useRouter();
 
   // 打开申请模态框
   const handleOpen = () => {
+    // 检查用户是否已登录，未登录则跳转到登录页面
+    if (!isAuthenticated) {
+      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+      return;
+    }
+    
     setIsOpen(true);
     setError(null);
     setSuccess(null);
@@ -43,10 +55,13 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
     setSuccess(null);
 
     try {
+      console.log('token',token);
+      
       const response = await fetch('/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // 添加认证头
         },
         body: JSON.stringify({
           petId,

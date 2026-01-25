@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('pets')
       .select('id, name, breed, age, gender, location, status, created_at, view_count')
-      .eq('status', 'available') // 只返回可领养状态的宠物
+    //  .eq('status', 'available') // 只返回可领养状态的宠物
 
     // 设置排序方式
     if (sortBy === 'newest') {
@@ -199,7 +199,13 @@ export async function GET(request: NextRequest) {
     }
 
     // 整理照片数据
-    const photosByPetId: Record<string, any[]> = {}
+    interface PetPhoto {
+      pet_id: string;
+      photo_url: string;
+      is_primary: boolean;
+    }
+    
+    const photosByPetId: Record<string, PetPhoto[]> = {}
     if (photos) {
       for (const photo of photos) {
         if (!photosByPetId[photo.pet_id]) {

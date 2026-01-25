@@ -20,14 +20,14 @@ const carouselItems = [
     imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1200&h=400&fit=crop',
     title: '宠物是人类最好的朋友',
     description: '选择领养，选择爱',
-    link: '/adoption'
+    link: '/pets'
   },
   {
     id: 3,
     imageUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1200&h=400&fit=crop',
     title: '加入我们的领养计划',
     description: '一起为流浪动物创造更美好的未来',
-    link: '/about'
+    link: '/publish'
   }
 ];
 

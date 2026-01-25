@@ -78,7 +78,7 @@ export default function PetDetail({ pet, photos, publisher }: PetDetailProps) {
               <span>•</span>
               <span>{genderLabels[pet.gender]}</span>
               <span>•</span>
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[pet.status]}`}>
+              <span className={`pet-status px-3 py-1 rounded-full text-xs font-medium ${statusColors[pet.status]}`}>
                 {statusLabels[pet.status]}
               </span>
             </div>

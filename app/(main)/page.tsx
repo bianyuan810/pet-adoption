@@ -10,24 +10,24 @@ import Link from 'next/link';
 const carouselItems = [
   {
     id: 1,
-    imageUrl: '/adopt1.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1200&h=400&fit=crop',
     title: '领养一只宠物，给它一个温暖的家',
     description: '每一只流浪动物都值得被爱',
     link: '/pets'
   },
   {
     id: 2,
-    imageUrl: '/adopt2.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1200&h=400&fit=crop',
     title: '宠物是人类最好的朋友',
     description: '选择领养，选择爱',
-    link: '/adoption'
+    link: '/pets'
   },
   {
     id: 3,
-    imageUrl: '/adopt3.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1200&h=400&fit=crop',
     title: '加入我们的领养计划',
     description: '一起为流浪动物创造更美好的未来',
-    link: '/about'
+    link: '/publish'
   }
 ];
 

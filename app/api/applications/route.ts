@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 // 获取所有申请（根据用户角色返回不同数据）
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
+    const session = await auth(req);
     if (!session?.user?.id) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
@@ -46,7 +46,9 @@ export async function GET(req: NextRequest) {
 // 创建新申请
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    
+    const session = await auth(req);
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }

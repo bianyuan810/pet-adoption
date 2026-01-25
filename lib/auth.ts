@@ -28,6 +28,7 @@ export async function auth(req?: NextRequest): Promise<Session | null> {
   // 如果提供了请求对象，从 cookie 或 authorization header 中获取 token
   if (req) {
     token = (req.cookies.get('token')?.value || req.headers.get('authorization')?.replace('Bearer ', '')) || null
+    
   } else {
     // 从环境变量或其他来源获取 token（适用于服务端调用）
     token = process.env.AUTH_TOKEN || null

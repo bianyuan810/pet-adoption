@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 // 同意收养申请
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await auth();
+    const session = await auth(req);
     if (!session?.user?.id) {
       return NextResponse.json({ error: '未授权访问' }, { status: 401 });
     }
