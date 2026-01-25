@@ -155,9 +155,11 @@ export default function Home() {
                   <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{pet.description}</p>
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
-                  <Button variant="primary" className="w-full">
-                    查看详情
-                  </Button>
+                  <Link href={`/pets/${pet.id}`} className="w-full">
+                    <Button variant="primary" className="w-full">
+                      查看详情
+                    </Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
