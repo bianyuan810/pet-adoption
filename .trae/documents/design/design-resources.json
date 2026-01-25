@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "name": "宠物领养平台设计资源",
+  "description": "宠物领养平台的设计资源文件，包含色彩、字体、组件和布局规范",
+  "created_at": "2026-01-24",
+  "last_updated": "2026-01-24",
+  "design_system": {
+    "color_palette": {
+      "primary": {
+        "main": "#F59E0B",
+        "dark": "#D97706",
+        "light": "#FBBF24"
+      },
+      "secondary": {
+        "blue": "#3B82F6",
+        "green": "#10B981",
+        "purple": "#8B5CF6",
+        "pink": "#EC4899"
+      },
+      "neutral": {
+        "white": "#FFFFFF",
+        "light-gray": "#F3F4F6",
+        "medium-gray": "#E5E7EB",
+        "dark-gray": "#9CA3AF",
+        "darker-gray": "#6B7280",
+        "darkest-gray": "#1F2937",
+        "black": "#111827"
+      },
+      "status": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF

@@ -467,18 +467,18 @@
 - [x] 创建字体规范文档
 - [x] 创建组件使用文档
 - [x] 创建响应式断点文档
-- [ ] 创建设计资源文件（Figma/Sketch）
+- [x] 创建设计资源文件（Figma/Sketch）
 - [x] **设计审查**：审查设计文档的完整性
 
 ### 步骤 7：基础 UI 组件和布局
 
 #### 7.1 创建布局组件
 - [ ] **创建新分支**：`git checkout -b feature/layout-components`
-- [ ] 创建 Header 组件（导航栏）
-- [ ] 创建 Footer 组件（页脚）
-- [ ] 创建 Sidebar 组件（侧边栏）
-- [ ] 创建根布局（app/layout.tsx）
-- [ ] 实现响应式导航
+- [x] 创建 Header 组件（导航栏）
+- [x] 创建 Footer 组件（页脚）
+- [x] 创建 Sidebar 组件（侧边栏）
+- [x] 创建根布局（app/layout.tsx）
+- [x] 实现响应式导航
 - [ ] **代码审查**：审查布局组件和响应式设计
 - [ ] **Git 提交**：提交布局组件
   - [ ] `git add .`
@@ -488,13 +488,13 @@
 
 #### 7.2 创建通用 UI 组件
 - [ ] **创建新分支**：`git checkout -b feature/ui-components`
-- [ ] 创建 Button 组件
-- [ ] 创建 Input 组件
-- [ ] 创建 Card 组件
-- [ ] 创建 Modal 组件
-- [ ] 创建 Loading 组件
-- [ ] 创建 EmptyState 组件
-- [ ] 创建 Toast 组件（提示框）
+- [x] 创建 Button 组件
+- [x] 创建 Input 组件
+- [x] 创建 Card 组件
+- [x] 创建 Modal 组件
+- [x] 创建 Loading 组件
+- [x] 创建 EmptyState 组件
+- [x] 创建 Toast 组件（提示框）
 - [ ] **代码审查**：审查 UI 组件的可访问性和可复用性
 - [ ] **Git 提交**：提交 UI 组件
   - [ ] `git add .`
@@ -504,10 +504,10 @@
 
 #### 7.3 创建首页
 - [ ] **创建新分支**：`git checkout -b feature/homepage`
-- [ ] 创建首页（app/page.tsx）
-- [ ] 创建轮播图组件
-- [ ] 添加推荐宠物展示
-- [ ] 添加快速筛选入口
+- [x] 创建首页（app/page.tsx）
+- [x] 创建轮播图组件
+- [x] 添加推荐宠物展示
+- [x] 添加快速筛选入口
 - [ ] **代码审查**：审查首页布局和用户体验
 - [ ] **Git 提交**：提交首页
   - [ ] `git add .`

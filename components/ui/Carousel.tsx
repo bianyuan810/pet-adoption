@@ -17,7 +17,7 @@ interface CarouselProps {
   interval?: number
 }
 
-export default function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselProps) {
+export function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // 自动播放功能
