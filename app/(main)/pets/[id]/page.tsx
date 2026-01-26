@@ -2,8 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import PetDetail from '@/components/pet/PetDetail'
+import dynamic from 'next/dynamic'
 import type { Pet } from '@/types/supabase'
+
+// 动态导入PetDetail组件，实现代码分割
+const PetDetail = dynamic(() => import('@/components/pet/PetDetail'), {
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    </div>
+  ),
+  ssr: false
+})
 
 export default function PetDetailPage() {
   const params = useParams()

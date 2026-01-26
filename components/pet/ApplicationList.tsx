@@ -207,7 +207,6 @@ const ApplicationList: React.FC<ApplicationListProps> = ({ isPublisher, petId })
                     <ApplicationCard
                       key={application.id}
                       application={application}
-                      isPublisher={isPublisher}
                     />
                   ))}
                 </div>

@@ -1,6 +1,38 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+
+// 自定义hook，安全地从localStorage获取数据
+function useLocalStorageState<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  // 使用函数式初始化，只在客户端执行
+  const [state, setState] = useState<T>(() => {
+    // 确保只在浏览器环境中执行
+    if (typeof window === 'undefined') {
+      return initialValue
+    }
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error)
+      return initialValue
+    }
+  })
+
+  // 更新localStorage和状态
+  const setValue = (value: T) => {
+    try {
+      setState(value)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(value))
+      }
+    } catch (error) {
+      console.error(`Error setting localStorage key "${key}":`, error)
+    }
+  }
+
+  return [state, setValue]
+}
 
 interface SearchBarProps {
   onSearch: (keyword: string) => void
@@ -9,16 +41,10 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [keyword, setKeyword] = useState('')
   const [showHistory, setShowHistory] = useState(false)
-  const [searchHistory, setSearchHistory] = useState<string[]>([])
-  const [hotSearches, setHotSearches] = useState<string[]>(['金毛', '拉布拉多', '柯基', '泰迪', '英短', '美短'])
-
-  // 从localStorage获取搜索历史
-  useEffect(() => {
-    const history = localStorage.getItem('searchHistory')
-    if (history) {
-      setSearchHistory(JSON.parse(history))
-    }
-  }, [])
+  // 使用自定义hook管理localStorage状态
+  const [searchHistory, setSearchHistory] = useLocalStorageState<string[]>('searchHistory', [])
+  // 移除未使用的setHotSearches
+  const [hotSearches] = useState<string[]>(['金毛', '拉布拉多', '柯基', '泰迪', '英短', '美短'])
 
   // 保存搜索历史到localStorage
   const saveSearchHistory = (searchKeyword: string) => {
@@ -30,8 +56,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       ...searchHistory.filter(item => item !== searchKeyword)
     ].slice(0, 10)
     
+    // 使用自定义hook的setValue方法，同时更新状态和localStorage
     setSearchHistory(newHistory)
-    localStorage.setItem('searchHistory', JSON.stringify(newHistory))
   }
 
   // 处理搜索提交

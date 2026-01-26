@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useState, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 interface ModalProps {
   isOpen: boolean
@@ -12,21 +12,17 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, title, children, footer, size = 'md' }: ModalProps) {
-  const [isVisible, setIsVisible] = useState(false)
+  // 简化状态管理，直接使用isOpen控制显示/隐藏，通过CSS处理动画
+  // 移除isVisible状态，使用isOpen直接控制
 
   // 处理模态框的显示和隐藏动画
   useEffect(() => {
     if (isOpen) {
-      setIsVisible(true)
       // 防止背景滚动
       document.body.style.overflow = 'hidden'
     } else {
-      // 等待动画完成后隐藏
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-        document.body.style.overflow = 'auto'
-      }, 300)
-      return () => clearTimeout(timer)
+      // 恢复背景滚动
+      document.body.style.overflow = 'auto'
     }
   }, [isOpen])
 
@@ -57,15 +53,16 @@ export default function Modal({ isOpen, onClose, title, children, footer, size =
     xl: 'max-w-xl'
   }
 
-  if (!isVisible) return null
+  // 如果不显示，直接返回null
+  if (!isOpen) return null
 
   return (
     <div 
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       onClick={handleOverlayClick}
     >
       <div 
-        className={`bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300 ${isVisible ? 'transform scale-100 opacity-100' : 'transform scale-95 opacity-0'} ${sizeClasses[size]}`}
+        className={`bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300 ${isOpen ? 'transform scale-100 opacity-100' : 'transform scale-95 opacity-0'} ${sizeClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 模态框头部 */}

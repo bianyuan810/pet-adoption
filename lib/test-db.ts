@@ -26,10 +26,12 @@ export async function testTables() {
 
   for (const table of tables) {
     try {
-      const { data, error } = await supabase.from(table).select('*', { count: 'exact', head: true })
+      // 使用下划线表示故意不使用的变量，并禁用ESLint警告
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { data: _, error } = await supabase.from(table).select('*', { count: 'exact', head: true })
       results[table] = !error
       console.log(`${table}: ${error ? '失败' : '成功'}`)
-    } catch (error) {
+    } catch {
       results[table] = false
       console.log(`${table}: 失败`)
     }

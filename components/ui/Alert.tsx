@@ -6,10 +6,9 @@ interface AlertProps {
   type: 'success' | 'error' | 'warning' | 'info'
   message: string | ReactNode
   onClose?: () => void
-  duration?: number
 }
 
-export default function Alert({ type, message, onClose, duration }: AlertProps) {
+export default function Alert({ type, message, onClose }: AlertProps) {
   // 根据类型设置不同的样式
   const typeClasses = {
     success: 'bg-green-100 text-green-800 border-green-200',

@@ -2,7 +2,17 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import RegisterForm from '@/components/auth/RegisterForm'
+import dynamic from 'next/dynamic'
+
+// 动态导入RegisterForm组件，实现代码分割
+const RegisterForm = dynamic(() => import('@/components/auth/RegisterForm'), {
+  loading: () => (
+    <div className="flex justify-center items-center py-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+  ),
+  ssr: false
+})
 
 export default function RegisterPage() {
   const [isSuccess, setIsSuccess] = useState(false)

@@ -7,14 +7,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
     // 在 Next.js 16 中，params 是一个 Promise，需要使用 await 获取实际参数
     const { id } = await params
 
     const { data: pet, error: petError } = await supabase
       .from('pets')
       .select(`
-        *,
+        *, 
         publisher:users!inner(
           id,
           name,
@@ -38,13 +37,17 @@ export async function GET(
       )
     }
 
-    const photos = pet.pet_photos || []
-    const { pet_photos: _photos, ...petData } = pet
+    // 直接提取照片，不使用解构
+    const photos = (pet.pet_photos || []).map((p: { photo_url: string }) => p.photo_url)
 
     return NextResponse.json(
       {
-        pet: petData,
-        photos: photos.map((p: { photo_url: string }) => p.photo_url),
+        pet: {
+          ...pet,
+          // 移除 pet_photos 字段，不使用额外变量
+          pet_photos: undefined
+        },
+        photos,
         publisher: pet.publisher,
       },
       { status: 200 }

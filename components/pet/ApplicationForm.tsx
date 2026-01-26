@@ -17,7 +17,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
   const [success, setSuccess] = useState<string | null>(null);
   
   // 获取认证状态、token和路由
-  const { isAuthenticated, isLoading, token } = useAuth();
+  const { isAuthenticated, token } = useAuth();
   const router = useRouter();
 
   // 打开申请模态框

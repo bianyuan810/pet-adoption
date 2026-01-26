@@ -71,7 +71,8 @@ export async function POST(request: NextRequest) {
 
     for (const { file, index } of photoEntries) {
       const fileName = `${pet.id}_${Date.now()}_${index}.jpg`
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      // 不使用uploadData变量，直接调用upload方法
+      const { error: uploadError } = await supabase.storage
         .from('pet-photos')
         .upload(fileName, file)
 
@@ -111,6 +112,10 @@ export async function POST(request: NextRequest) {
 
 
 
+// 设置API路由缓存配置
+export const revalidate = 3600 // 缓存1小时
+export const fetchCache = 'force-cache' // 使用强制缓存
+
 // 获取宠物列表，支持筛选
 export async function GET(request: NextRequest) {
   try {
@@ -124,10 +129,13 @@ export async function GET(request: NextRequest) {
     const location = searchParams.get('location')
     const sortBy = searchParams.get('sortBy')
 
-    // 构建查询
+    // 构建查询 - 使用JOIN一次性获取宠物和照片数据
     let query = supabase
       .from('pets')
-      .select('id, name, breed, age, gender, location, status, created_at, view_count')
+      .select(`
+        id, name, breed, age, gender, location, status, created_at, view_count,
+        pet_photos (photo_url, is_primary)
+      `)
     //  .eq('status', 'available') // 只返回可领养状态的宠物
 
     // 设置排序方式
@@ -177,47 +185,45 @@ export async function GET(request: NextRequest) {
     }
 
     // 执行查询
-    const { data: pets, error: petsError } = await query
+    const { data: petsWithPhotos, error: queryError } = await query
 
-    if (petsError) {
-      console.error('获取宠物列表时出错:', petsError)
+    if (queryError) {
+      console.error('获取宠物列表时出错:', queryError)
       return NextResponse.json(
         { error: '获取宠物列表失败' },
         { status: 500 }
       )
     }
 
-    // 获取每张宠物的照片
-    const petIds = pets.map(pet => pet.id)
-    const { data: photos, error: photosError } = await supabase
-      .from('pet_photos')
-      .select('pet_id, photo_url, is_primary')
-      .in('pet_id', petIds)
-
-    if (photosError) {
-      console.error('获取宠物照片时出错:', photosError)
-    }
-
-    // 整理照片数据
-    interface PetPhoto {
-      pet_id: string;
-      photo_url: string;
-      is_primary: boolean;
+    // 整理数据结构
+    interface PetWithPhotos {
+      id: string;
+      name: string;
+      breed: string;
+      age: number;
+      gender: string;
+      location: string;
+      status: string;
+      created_at: string;
+      view_count: number;
+      pet_photos?: { photo_url: string; is_primary: boolean }[];
     }
     
-    const photosByPetId: Record<string, PetPhoto[]> = {}
-    if (photos) {
-      for (const photo of photos) {
-        if (!photosByPetId[photo.pet_id]) {
-          photosByPetId[photo.pet_id] = []
-        }
-        photosByPetId[photo.pet_id].push(photo)
-      }
+    const photosByPetId: Record<string, { photo_url: string; is_primary: boolean }[]> = {};
+    
+    for (const pet of petsWithPhotos || []) {
+      // 从JOIN结果中提取宠物照片
+      const petWithPhotos = pet as PetWithPhotos;
+      const petPhotos = petWithPhotos.pet_photos || [];
+      photosByPetId[petWithPhotos.id] = petPhotos;
+      
+      // 移除照片数据，保留原始宠物数据结构
+      delete petWithPhotos.pet_photos;
     }
 
     return NextResponse.json(
       {
-        pets: pets || [],
+        pets: petsWithPhotos || [],
         photos: photosByPetId
       },
       { status: 200 }

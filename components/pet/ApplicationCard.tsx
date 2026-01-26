@@ -32,10 +32,9 @@ interface Application {
 
 interface ApplicationCardProps {
   application: Application;
-  isPublisher: boolean;
 }
 
-export default function ApplicationCard({ application, isPublisher }: ApplicationCardProps) {
+export default function ApplicationCard({ application }: ApplicationCardProps) {
   const router = useRouter();
   
   const statusColors = {

@@ -138,6 +138,7 @@ export default function Home() {
                     alt={pet.name} 
                     fill
                     className="object-cover transition-transform duration-500 hover:scale-110"
+                    loading="lazy"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
                   <div className="absolute top-2 right-2 bg-white text-gray-900 px-2 py-1 rounded-full text-xs font-medium">

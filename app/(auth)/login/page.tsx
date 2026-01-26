@@ -1,7 +1,17 @@
 'use client'
 
 import Link from 'next/link'
-import LoginForm from '@/components/auth/LoginForm'
+import dynamic from 'next/dynamic'
+
+// 动态导入LoginForm组件，实现代码分割
+const LoginForm = dynamic(() => import('@/components/auth/LoginForm'), {
+  loading: () => (
+    <div className="flex justify-center items-center py-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+  ),
+  ssr: false
+})
 
 export default function LoginPage() {
   return (
