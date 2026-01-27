@@ -11,9 +11,9 @@ interface PetCardProps {
 
 export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
   const statusColors = {
-    available: 'bg-green-100 text-green-800',
-    adopted: 'bg-gray-100 text-gray-800',
-    pending: 'bg-yellow-100 text-yellow-800',
+    available: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200',
+    adopted: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
+    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200',
   }
 
   const statusLabels = {
@@ -30,8 +30,8 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
 
   return (
     <Link href={`/pets/${pet.id}`}>
-      <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-        <div className="relative h-48 bg-gray-200">
+      <div className="bg-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group">
+        <div className="relative h-48 bg-muted">
           {primaryPhoto ? (
             <Image
               src={primaryPhoto}
@@ -42,7 +42,7 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               <svg
                 className="w-16 h-16"
                 fill="none"
@@ -65,19 +65,19 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
           </span>
         </div>
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{pet.name}</h3>
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+          <h3 className="text-lg font-semibold text-foreground mb-2">{pet.name}</h3>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
             <span>{pet.breed}</span>
             <span>•</span>
             <span>{pet.age} 岁</span>
             <span>•</span>
             <span>{genderLabels[pet.gender]}</span>
           </div>
-          <p className="text-sm text-gray-500 line-clamp-2 mb-3">
+          <p className="text-sm text-foreground/80 line-clamp-2 mb-3">
             {pet.description}
           </p>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500 flex items-center gap-1">
+            <span className="text-muted-foreground flex items-center gap-1">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -99,7 +99,7 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
               </svg>
               {pet.location}
             </span>
-            <span className="text-gray-400 flex items-center gap-1">
+            <span className="text-muted-foreground flex items-center gap-1">
               <svg
                 className="w-4 h-4"
                 fill="none"

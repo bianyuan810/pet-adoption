@@ -47,7 +47,7 @@ export function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselPr
   }
 
   return (
-    <div className="relative w-full overflow-hidden rounded-lg shadow-md">
+    <div className="relative w-full overflow-hidden rounded-xl shadow-lg">
       <div className="relative h-64 sm:h-80 md:h-96">
         {/* 幻灯片内容 */}
         {items.map((item, index) => (
@@ -70,7 +70,7 @@ export function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselPr
               loading={index === 0 ? "eager" : "lazy"}
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white z-20">
               <h2 className="text-xl sm:text-2xl font-bold mb-2">{item.title}</h2>
               {item.description && (
@@ -79,7 +79,7 @@ export function Carousel({ items, autoPlay = true, interval = 5000 }: CarouselPr
               {item.link && (
                 <a
                   href={item.link}
-                  className="inline-block mt-3 px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors text-sm relative z-30"
+                  className="inline-block mt-3 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-colors text-sm relative z-30"
                 >
                   了解更多
                 </a>

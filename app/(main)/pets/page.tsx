@@ -46,11 +46,11 @@ export default function PetsPage() {
   }, [filters, keyword, sortBy])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-muted/20 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">宠物领养</h1>
-          <p className="text-gray-600">发现您的完美伙伴，给它们一个温暖的家</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">宠物领养</h1>
+          <p className="text-muted-foreground">发现您的完美伙伴，给它们一个温暖的家</p>
         </div>
 
         {/* 添加搜索栏 */}

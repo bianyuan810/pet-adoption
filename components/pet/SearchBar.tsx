@@ -49,13 +49,13 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   // 保存搜索历史到localStorage
   const saveSearchHistory = (searchKeyword: string) => {
     if (!searchKeyword.trim()) return
-    
+
     // 去重并限制最多保存10条
     const newHistory = [
       searchKeyword,
       ...searchHistory.filter(item => item !== searchKeyword)
     ].slice(0, 10)
-    
+
     // 使用自定义hook的setValue方法，同时更新状态和localStorage
     setSearchHistory(newHistory)
   }
@@ -102,20 +102,20 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             onFocus={() => setShowHistory(true)}
             onBlur={() => setTimeout(() => setShowHistory(false), 200)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           />
-          
+
           {/* 搜索历史和热门推荐下拉框 */}
           {showHistory && (
-            <div className="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+            <div className="absolute left-0 right-0 mt-2 bg-card rounded-lg shadow-lg border border-border z-10">
               {/* 搜索历史 */}
               {searchHistory.length > 0 && (
                 <div className="p-3">
                   <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-gray-700">搜索历史</h3>
+                    <h3 className="text-sm font-medium text-foreground">搜索历史</h3>
                     <button
                       onClick={clearHistory}
-                      className="text-xs text-gray-500 hover:text-gray-700"
+                      className="text-xs text-muted-foreground hover:text-foreground"
                     >
                       清除
                     </button>
@@ -125,7 +125,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                       <button
                         key={index}
                         onClick={() => handleHistoryClick(item)}
-                        className="px-3 py-1 text-sm bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-colors"
+                        className="px-3 py-1 text-sm bg-muted text-foreground rounded-full hover:bg-muted/80 transition-colors"
                       >
                         {item}
                       </button>
@@ -133,16 +133,16 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                   </div>
                 </div>
               )}
-              
+
               {/* 热门搜索 */}
-              <div className="p-3 border-t border-gray-200">
-                <h3 className="text-sm font-medium text-gray-700 mb-2">热门搜索</h3>
+              <div className="p-3 border-t border-border">
+                <h3 className="text-sm font-medium text-foreground mb-2">热门搜索</h3>
                 <div className="flex flex-wrap gap-2">
                   {hotSearches.map((item, index) => (
                     <button
                       key={index}
                       onClick={() => handleHotSearchClick(item)}
-                      className="px-3 py-1 text-sm bg-indigo-50 text-indigo-800 rounded-full hover:bg-indigo-100 transition-colors"
+                      className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors"
                     >
                       {item}
                     </button>
@@ -152,11 +152,11 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             </div>
           )}
         </div>
-        
+
         {/* 搜索按钮 */}
         <button
           onClick={handleSearch}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
         >
           搜索
         </button>

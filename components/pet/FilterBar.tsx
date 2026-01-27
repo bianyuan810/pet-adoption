@@ -32,15 +32,15 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+    <div className="bg-card rounded-xl shadow-sm p-4 mb-8 border border-border">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 品种筛选 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">品种</label>
+          <label className="block text-sm font-medium text-foreground mb-1">品种</label>
           <select
             value={filters.breed || '所有品种'}
             onChange={(e) => handleFilterChange('breed', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           >
             {breedOptions.map((breed) => (
               <option key={breed} value={breed}>
@@ -52,11 +52,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 年龄筛选 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+          <label className="block text-sm font-medium text-foreground mb-1">年龄</label>
           <select
             value={filters.age || '所有年龄'}
             onChange={(e) => handleFilterChange('age', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           >
             {ageOptions.map((age) => (
               <option key={age} value={age}>
@@ -68,11 +68,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 性别筛选 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">性别</label>
+          <label className="block text-sm font-medium text-foreground mb-1">性别</label>
           <select
             value={filters.gender || '所有性别'}
             onChange={(e) => handleFilterChange('gender', e.target.value as 'male' | 'female')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           >
             {genderOptions.map((gender) => (
               <option key={gender} value={gender === '公' ? 'male' : gender === '母' ? 'female' : '所有性别'}>
@@ -84,11 +84,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 地区筛选 */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">地区</label>
+          <label className="block text-sm font-medium text-foreground mb-1">地区</label>
           <select
             value={filters.location || '所有地区'}
             onChange={(e) => handleFilterChange('location', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           >
             {locationOptions.map((location) => (
               <option key={location} value={location}>
