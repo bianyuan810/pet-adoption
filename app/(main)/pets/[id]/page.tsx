@@ -165,10 +165,7 @@ export default function PetDetailPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   pet.vaccine_status && '接种过疫苗',
-                  pet.sterilized && '已绝育',
-                  '会定点排便',
-                  '与其他宠物友好',
-                  '对小孩友好'
+                  pet.sterilized && '已绝育'
                 ].filter((item): item is string => Boolean(item)).map((trait, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <CheckCircle className="text-secondary" />
