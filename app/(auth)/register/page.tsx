@@ -3,10 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { UserPlus, User, Mail, Lock } from 'lucide-react';
+import { UserPlus, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,11 +57,19 @@ export default function RegisterPage() {
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input 
-                type="password" 
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
+                type={showPassword ? 'text' : 'password'} 
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 transition-all"
                 placeholder="不少于 8 位字符"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label={showPassword ? '隐藏密码' : '显示密码'}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 

@@ -17,6 +17,7 @@ export default function PublishPage() {
     description: '',
     health_status: '',
     vaccine_status: false,
+    dewormed: false,
     sterilized: false,
     photos: [] as File[]
   });
@@ -84,9 +85,8 @@ export default function PublishPage() {
       });
       
       if (response.ok) {
-        const result = await response.json();
-        // 发布成功后跳转到宠物详情页面
-        router.push(`/pets/${result.pet.id}`);
+        // 发布成功后跳转到"我发布的宠物"列表页面
+        router.push('/my-pets');
       } else {
         const errorData = await response.json();
         alert(`发布失败: ${errorData.error || '请稍后重试'}`);
@@ -265,7 +265,7 @@ export default function PublishPage() {
             </div>
             <div className="space-y-4">
               <label className="block text-sm font-bold">健康状况</label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input 
                     type="checkbox" 
@@ -279,6 +279,9 @@ export default function PublishPage() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input 
                     type="checkbox" 
+                    name="dewormed"
+                    checked={formData.dewormed as boolean}
+                    onChange={handleInputChange}
                     className="rounded text-primary focus:ring-primary border-gray-300" 
                   />
                   <span className="text-sm font-medium">已驱虫</span>
@@ -292,13 +295,6 @@ export default function PublishPage() {
                     className="rounded text-primary focus:ring-primary border-gray-300" 
                   />
                   <span className="text-sm font-medium">已绝育</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="rounded text-primary focus:ring-primary border-gray-300" 
-                  />
-                  <span className="text-sm font-medium">芯片植入</span>
                 </label>
               </div>
             </div>

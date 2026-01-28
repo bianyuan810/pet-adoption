@@ -55,13 +55,23 @@ export default function MyApplicationsPage() {
         const data = await response.json();
         
         if (response.ok) {
-          setApplications(data as Application[]);
+          // 确保 applications 始终是数组
+          if (data.success && Array.isArray(data.data)) {
+            setApplications(data.data as Application[]);
+          } else if (Array.isArray(data)) {
+            // 兼容直接返回数组的情况
+            setApplications(data as Application[]);
+          } else {
+            setApplications([]);
+          }
         } else {
           setError(data.error || '获取申请列表失败');
+          setApplications([]);
         }
       } catch (err) {
         console.error('获取申请列表失败:', err);
         setError('获取申请列表失败，请稍后重试');
+        setApplications([]);
       } finally {
         setIsLoading(false);
       }

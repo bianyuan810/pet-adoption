@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, UnlockIcon, Lock, Shield, Info } from 'lucide-react';
+import { ArrowLeft, UnlockIcon, Lock, Shield, Info, Eye, EyeOff } from 'lucide-react';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -14,6 +14,9 @@ export default function ChangePasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -122,14 +125,22 @@ export default function ChangePasswordPage() {
             <div className="relative">
               <UnlockIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input 
-                type="password" 
+                type={showCurrentPassword ? 'text' : 'password'} 
                 name="currentPassword"
                 value={formData.currentPassword}
                 onChange={handleInputChange}
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
                 placeholder="请输入旧密码"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label={showCurrentPassword ? '隐藏密码' : '显示密码'}
+              >
+                {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 
@@ -140,14 +151,22 @@ export default function ChangePasswordPage() {
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input 
-                type="password" 
+                type={showNewPassword ? 'text' : 'password'} 
                 name="newPassword"
                 value={formData.newPassword}
                 onChange={handleInputChange}
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
                 placeholder="请输入新密码"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label={showNewPassword ? '隐藏密码' : '显示密码'}
+              >
+                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 
@@ -156,14 +175,22 @@ export default function ChangePasswordPage() {
             <div className="relative">
               <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input 
-                type="password" 
+                type={showConfirmPassword ? 'text' : 'password'} 
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 pr-12 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
                 placeholder="请再次输入新密码"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label={showConfirmPassword ? '隐藏密码' : '显示密码'}
+              >
+                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
 

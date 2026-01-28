@@ -38,7 +38,7 @@ export function Header() {
     { href: '/', label: '首页' },
     { href: '/pets', label: '宠物列表' },
     ...(isAuthenticated ? [
-      { href: '/publish', label: '发布宠物' },
+      { href: '/my-pets', label: '发布宠物' },
       { href: '/my-applications', label: '我的申请' },
       { href: '/applications', label: '申请管理' }
     ] : [])

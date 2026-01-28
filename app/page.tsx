@@ -21,12 +21,7 @@ interface PetWithPhotos extends Pet {
   photos?: string[];
 }
 
-const CategoryCard: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon, label }) => (
-  <button className="group flex flex-col items-center justify-center p-6 bg-white dark:bg-white/5 border border-[#e6dedb] dark:border-white/10 rounded-xl hover:border-primary hover:shadow-md transition-all">
-    <div className="text-4xl text-primary mb-2 group-hover:scale-110 transition-transform">{icon}</div>
-    <span className="font-bold text-zinc-900 dark:text-white">{label}</span>
-  </button>
-);
+
 
 export default function Home() {
   const router = useRouter();
@@ -40,14 +35,16 @@ export default function Home() {
         const response = await fetch('/api/pets?sortBy=newest&limit=4');
         const data = await response.json();
         
-        if (data.pets) {
-          // 处理宠物数据，添加照片信息
-          const petsWithPhotos = data.pets.map((pet: any) => ({
-            ...pet,
-            photos: data.photos[pet.id]?.map((photo: any) => photo.photo_url) || [],
-            category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
-                     pet.breed.includes('猫') ? 'cat' : 'other'
-          }));
+        if (data.success && data.data && data.data.pets) {
+          // 处理宠物数据，添加照片信息，并只保留可领养的宠物
+          const petsWithPhotos = data.data.pets
+            .filter((pet: any) => pet.status === 'available') // 只保留可领养的宠物
+            .map((pet: any) => ({
+              ...pet,
+              photos: data.data.photos && data.data.photos[pet.id] ? data.data.photos[pet.id].map((photo: any) => photo.photo_url) : [],
+              category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
+                       pet.breed.includes('猫') ? 'cat' : 'other'
+            }));
           setPets(petsWithPhotos);
         }
       } catch (error) {
@@ -75,18 +72,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Shortcuts */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">快捷筛选</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            <CategoryCard icon={<Dog />} label="狗狗" />
-            <CategoryCard icon={<Cat />} label="猫咪" />
-            <CategoryCard icon={<Rabbit />} label="兔子" />
-            <CategoryCard icon={<Bird />} label="鸟类" />
-            <CategoryCard icon={<MoreHorizontal />} label="其他" />
-            <CategoryCard icon={<Grid />} label="查看全部" />
-          </div>
-        </section>
+
 
         {/* Recommendations */}
         <section className="mb-16">
@@ -113,7 +99,7 @@ export default function Home() {
               pets.map((pet) => (
                 <Link key={pet.id} href={`/pets/${pet.id}`} className="group bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                   <div className="relative h-[224px] w-full">
-                    <img alt={pet.name} className="w-full h-full object-cover" src={pet.photos?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'} />
+                    <img alt={pet.name} className="w-full h-full object-cover" src={pet.photos?.[0] || '/images/用户未上传.png'} />
                     <span className="absolute top-3 left-3 bg-white/90 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 text-zinc-800 dark:text-white">
                       {pet.category === 'dog' ? '狗狗 🐕' : pet.category === 'cat' ? '猫咪 🐈' : '宠物'}
                     </span>

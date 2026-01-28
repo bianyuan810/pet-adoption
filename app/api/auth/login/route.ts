@@ -17,7 +17,11 @@ export async function POST(request: NextRequest) {
 
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: '请求数据格式错误', details: validationResult.error.issues },
+        {
+          success: false,
+          error: '请求数据格式错误',
+          data: { details: validationResult.error.issues }
+        },
         { status: 400 }
       )
     }
@@ -33,14 +37,20 @@ export async function POST(request: NextRequest) {
     if (fetchError) {
       console.error('查询用户时出错:', fetchError)
       return NextResponse.json(
-        { error: '邮箱或密码错误' },
+        {
+          success: false,
+          error: '邮箱或密码错误'
+        },
         { status: 401 }
       )
     }
 
     if (!user) {
       return NextResponse.json(
-        { error: '邮箱或密码错误' },
+        {
+          success: false,
+          error: '邮箱或密码错误'
+        },
         { status: 401 }
       )
     }
@@ -49,7 +59,10 @@ export async function POST(request: NextRequest) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: '邮箱或密码错误' },
+        {
+          success: false,
+          error: '邮箱或密码错误'
+        },
         { status: 401 }
       )
     }
@@ -66,9 +79,12 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json(
       {
-        message: '登录成功',
-        token,
-        user: userWithoutPassword,
+        success: true,
+        data: {
+          token,
+          user: userWithoutPassword,
+          message: '登录成功'
+        }
       },
       { status: 200 }
     )
@@ -85,7 +101,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('登录接口错误:', error)
     return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
+      {
+        success: false,
+        error: '服务器错误，请稍后重试'
+      },
       { status: 500 }
     )
   }

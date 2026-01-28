@@ -17,7 +17,7 @@ export interface FilterValues {
 export default function FilterBar({ onFilterChange }: FilterBarProps) {
   const [filters, setFilters] = useState<FilterValues>({})
 
-  // 模拟筛选选项数据，实际项目中应从 API 获取
+  // 筛选选项数据
   const breedOptions = ['所有品种', '金毛', '拉布拉多', '柯基', '泰迪', '英短', '美短', '布偶', '暹罗']
   const ageOptions = ['所有年龄', '0-1岁', '1-3岁', '3-5岁', '5岁以上']
   const genderOptions = ['所有性别', '公', '母']

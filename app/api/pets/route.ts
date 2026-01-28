@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { verifyToken } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
@@ -8,7 +8,10 @@ export async function POST(request: NextRequest) {
 
     if (!token) {
       return NextResponse.json(
-        { error: '未授权访问' },
+        {
+          success: false,
+          error: '未授权访问'
+        },
         { status: 401 }
       )
     }
@@ -17,7 +20,10 @@ export async function POST(request: NextRequest) {
 
     if (!payload) {
       return NextResponse.json(
-        { error: 'Token 无效或已过期' },
+        {
+          success: false,
+          error: 'Token 无效或已过期'
+        },
         { status: 401 }
       )
     }
@@ -33,6 +39,7 @@ export async function POST(request: NextRequest) {
     const location = formData.get('location') as string
     const health_status = formData.get('health_status') as string | null
     const vaccine_status = formData.get('vaccine_status') === 'true'
+    const dewormed = formData.get('dewormed') === 'true'
     const sterilized = formData.get('sterilized') === 'true'
 
     const { data: pet, error: insertError } = await supabase
@@ -48,6 +55,7 @@ export async function POST(request: NextRequest) {
         location,
         health_status,
         vaccine_status,
+        dewormed,
         sterilized,
         view_count: 0,
       })
@@ -57,7 +65,10 @@ export async function POST(request: NextRequest) {
     if (insertError || !pet) {
       console.error('创建宠物时出错:', insertError)
       return NextResponse.json(
-        { error: '创建宠物失败，请稍后重试' },
+        {
+          success: false,
+          error: '创建宠物失败，请稍后重试'
+        },
         { status: 500 }
       )
     }
@@ -71,8 +82,8 @@ export async function POST(request: NextRequest) {
 
     for (const { file, index } of photoEntries) {
       const fileName = `${pet.id}_${Date.now()}_${index}.jpg`
-      // 不使用uploadData变量，直接调用upload方法
-      const { error: uploadError } = await supabase.storage
+      // 使用服务端客户端上传文件
+      const { error: uploadError } = await supabaseAdmin.storage
         .from('pet-photos')
         .upload(fileName, file)
 
@@ -96,15 +107,21 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: '发布成功',
-        pet: { id: pet.id, name: pet.name, breed: pet.breed },
+        success: true,
+        data: {
+          pet: { id: pet.id, name: pet.name, breed: pet.breed },
+          message: '发布成功'
+        }
       },
       { status: 201 }
     )
   } catch (error) {
     console.error('发布宠物接口错误:', error)
     return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
+      {
+        success: false,
+        error: '服务器错误，请稍后重试'
+      },
       { status: 500 }
     )
   }
@@ -121,6 +138,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     
+    
     // 获取筛选参数、搜索关键词和排序方式
     const keyword = searchParams.get('keyword')
     const breed = searchParams.get('breed')
@@ -129,12 +147,11 @@ export async function GET(request: NextRequest) {
     const location = searchParams.get('location')
     const sortBy = searchParams.get('sortBy')
 
-    // 构建查询 - 使用JOIN一次性获取宠物和照片数据
+    // 构建查询 - 先获取宠物数据（不带照片），确保排序和去重正确
     let query = supabase
       .from('pets')
       .select(`
-        id, name, breed, age, gender, location, status, created_at, view_count,
-        pet_photos (photo_url, is_primary)
+        id, name, breed, age, gender, location, status, created_at, view_count
       `)
     //  .eq('status', 'available') // 只返回可领养状态的宠物
 
@@ -147,6 +164,10 @@ export async function GET(request: NextRequest) {
       query = query.order('view_count', { ascending: false })
     } else if (sortBy === 'least_viewed') {
       query = query.order('view_count', { ascending: true })
+    } else if (sortBy === 'age_asc') {
+      query = query.order('age', { ascending: true })
+    } else if (sortBy === 'age_desc') {
+      query = query.order('age', { ascending: false })
     } else {
       // 默认按创建时间倒序
       query = query.order('created_at', { ascending: false })
@@ -184,54 +205,75 @@ export async function GET(request: NextRequest) {
       query = query.ilike('location', `%${location}%`)
     }
 
-    // 执行查询
-    const { data: petsWithPhotos, error: queryError } = await query
-
+    
+    
+    // 执行查询获取宠物数据
+    const { data: petsData, error: queryError } = await query
+    
+ 
+      
     if (queryError) {
       console.error('获取宠物列表时出错:', queryError)
       return NextResponse.json(
-        { error: '获取宠物列表失败' },
+        {
+          success: false,
+          error: '获取宠物列表失败'
+        },
         { status: 500 }
       )
     }
 
-    // 整理数据结构
-    interface PetWithPhotos {
-      id: string;
-      name: string;
-      breed: string;
-      age: number;
-      gender: string;
-      location: string;
-      status: string;
-      created_at: string;
-      view_count: number;
-      pet_photos?: { photo_url: string; is_primary: boolean }[];
-    }
-    
-    const photosByPetId: Record<string, { photo_url: string; is_primary: boolean }[]> = {};
-    
-    for (const pet of petsWithPhotos || []) {
-      // 从JOIN结果中提取宠物照片
-      const petWithPhotos = pet as PetWithPhotos;
-      const petPhotos = petWithPhotos.pet_photos || [];
-      photosByPetId[petWithPhotos.id] = petPhotos;
+    // 如果有宠物数据，获取对应的照片数据
+    let photosByPetId: Record<string, { photo_url: string; is_primary: boolean }[]> = {};
+    if (petsData && petsData.length > 0) {
+      const petIds = petsData.map(pet => pet.id);
       
-      // 移除照片数据，保留原始宠物数据结构
-      delete petWithPhotos.pet_photos;
+      // 批量查询照片数据
+      const { data: photosData, error: photosError } = await supabase
+        .from('pet_photos')
+        .select('pet_id, photo_url, is_primary')
+        .in('pet_id', petIds);
+      
+      if (!photosError) {
+        // 整理照片数据，按宠物ID分组
+        photosByPetId = {};
+        photosData.forEach(photo => {
+          if (!photosByPetId[photo.pet_id]) {
+            photosByPetId[photo.pet_id] = [];
+          }
+          photosByPetId[photo.pet_id].push({
+            photo_url: photo.photo_url,
+            is_primary: photo.is_primary || false,
+          });
+        });
+      }
     }
+    
+    // 准备返回的宠物数据（保持原始排序顺序）
+    const pets = petsData || [];
 
     return NextResponse.json(
       {
-        pets: petsWithPhotos || [],
-        photos: photosByPetId
+        success: true,
+        data: {
+          pets: pets || [],
+          photos: photosByPetId
+        },
+        meta: {
+          total: pets.length,
+          page: 1,
+          limit: pets.length
+        }
       },
       { status: 200 }
     )
   } catch (error) {
     console.error('获取宠物列表接口错误:', error)
     return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
+      {
+        success: false,
+        error: '服务器错误，请稍后重试'
+      },
       { status: 500 }
     )
   }

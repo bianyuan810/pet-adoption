@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { label: '首页', path: '/' },
     { label: '宠物列表', path: '/pets' },
-    { label: '发布宠物', path: '/publish' },
+    { label: '发布宠物', path: '/my-pets' },
     { label: '领养申请', path: '/my-applications' },
     { label: '申请管理', path: '/applications' },
   ];

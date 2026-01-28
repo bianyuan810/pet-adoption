@@ -15,9 +15,6 @@ interface PetDetail extends Pet {
     phone?: string;
     wechat?: string;
   };
-  health_status?: string;
-  vaccine_status?: boolean;
-  sterilized?: boolean;
 }
 
 export default function PetDetailPage() {

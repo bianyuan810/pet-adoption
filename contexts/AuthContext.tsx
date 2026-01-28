@@ -59,15 +59,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
 
-    if (!response.ok) {
+    if (!response.ok || !data.success) {
       throw new Error(data.error || '登录失败')
     }
 
-    setToken(data.token)
-    setUser(data.user)
+    setToken(data.data.token)
+    setUser(data.data.user)
 
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('user', JSON.stringify(data.user))
+    localStorage.setItem('token', data.data.token)
+    localStorage.setItem('user', JSON.stringify(data.data.user))
 
     // 使用 window.location.href 进行完全刷新，确保 cookie 被正确传递给 middleware
     window.location.href = '/'

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { z } from 'zod'
 import { useAuth } from '@/contexts/AuthContext'
+import { Eye, EyeOff } from 'lucide-react'
 
 const loginSchema = z.object({
   email: z.string().email('请输入有效的邮箱地址'),
@@ -26,6 +27,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   )
   const [isLoading, setIsLoading] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
 
   const validateField = (field: keyof LoginFormData, value: string) => {
     try {
@@ -111,16 +113,26 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
           密码 <span className="text-red-500">*</span>
         </label>
-        <input
-          type="password"
-          id="password"
-          value={formData.password}
-          onChange={(e) => handleChange('password', e.target.value)}
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-            errors.password ? 'border-red-500' : 'border-gray-300'
-          }`}
-          placeholder="请输入您的密码"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            value={formData.password}
+            onChange={(e) => handleChange('password', e.target.value)}
+            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+              errors.password ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="请输入您的密码"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label={showPassword ? '隐藏密码' : '显示密码'}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
         {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
       </div>
 

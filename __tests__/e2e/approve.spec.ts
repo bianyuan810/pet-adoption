@@ -125,7 +125,7 @@ test('审核申请流程测试', async ({ page }) => {
   // 等待跳转到首页
   await expect(page).toHaveURL('/');
   
-  // 6. 访问应用管理页面
+  // 6. 访问申请管理页面
   await page.goto('/applications');
   // 验证是否显示申请管理标题
   await expect(page.locator('h1')).toContainText('申请管理', { timeout: 10000 });

@@ -7,7 +7,13 @@ export async function GET(req: NextRequest) {
   try {
     const session = await auth(req);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '未授权访问'
+        }, 
+        { status: 401 }
+      );
     }
 
     const url = new URL(req.url);
@@ -33,13 +39,35 @@ export async function GET(req: NextRequest) {
 
     if (error) {
       console.error('获取申请列表失败:', error);
-      return NextResponse.json({ error: '获取申请列表失败' }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '获取申请列表失败'
+        }, 
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(
+      {
+        success: true,
+        data,
+        meta: {
+          total: data.length,
+          page: 1,
+          limit: data.length
+        }
+      }
+    );
   } catch (error) {
     console.error('服务器错误:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: '服务器错误'
+      }, 
+      { status: 500 }
+    );
   }
 }
 
@@ -50,14 +78,26 @@ export async function POST(req: NextRequest) {
     const session = await auth(req);
 
     if (!session?.user?.id) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '未授权访问'
+        }, 
+        { status: 401 }
+      );
     }
 
     const { petId, message } = await req.json();
 
     // 验证输入
     if (!petId) {
-      return NextResponse.json({ error: '宠物ID不能为空' }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '宠物ID不能为空'
+        }, 
+        { status: 400 }
+      );
     }
 
     // 获取宠物信息，验证宠物是否存在以及状态是否为可收养
@@ -67,15 +107,33 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (petError) {
-      return NextResponse.json({ error: '获取宠物信息失败' }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '获取宠物信息失败'
+        }, 
+        { status: 500 }
+      );
     }
 
     if (!pet) {
-      return NextResponse.json({ error: '宠物不存在' }, { status: 404 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '宠物不存在'
+        }, 
+        { status: 404 }
+      );
     }
 
     if (pet.status !== 'available') {
-      return NextResponse.json({ error: '该宠物已被收养或不可申请' }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '该宠物已被收养或不可申请'
+        }, 
+        { status: 400 }
+      );
     }
 
     // 检查是否已经申请过该宠物
@@ -86,11 +144,23 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (existingError && existingError.code !== 'PGRST116') { // PGRST116 表示未找到记录
-      return NextResponse.json({ error: '检查申请记录失败' }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '检查申请记录失败'
+        }, 
+        { status: 500 }
+      );
     }
 
     if (existingApplication) {
-      return NextResponse.json({ error: '您已经申请过该宠物' }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '您已经申请过该宠物'
+        }, 
+        { status: 400 }
+      );
     }
 
     // 创建申请
@@ -104,12 +174,33 @@ export async function POST(req: NextRequest) {
 
     if (createError) {
       console.error('创建申请失败:', createError);
-      return NextResponse.json({ error: '创建申请失败' }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: '创建申请失败'
+        }, 
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ data: newApplication, message: '申请提交成功' }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          application: newApplication,
+          message: '申请提交成功'
+        }
+      }, 
+      { status: 201 }
+    );
   } catch (error) {
     console.error('服务器错误:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: '服务器错误'
+      }, 
+      { status: 500 }
+    );
   }
 }

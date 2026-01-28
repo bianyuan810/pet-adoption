@@ -30,8 +30,9 @@ export interface Pet {
   description: string
   location: string
   health_status?: string
-  vaccine_status?: boolean
-  sterilized?: boolean
+  vaccine_status: boolean
+  dewormed: boolean
+  sterilized: boolean
   view_count: number
   created_at: string
   updated_at: string

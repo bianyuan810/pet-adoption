@@ -2,17 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { PawPrint, Mail, Lock, MessageCircle } from 'lucide-react';
+import { PawPrint, MessageCircle } from 'lucide-react';
+import LoginForm from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.push('/');
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-gray-100 dark:border-white/10 p-8 md:p-10">
@@ -24,40 +17,7 @@ export default function LoginPage() {
           <p className="text-gray-500 mt-2">继续寻找您的完美伙伴</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">电子邮箱</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-              <input 
-                type="email" 
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="example@mail.com"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center ml-1">
-              <label className="text-sm font-bold text-gray-700 dark:text-gray-300">密码</label>
-              <Link href="/change-password" title="重置密码" className="text-xs text-primary font-bold hover:underline">忘记密码？</Link>
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-              <input 
-                type="password" 
-                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="w-full bg-primary text-white h-12 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 hover:brightness-110 transition-all">
-            登录
-          </button>
-        </form>
+        <LoginForm />
 
         <div className="mt-8 text-center">
           <div className="flex items-center gap-4 mb-8">
