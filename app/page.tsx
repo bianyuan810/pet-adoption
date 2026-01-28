@@ -1,172 +1,147 @@
 'use client';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/Card';
-import { Carousel } from '@/components/ui/Carousel';
-import { Button } from '@/components/ui/Button';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Dog, Cat, Rabbit, Bird, MoreHorizontal, Grid, ArrowRight, MapPin } from 'lucide-react';
 
-// 轮播图数据
-const carouselItems = [
-  {
-    id: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1200&h=400&fit=crop',
-    title: '领养一只宠物，给它一个温暖的家',
-    description: '每一只流浪动物都值得被爱',
-    link: '/pets'
-  },
-  {
-    id: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1200&h=400&fit=crop',
-    title: '宠物是人类最好的朋友',
-    description: '选择领养，选择爱',
-    link: '/pets'
-  },
-  {
-    id: 3,
-    imageUrl: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1200&h=400&fit=crop',
-    title: '加入我们的领养计划',
-    description: '一起为流浪动物创造更美好的未来',
-    link: '/pets'
-  }
-];
+// 宠物类型定义
+interface Pet {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  gender: 'male' | 'female' | 'unknown';
+  location: string;
+  status: 'available' | 'adopted' | 'pending';
+  category?: string;
+}
 
-// 推荐宠物数据
-const recommendedPets = [
-  {
-    id: '660e8400-e29b-41d4-a716-446655440001',
-    name: '小白',
-    type: 'dog',
-    breed: '金毛',
-    age: 2,
-    gender: 'male',
-    imageUrl: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=800',
-    description: '性格温顺，喜欢与人互动'
-  },
-  
-  {
-    id: '660e8400-e29b-41d4-a716-446655440005',
-    name: '咪咪',
-    type: 'cat',
-    breed: '英短',
-    age: 1,
-    gender: 'female',
-    imageUrl: 'https://plus.unsplash.com/premium_photo-1675616553658-259d91ec4a16?w=800',
-    description: '活泼可爱，喜欢玩耍'
-  },
-  {
-    id: '660e8400-e29b-41d4-a716-446655440002',
-    name: '小黑',
-    type: 'dog',
-    breed: '拉布拉多',
-    age: 3,
-    gender: 'male',
-    imageUrl: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800',
-    description: '聪明伶俐，易于训练'
-  },
-  {
-    id: '660e8400-e29b-41d4-a716-446655440003',
-    name: '花花',
-    type: 'cat',
-    breed: '布偶',
-    age: 1,
-    gender: 'female',
-    imageUrl: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800',
-    description: '温柔可人，喜欢被抚摸'
-  }
-];
+interface PetWithPhotos extends Pet {
+  photos?: string[];
+}
+
+const CategoryCard: React.FC<{ icon: React.ReactNode; label: string }> = ({ icon, label }) => (
+  <button className="group flex flex-col items-center justify-center p-6 bg-white dark:bg-white/5 border border-[#e6dedb] dark:border-white/10 rounded-xl hover:border-primary hover:shadow-md transition-all">
+    <div className="text-4xl text-primary mb-2 group-hover:scale-110 transition-transform">{icon}</div>
+    <span className="font-bold text-zinc-900 dark:text-white">{label}</span>
+  </button>
+);
 
 export default function Home() {
+  const router = useRouter();
+  const [pets, setPets] = useState<PetWithPhotos[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecommendedPets = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/pets?sortBy=newest&limit=4');
+        const data = await response.json();
+        
+        if (data.pets) {
+          // 处理宠物数据，添加照片信息
+          const petsWithPhotos = data.pets.map((pet: any) => ({
+            ...pet,
+            photos: data.photos[pet.id]?.map((photo: any) => photo.photo_url) || [],
+            category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
+                     pet.breed.includes('猫') ? 'cat' : 'other'
+          }));
+          setPets(petsWithPhotos);
+        }
+      } catch (error) {
+        console.error('获取推荐宠物失败:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRecommendedPets();
+  }, []);
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* 轮播图 */}
-      <section className="w-full py-6">
-        <div className="container mx-auto px-4">
-          <Carousel items={carouselItems} />
-        </div>
-      </section>
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section */}
+        <section className="mb-12">
+          <div className="relative w-full h-[400px] md:h-[500px] rounded-xl overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-pet.jpg')" }}></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center px-12 text-white">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 max-w-lg">遇见你的新伙伴</h1>
+              <p className="text-lg mb-8 max-w-md opacity-90">通过简单且充满关怀的领养流程，为可爱的宠物找到永远的家。</p>
+              <button onClick={() => router.push('/pets')} className="w-fit px-8 py-4 bg-primary text-white font-bold rounded-xl text-lg hover:scale-105 transition-transform shadow-lg">寻找你的伙伴</button>
+            </div>
+          </div>
+        </section>
 
-      {/* 快速筛选入口 */}
-      <section className="w-full py-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">快速筛选</h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <Link href="/pets?type=dog" className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="text-3xl">🐕</span>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">狗狗</span>
-            </Link>
-            <Link href="/pets?type=cat" className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="text-3xl">🐱</span>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">猫咪</span>
-            </Link>
-            <Link href="/pets?type=rabbit" className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="text-3xl">🐰</span>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">兔子</span>
-            </Link>
-            <Link href="/pets?type=bird" className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="text-3xl">🐦</span>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">鸟类</span>
-            </Link>
-            <Link href="/pets?type=other" className="flex flex-col items-center gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-              <span className="text-3xl">🐹</span>
-              <span className="text-gray-700 dark:text-gray-300 font-medium">其他</span>
-            </Link>
-            <Link href="/pets" className="flex flex-col items-center gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-              <span className="text-3xl">🔍</span>
-              <span className="text-blue-700 dark:text-blue-400 font-medium">查看全部</span>
+        {/* Shortcuts */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 text-zinc-900 dark:text-white">快捷筛选</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            <CategoryCard icon={<Dog />} label="狗狗" />
+            <CategoryCard icon={<Cat />} label="猫咪" />
+            <CategoryCard icon={<Rabbit />} label="兔子" />
+            <CategoryCard icon={<Bird />} label="鸟类" />
+            <CategoryCard icon={<MoreHorizontal />} label="其他" />
+            <CategoryCard icon={<Grid />} label="查看全部" />
+          </div>
+        </section>
+
+        {/* Recommendations */}
+        <section className="mb-16">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">推荐宠物</h2>
+            <Link href="/pets" className="text-primary font-bold hover:underline flex items-center gap-1">
+              查看更多 <ArrowRight size={14} />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* 推荐宠物 */}
-      <section className="w-full py-12 bg-gray-50 dark:bg-gray-950">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">推荐宠物</h2>
-            <Link href="/pets" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">
-              查看全部 →
-            </Link>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {recommendedPets.map((pet) => (
-              <Card key={pet.id} className="overflow-hidden transition-all duration-300 hover:shadow-md">
-                <div className="relative h-48 overflow-hidden">
-                  <Image 
-                    src={pet.imageUrl} 
-                    alt={pet.name} 
-                    fill
-                    className="object-cover transition-transform duration-500 hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute top-2 right-2 bg-white text-gray-900 px-2 py-1 rounded-full text-xs font-medium">
-                    {pet.type === 'dog' ? '🐕 狗狗' : '🐱 猫咪'}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {isLoading ? (
+              // 加载状态
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm animate-pulse">
+                  <div className="relative h-[224px] w-full bg-gray-200 dark:bg-white/10"></div>
+                  <div className="p-4">
+                    <div className="h-4 bg-gray-200 dark:bg-white/10 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-1/2 mb-3"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-white/10 rounded w-1/4"></div>
                   </div>
                 </div>
-                <CardHeader className="p-4 pb-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{pet.name}</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{pet.age}岁</span>
+              ))
+            ) : pets.length > 0 ? (
+              pets.map((pet) => (
+                <Link key={pet.id} href={`/pets/${pet.id}`} className="group bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                  <div className="relative h-[224px] w-full">
+                    <img alt={pet.name} className="w-full h-full object-cover" src={pet.photos?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'} />
+                    <span className="absolute top-3 left-3 bg-white/90 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 text-zinc-800 dark:text-white">
+                      {pet.category === 'dog' ? '狗狗 🐕' : pet.category === 'cat' ? '猫咪 🐈' : '宠物'}
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{pet.breed}</p>
-                </CardHeader>
-                <CardContent className="p-4 pt-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{pet.description}</p>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <Link href={`/pets/${pet.id}`} className="w-full">
-                    <Button variant="primary" className="w-full">
-                      查看详情
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
+                  <div className="p-4">
+                    <div className="flex justify-between items-start mb-1">
+                      <h3 className="text-lg font-bold text-zinc-900 dark:text-white">{pet.name}</h3>
+                      <span className="flex items-center text-xs text-secondary font-bold">{pet.status === 'available' ? '待领养' : pet.status === 'adopted' ? '已领养' : '审核中'}</span>
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{pet.breed} • {pet.age}岁 • {pet.gender === 'male' ? '雄性' : pet.gender === 'female' ? '雌性' : '未知'}</p>
+                    <div className="flex justify-between items-center border-t border-[#e6dedb] dark:border-white/10 pt-4 mt-2">
+                      <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                        <MapPin size={14} />
+                        <span className="text-xs">{pet.location}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              // 无数据状态
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 dark:text-gray-400">暂无推荐宠物</p>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

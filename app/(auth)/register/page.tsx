@@ -1,77 +1,85 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
-
-// 动态导入RegisterForm组件，实现代码分割
-const RegisterForm = dynamic(() => import('@/components/auth/RegisterForm'), {
-  loading: () => (
-    <div className="flex justify-center items-center py-4">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-    </div>
-  ),
-  ssr: false
-})
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { UserPlus, User, Mail, Lock } from 'lucide-react';
 
 export default function RegisterPage() {
-  const [isSuccess, setIsSuccess] = useState(false)
+  const router = useRouter();
+
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push('/'); // 注册成功后跳转到首页
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">创建账户</h1>
-            <p className="text-gray-600">加入我们，开始您的宠物领养之旅</p>
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+      <div className="max-w-md w-full bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-gray-100 dark:border-white/10 p-8 md:p-10">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center size-16 bg-primary/10 rounded-2xl mb-4">
+            <UserPlus className="text-4xl text-primary" />
+          </div>
+          <h2 className="text-3xl font-black text-zinc-900 dark:text-white">创建账号</h2>
+          <p className="text-gray-500 mt-2">开启您的宠物领养之旅</p>
+        </div>
+
+        <form onSubmit={handleRegister} className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">全名</label>
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+              <input 
+                type="text" 
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="张三"
+                required
+              />
+            </div>
           </div>
 
-          {isSuccess ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                注册成功！
-              </h2>
-              <p className="text-gray-600 mb-6">
-                您的账户已创建成功，现在可以登录了
-              </p>
-              <Link
-                href="/login"
-                className="inline-block w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
-              >
-                前往登录
-              </Link>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">电子邮箱</label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+              <input 
+                type="email" 
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="example@mail.com"
+                required
+              />
             </div>
-          ) : (
-            <>
-              <RegisterForm onSuccess={() => setIsSuccess(true)} />
-              <p className="text-center mt-6 text-gray-600">
-                已有账户？{' '}
-                <Link
-                  href="/login"
-                  className="text-indigo-600 hover:text-indigo-700 font-medium"
-                >
-                  立即登录
-                </Link>
-              </p>
-            </>
-          )}
-        </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">设置密码</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
+              <input 
+                type="password" 
+                className="w-full bg-gray-50 dark:bg-white/5 border-none rounded-2xl h-12 pl-12 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="不少于 8 位字符"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 pt-2">
+            <input type="checkbox" className="mt-1 rounded text-primary focus:ring-primary" required />
+            <p className="text-xs text-gray-500 leading-relaxed">
+              我已阅读并同意 <button type="button" className="text-primary font-bold">服务协议</button> 与 <button type="button" className="text-primary font-bold">隐私政策</button>
+            </p>
+          </div>
+
+          <button type="submit" className="w-full bg-primary text-white h-12 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 hover:brightness-110 transition-all mt-4">
+            立即注册
+          </button>
+        </form>
+
+        <p className="mt-10 text-center text-sm text-gray-500">
+          已经有账号了？ <Link href="/login" className="text-primary font-bold hover:underline">点此登录</Link>
+        </p>
       </div>
     </div>
-  )
+  );
 }

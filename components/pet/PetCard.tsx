@@ -29,22 +29,22 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
   }
 
   return (
-    <Link href={`/pets/${pet.id}`}>
-      <div className="bg-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer group">
-        <div className="relative h-48 bg-muted">
+    <Link href={`/pets/${pet.id}`} className="block">
+      <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group h-full flex flex-col">
+        <div className="relative h-56 bg-muted overflow-hidden">
           {primaryPhoto ? (
             <Image
               src={primaryPhoto}
               alt={pet.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               <svg
-                className="w-16 h-16"
+                className="w-16 h-16 opacity-30"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -52,32 +52,35 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
             </div>
           )}
           <span
-            className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium ${statusColors[pet.status]}`}
+            className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold ${statusColors[pet.status]}`}
           >
             {statusLabels[pet.status]}
           </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-foreground mb-2">{pet.name}</h3>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-            <span>{pet.breed}</span>
+        <div className="p-5 flex-1 flex flex-col">
+          <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+            {pet.name}
+          </h3>
+          <div className="flex items-center gap-3 text-sm text-muted-foreground mb-3">
+            <span className="font-medium">{pet.breed}</span>
             <span>•</span>
             <span>{pet.age} 岁</span>
             <span>•</span>
             <span>{genderLabels[pet.gender]}</span>
           </div>
-          <p className="text-sm text-foreground/80 line-clamp-2 mb-3">
+          <p className="text-sm text-foreground/80 line-clamp-3 mb-4 flex-1">
             {pet.description}
           </p>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground flex items-center gap-1">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -99,7 +102,7 @@ export default function PetCard({ pet, primaryPhoto }: PetCardProps) {
               </svg>
               {pet.location}
             </span>
-            <span className="text-muted-foreground flex items-center gap-1">
+            <span className="flex items-center gap-2">
               <svg
                 className="w-4 h-4"
                 fill="none"

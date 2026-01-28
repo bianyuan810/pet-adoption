@@ -2,70 +2,131 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 24 12% 18%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 12% 18%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 12% 18%;
 
-  --primary: 18 93% 56%; /* Warm coral - FF6B35 */
-  --primary-foreground: 60 9.1% 97.8%;
+    --primary: 18 93% 56%; /* Warm coral - FF6B35 */
+    --primary-foreground: 60 9.1% 97.8%;
 
-  --secondary: 180 47% 45%; /* Soft teal - 4ECDC4 */
-  --secondary-foreground: 60 9.1% 97.8%;
+    --secondary: 180 47% 45%; /* Soft teal - 4ECDC4 */
+    --secondary-foreground: 60 9.1% 97.8%;
 
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
 
-  --accent: 45 100% 70%; /* Golden yellow - FFD166 */
-  --accent-foreground: 60 9.1% 97.8%;
+    --accent: 45 100% 70%; /* Golden yellow - FFD166 */
+    --accent-foreground: 24 12% 18%;
 
-  --destructive: 351 82% 65%; /* Gentle red - EF476F */
-  --destructive-foreground: 60 9.1% 97.8%;
+    --destructive: 351 82% 65%; /* Gentle red - EF476F */
+    --destructive-foreground: 60 9.1% 97.8%;
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 18 93% 56%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 18 93% 56%;
 
-  --radius: 0.5rem;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 24 12% 10%;
+    --foreground: 88 8% 92%;
+
+    --card: 24 12% 12%;
+    --card-foreground: 88 8% 92%;
+
+    --popover: 24 12% 12%;
+    --popover-foreground: 88 8% 92%;
+
+    --primary: 18 93% 65%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 180 47% 55%;
+    --secondary-foreground: 60 9.1% 97.8%;
+
+    --muted: 24 12% 18%;
+    --muted-foreground: 25 5.3% 65%;
+
+    --accent: 45 100% 75%;
+    --accent-foreground: 24 12% 18%;
+
+    --destructive: 351 82% 70%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 24 12% 20%;
+    --input: 24 12% 20%;
+    --ring: 18 93% 65%;
+  }
 }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 60 9.1% 97.8%;
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 60 9.1% 97.8%;
+  body {
+    @apply bg-background text-foreground min-h-screen font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 60 9.1% 97.8%;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
 
-  --primary: 18 93% 56%;
-  --primary-foreground: 60 9.1% 97.8%;
+  h1 {
+    @apply text-4xl md:text-5xl font-bold;
+  }
 
-  --secondary: 180 47% 45%;
-  --secondary-foreground: 60 9.1% 97.8%;
+  h2 {
+    @apply text-2xl md:text-3xl font-bold;
+  }
 
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-
-  --accent: 45 100% 70%;
-  --accent-foreground: 60 9.1% 97.8%;
-
-  --destructive: 351 82% 65%;
-  --destructive-foreground: 60 9.1% 97.8%;
-
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 18 93% 56%;
+  p {
+    @apply leading-relaxed;
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for interactive elements */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--border));
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted));
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
 
 // 自定义hook，安全地从localStorage获取数据
 function useLocalStorageState<T>(key: string, initialValue: T): [T, (value: T) => void] {
@@ -91,8 +92,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }
 
   return (
-    <div className="relative mb-8">
-      <div className="flex gap-2">
+    <div className="relative">
+      <div className="flex gap-3">
         <div className="flex-grow relative">
           <input
             type="text"
@@ -102,20 +103,20 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             onFocus={() => setShowHistory(true)}
             onBlur={() => setTimeout(() => setShowHistory(false), 200)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full px-5 py-3.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow"
           />
 
           {/* 搜索历史和热门推荐下拉框 */}
           {showHistory && (
-            <div className="absolute left-0 right-0 mt-2 bg-card rounded-lg shadow-lg border border-border z-10">
+            <div className="absolute left-0 right-0 mt-3 bg-card rounded-xl shadow-xl border border-border z-10 overflow-hidden">
               {/* 搜索历史 */}
               {searchHistory.length > 0 && (
-                <div className="p-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-sm font-medium text-foreground">搜索历史</h3>
+                <div className="p-4">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-sm font-semibold text-foreground">搜索历史</h3>
                     <button
                       onClick={clearHistory}
-                      className="text-xs text-muted-foreground hover:text-foreground"
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                       清除
                     </button>
@@ -125,7 +126,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                       <button
                         key={index}
                         onClick={() => handleHistoryClick(item)}
-                        className="px-3 py-1 text-sm bg-muted text-foreground rounded-full hover:bg-muted/80 transition-colors"
+                        className="px-3 py-1.5 text-sm bg-muted/50 text-foreground rounded-full hover:bg-muted/70 transition-colors font-medium"
                       >
                         {item}
                       </button>
@@ -135,14 +136,14 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
               )}
 
               {/* 热门搜索 */}
-              <div className="p-3 border-t border-border">
-                <h3 className="text-sm font-medium text-foreground mb-2">热门搜索</h3>
+              <div className={`p-4 ${searchHistory.length > 0 ? 'border-t border-border' : ''}`}>
+                <h3 className="text-sm font-semibold text-foreground mb-3">热门搜索</h3>
                 <div className="flex flex-wrap gap-2">
                   {hotSearches.map((item, index) => (
                     <button
                       key={index}
                       onClick={() => handleHotSearchClick(item)}
-                      className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors"
+                      className="px-3 py-1.5 text-sm bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-colors font-medium"
                     >
                       {item}
                     </button>
@@ -154,12 +155,9 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         </div>
 
         {/* 搜索按钮 */}
-        <button
-          onClick={handleSearch}
-          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-        >
+        <Button variant="primary" size="lg" onClick={handleSearch} className="font-semibold">
           搜索
-        </button>
+        </Button>
       </div>
     </div>
   )

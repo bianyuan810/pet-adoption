@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
 
 interface FilterBarProps {
   onFilterChange: (filters: FilterValues) => void
@@ -31,16 +32,29 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
     onFilterChange(newFilters)
   }
 
+  const clearFilters = () => {
+    setFilters({})
+    onFilterChange({})
+  }
+
   return (
-    <div className="bg-card rounded-xl shadow-sm p-4 mb-8 border border-border">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="bg-card rounded-2xl shadow-sm p-6 border border-border">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-foreground">筛选条件</h3>
+        {(filters.breed || filters.age || filters.gender || filters.location) && (
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground hover:text-destructive">
+            清除筛选
+          </Button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* 品种筛选 */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">品种</label>
+          <label className="block text-sm font-medium text-foreground mb-2">品种</label>
           <select
             value={filters.breed || '所有品种'}
             onChange={(e) => handleFilterChange('breed', e.target.value)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full px-4 py-2.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow"
           >
             {breedOptions.map((breed) => (
               <option key={breed} value={breed}>
@@ -52,11 +66,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 年龄筛选 */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">年龄</label>
+          <label className="block text-sm font-medium text-foreground mb-2">年龄</label>
           <select
             value={filters.age || '所有年龄'}
             onChange={(e) => handleFilterChange('age', e.target.value)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full px-4 py-2.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow"
           >
             {ageOptions.map((age) => (
               <option key={age} value={age}>
@@ -68,11 +82,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 性别筛选 */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">性别</label>
+          <label className="block text-sm font-medium text-foreground mb-2">性别</label>
           <select
             value={filters.gender || '所有性别'}
             onChange={(e) => handleFilterChange('gender', e.target.value as 'male' | 'female')}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full px-4 py-2.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow"
           >
             {genderOptions.map((gender) => (
               <option key={gender} value={gender === '公' ? 'male' : gender === '母' ? 'female' : '所有性别'}>
@@ -84,11 +98,11 @@ export default function FilterBar({ onFilterChange }: FilterBarProps) {
 
         {/* 地区筛选 */}
         <div>
-          <label className="block text-sm font-medium text-foreground mb-1">地区</label>
+          <label className="block text-sm font-medium text-foreground mb-2">地区</label>
           <select
             value={filters.location || '所有地区'}
             onChange={(e) => handleFilterChange('location', e.target.value)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full px-4 py-2.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow"
           >
             {locationOptions.map((location) => (
               <option key={location} value={location}>

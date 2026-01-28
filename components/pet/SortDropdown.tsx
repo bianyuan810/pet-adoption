@@ -14,12 +14,12 @@ export default function SortDropdown({ onSortChange, currentSort }: SortDropdown
   ]
 
   return (
-    <div className="flex items-center gap-2 mb-8">
-      <span className="text-muted-foreground text-sm">排序方式：</span>
+    <div className="flex items-center gap-3">
+      <span className="text-muted-foreground font-medium">排序方式：</span>
       <select
         value={currentSort}
         onChange={(e) => onSortChange(e.target.value)}
-        className="px-3 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-sm"
+        className="px-4 py-2.5 border border-input rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground shadow-sm hover:shadow-md transition-shadow min-w-[120px]"
       >
         {sortOptions.map(option => (
           <option key={option.value} value={option.value}>

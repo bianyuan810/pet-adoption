@@ -22,7 +22,7 @@ interface CardFooterProps {
 
 export function Card({ children, className = '' }: CardProps) {
   return (
-    <div className={`bg-card text-card-foreground rounded-xl shadow-sm border border-border hover:shadow-md transition-shadow duration-200 ${className}`}>
+    <div className={`bg-card text-card-foreground rounded-xl border border-border shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden ${className}`}>
       {children}
     </div>
   );
@@ -30,7 +30,7 @@ export function Card({ children, className = '' }: CardProps) {
 
 export function CardHeader({ children, className = '' }: CardHeaderProps) {
   return (
-    <div className={`p-4 border-b border-border ${className}`}>
+    <div className={`p-6 pb-4 border-b border-border ${className}`}>
       {children}
     </div>
   );
@@ -38,7 +38,7 @@ export function CardHeader({ children, className = '' }: CardHeaderProps) {
 
 export function CardContent({ children, className = '' }: CardContentProps) {
   return (
-    <div className={`p-4 ${className}`}>
+    <div className={`p-6 pt-2 ${className}`}>
       {children}
     </div>
   );
@@ -46,7 +46,7 @@ export function CardContent({ children, className = '' }: CardContentProps) {
 
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
-    <div className={`p-4 border-t border-border ${className}`}>
+    <div className={`p-6 pt-4 border-t border-border bg-muted/10 ${className}`}>
       {children}
     </div>
   );

@@ -78,86 +78,86 @@ const recommendedPets = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 轮播图 */}
-      <section className="w-full py-6">
+      {/* Hero Section */}
+      <section className="w-full py-8">
         <div className="container mx-auto px-4">
           <Carousel items={carouselItems} />
         </div>
       </section>
 
-      {/* 快速筛选入口 */}
-      <section className="w-full py-8 bg-background">
+      {/* Quick Filter Section */}
+      <section className="w-full py-12 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-foreground mb-8 text-center">快速筛选</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-10 text-center">快速筛选</h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <Link href="/pets?type=dog" className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">🐕</span>
-              <span className="text-foreground font-medium">狗狗</span>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <Link href="/pets?type=dog" className="flex flex-col items-center gap-4 p-6 bg-muted/20 rounded-2xl hover:bg-muted/40 transition-all duration-300 group border border-transparent hover:border-primary/30">
+              <span className="text-4xl group-hover:scale-110 transition-transform duration-300">🐕</span>
+              <span className="text-foreground font-semibold text-lg">狗狗</span>
             </Link>
-            <Link href="/pets?type=cat" className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">🐱</span>
-              <span className="text-foreground font-medium">猫咪</span>
+            <Link href="/pets?type=cat" className="flex flex-col items-center gap-4 p-6 bg-muted/20 rounded-2xl hover:bg-muted/40 transition-all duration-300 group border border-transparent hover:border-primary/30">
+              <span className="text-4xl group-hover:scale-110 transition-transform duration-300">🐱</span>
+              <span className="text-foreground font-semibold text-lg">猫咪</span>
             </Link>
-            <Link href="/pets?type=rabbit" className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">🐰</span>
-              <span className="text-foreground font-medium">兔子</span>
+            <Link href="/pets?type=rabbit" className="flex flex-col items-center gap-4 p-6 bg-muted/20 rounded-2xl hover:bg-muted/40 transition-all duration-300 group border border-transparent hover:border-primary/30">
+              <span className="text-4xl group-hover:scale-110 transition-transform duration-300">🐰</span>
+              <span className="text-foreground font-semibold text-lg">兔子</span>
             </Link>
-            <Link href="/pets?type=bird" className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">🐦</span>
-              <span className="text-foreground font-medium">鸟类</span>
+            <Link href="/pets?type=bird" className="flex flex-col items-center gap-4 p-6 bg-muted/20 rounded-2xl hover:bg-muted/40 transition-all duration-300 group border border-transparent hover:border-primary/30">
+              <span className="text-4xl group-hover:scale-110 transition-transform duration-300">🐦</span>
+              <span className="text-foreground font-semibold text-lg">鸟类</span>
             </Link>
-            <Link href="/pets?type=other" className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-xl hover:bg-muted/50 transition-colors group">
-              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">🐹</span>
-              <span className="text-foreground font-medium">其他</span>
+            <Link href="/pets?type=other" className="flex flex-col items-center gap-4 p-6 bg-muted/20 rounded-2xl hover:bg-muted/40 transition-all duration-300 group border border-transparent hover:border-primary/30">
+              <span className="text-4xl group-hover:scale-110 transition-transform duration-300">🐹</span>
+              <span className="text-foreground font-semibold text-lg">其他</span>
             </Link>
-            <Link href="/pets" className="flex flex-col items-center gap-3 p-4 bg-primary/10 rounded-xl hover:bg-primary/20 transition-colors group">
-              <span className="text-3xl text-primary group-hover:scale-110 transition-transform duration-200">🔍</span>
-              <span className="text-primary font-medium">查看全部</span>
+            <Link href="/pets" className="flex flex-col items-center gap-4 p-6 bg-primary/10 rounded-2xl hover:bg-primary/20 transition-all duration-300 group border border-transparent hover:border-primary/50">
+              <span className="text-4xl text-primary group-hover:scale-110 transition-transform duration-300">🔍</span>
+              <span className="text-primary font-semibold text-lg">查看全部</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 推荐宠物 */}
-      <section className="w-full py-12 bg-muted/20">
+      {/* Featured Pets Section */}
+      <section className="w-full py-16 bg-muted/10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-foreground">推荐宠物</h2>
-            <Link href="/pets" className="text-primary hover:text-primary/80 hover:underline font-medium transition-colors">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-3xl font-bold text-foreground">推荐宠物</h2>
+            <Link href="/pets" className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors flex items-center gap-2">
               查看全部 →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {recommendedPets.map((pet) => (
-              <Card key={pet.id} className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-                <div className="relative h-48 overflow-hidden">
+              <Card key={pet.id} className="overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-2 h-full flex flex-col">
+                <div className="relative h-64 overflow-hidden">
                   <Image
                     src={pet.imageUrl}
                     alt={pet.name}
                     fill
-                    className="object-cover transition-transform duration-500 hover:scale-105"
+                    className="object-cover transition-transform duration-700 hover:scale-110"
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   />
-                  <div className="absolute top-3 right-3 bg-white text-foreground px-3 py-1.5 rounded-full text-xs font-medium shadow-sm">
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-foreground px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                     {pet.type === 'dog' ? '🐕 狗狗' : '🐱 猫咪'}
                   </div>
                 </div>
-                <CardHeader className="p-4 pb-0">
+                <CardHeader className="p-6 pb-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">{pet.name}</h3>
-                    <span className="text-sm text-muted-foreground">{pet.age}岁</span>
+                    <h3 className="text-xl font-bold text-foreground">{pet.name}</h3>
+                    <span className="text-sm text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">{pet.age}岁</span>
                   </div>
                   <p className="text-sm text-muted-foreground">{pet.breed}</p>
                 </CardHeader>
-                <CardContent className="p-4 pt-2">
-                  <p className="text-sm text-foreground/80 line-clamp-2">{pet.description}</p>
+                <CardContent className="p-6 pt-2 flex-1">
+                  <p className="text-sm text-foreground/80 line-clamp-3">{pet.description}</p>
                 </CardContent>
-                <CardFooter className="p-4 pt-0">
+                <CardFooter className="p-6 pt-2">
                   <Link href={`/pets/${pet.id}`} className="w-full">
-                    <Button variant="primary" className="w-full">
+                    <Button variant="primary" className="w-full font-semibold">
                       查看详情
                     </Button>
                   </Link>
