@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import type { ApiResponse } from '@/types/api';
+import { HttpStatus } from '@/types/api';
 
 // 获取所有申请（根据用户角色返回不同数据）
 export async function GET(req: NextRequest) {
   try {
     const session = await auth(req);
     if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '未授权访问'
-        }, 
-        { status: 401 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const url = new URL(req.url);
@@ -48,26 +48,24 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data,
-        meta: {
-          total: data.length,
-          page: 1,
-          limit: data.length
-        }
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '获取申请列表成功',
+      data,
+      meta: {
+        total: data.length,
+        page: 1,
+        limit: data.length
       }
-    );
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('服务器错误:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: '服务器错误'
-      }, 
-      { status: 500 }
-    );
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 

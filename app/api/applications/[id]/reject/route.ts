@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import type { ApiResponse } from '@/types/api';
+import { HttpStatus } from '@/types/api';
 
 // 拒绝收养申请
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth(req);
     if (!session?.user?.id) {
-      return NextResponse.json({ error: '未授权访问' }, { status: 401 });
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     // 在 Next.js 16 中，params 是一个 Promise，需要使用 await 获取实际参数
@@ -21,21 +27,37 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       .single();
 
     if (getAppError) {
-      return NextResponse.json({ error: '获取申请信息失败' }, { status: 500 });
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '获取申请信息失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     if (!application) {
-      return NextResponse.json({ error: '申请不存在' }, { status: 404 });
+      const response: ApiResponse = {
+        code: HttpStatus.NOT_FOUND,
+        msg: '申请不存在'
+      };
+      return NextResponse.json(response, { status: HttpStatus.NOT_FOUND });
     }
 
     // 验证是否为发布者
     if (application.publisher_id !== session.user.id) {
-      return NextResponse.json({ error: '无权操作此申请' }, { status: 403 });
+      const response: ApiResponse = {
+        code: HttpStatus.FORBIDDEN,
+        msg: '无权操作此申请'
+      };
+      return NextResponse.json(response, { status: HttpStatus.FORBIDDEN });
     }
 
     // 验证申请状态
     if (application.status !== 'pending') {
-      return NextResponse.json({ error: '申请已处理' }, { status: 400 });
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '申请已处理'
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     // 2. 更新申请状态为已拒绝
@@ -46,12 +68,24 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     if (updateError) {
       console.error('拒绝申请失败:', updateError);
-      return NextResponse.json({ error: '拒绝申请失败' }, { status: 500 });
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '拒绝申请失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
-    return NextResponse.json({ message: '申请已拒绝' });
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '申请已拒绝'
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('服务器错误:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

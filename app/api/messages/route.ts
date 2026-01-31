@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { verifyToken } from '@/lib/auth'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 // 获取用户消息列表
 export async function GET(request: NextRequest) {
@@ -8,19 +10,21 @@ export async function GET(request: NextRequest) {
     const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const payload = verifyToken(token)
 
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Token 无效或已过期' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { searchParams } = new URL(request.url)
@@ -58,16 +62,19 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      { messages },
-      { status: 200 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '获取消息列表成功',
+      data: messages
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('获取消息接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -77,29 +84,32 @@ export async function POST(request: NextRequest) {
     const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const payload = verifyToken(token)
 
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Token 无效或已过期' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const body = await request.json()
     const { receiver_id, content, pet_id } = body
 
     if (!receiver_id || !content) {
-      return NextResponse.json(
-        { error: '接收者ID和消息内容不能为空' },
-        { status: 400 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '接收者ID和消息内容不能为空'
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     const { data: message, error: insertError } = await supabase
@@ -126,18 +136,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      {
-        message: '发送成功',
-        data: message
-      },
-      { status: 201 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.CREATED,
+      msg: '发送成功',
+      data: message
+    };
+    return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
     console.error('发送消息接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { verifyToken } from '@/lib/auth'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 export async function GET(
   request: NextRequest,
@@ -31,17 +33,20 @@ export async function GET(
       .single()
 
     if (petError || !pet) {
-      return NextResponse.json(
-        { error: '宠物不存在' },
-        { status: 404 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.NOT_FOUND,
+        msg: '宠物不存在'
+      };
+      return NextResponse.json(response, { status: HttpStatus.NOT_FOUND });
     }
 
     // 直接提取照片，不使用解构
     const photos = (pet.pet_photos || []).map((p: { photo_url: string }) => p.photo_url)
 
-    return NextResponse.json(
-      {
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '获取宠物详情成功',
+      data: {
         pet: {
           ...pet,
           // 移除 pet_photos 字段，不使用额外变量
@@ -49,15 +54,16 @@ export async function GET(
         },
         photos,
         publisher: pet.publisher,
-      },
-      { status: 200 }
-    )
+      }
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('获取宠物详情接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -71,19 +77,21 @@ export async function DELETE(
     const { id } = await params
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const payload = verifyToken(token)
 
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Token 无效或已过期' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { data: pet, error: petError } = await supabase
@@ -93,17 +101,19 @@ export async function DELETE(
       .single()
 
     if (petError || !pet) {
-      return NextResponse.json(
-        { error: '宠物不存在' },
-        { status: 404 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.NOT_FOUND,
+        msg: '宠物不存在'
+      };
+      return NextResponse.json(response, { status: HttpStatus.NOT_FOUND });
     }
 
     if (pet.publisher_id !== payload.userId) {
-      return NextResponse.json(
-        { error: '无权删除此宠物' },
-        { status: 403 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.FORBIDDEN,
+        msg: '无权删除此宠物'
+      };
+      return NextResponse.json(response, { status: HttpStatus.FORBIDDEN });
     }
 
     const { error: deleteError } = await supabase
@@ -119,16 +129,18 @@ export async function DELETE(
       )
     }
 
-    return NextResponse.json(
-      { message: '删除成功' },
-      { status: 200 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '删除成功'
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('删除宠物接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -142,19 +154,21 @@ export async function PUT(
     const { id } = await params
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const payload = verifyToken(token)
 
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Token 无效或已过期' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { data: existingPet, error: fetchError } = await supabase
@@ -164,17 +178,19 @@ export async function PUT(
       .single()
 
     if (fetchError || !existingPet) {
-      return NextResponse.json(
-        { error: '宠物不存在' },
-        { status: 404 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.NOT_FOUND,
+        msg: '宠物不存在'
+      };
+      return NextResponse.json(response, { status: HttpStatus.NOT_FOUND });
     }
 
     if (existingPet.publisher_id !== payload.userId) {
-      return NextResponse.json(
-        { error: '无权编辑此宠物' },
-        { status: 403 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.FORBIDDEN,
+        msg: '无权编辑此宠物'
+      };
+      return NextResponse.json(response, { status: HttpStatus.FORBIDDEN });
     }
 
     const formData = await request.formData()
@@ -216,18 +232,20 @@ export async function PUT(
       )
     }
 
-    return NextResponse.json(
-      {
-        message: '更新成功',
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '更新成功',
+      data: {
         pet: { id: pet.id, name: pet.name, breed: pet.breed },
-      },
-      { status: 200 }
-    )
+      }
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('更新宠物接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

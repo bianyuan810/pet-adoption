@@ -1,31 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { verifyToken } from '@/lib/auth'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 export async function POST(request: NextRequest) {
   try {
     const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
 
     if (!token) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '未授权访问'
-        },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const payload = verifyToken(token)
 
     if (!payload) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Token 无效或已过期'
-        },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const formData = await request.formData()
@@ -105,25 +103,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: {
-          pet: { id: pet.id, name: pet.name, breed: pet.breed },
-          message: '发布成功'
-        }
-      },
-      { status: 201 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.CREATED,
+      msg: '发布成功',
+      data: {
+        pet: { id: pet.id, name: pet.name, breed: pet.breed },
+        message: '发布成功'
+      }
+    };
+    return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
     console.error('发布宠物接口错误:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: '服务器错误，请稍后重试'
-      },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
 
@@ -332,26 +327,23 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: pets,
-        meta: {
-          total: pets.length,
-          page: 1,
-          limit: pets.length
-        }
-      },
-      { status: 200 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.OK,
+      msg: '获取宠物列表成功',
+      data: pets,
+      meta: {
+        total: pets.length,
+        page: 1,
+        limit: pets.length
+      }
+    };
+    return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
     console.error('获取宠物列表接口错误:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: '服务器错误，请稍后重试'
-      },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

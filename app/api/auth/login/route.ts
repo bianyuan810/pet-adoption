@@ -3,6 +3,8 @@ import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabase } from '@/lib/supabase'
 import { generateToken } from '@/lib/auth'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 
 const loginSchema = z.object({
@@ -17,14 +19,12 @@ export async function POST(request: NextRequest) {
     const validationResult = loginSchema.safeParse(body)
 
     if (!validationResult.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '请求数据格式错误',
-          data: { details: validationResult.error.issues }
-        },
-        { status: 400 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '请求数据格式错误',
+        data: { details: validationResult.error.issues }
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     const { email, password } = validationResult.data
@@ -37,35 +37,29 @@ export async function POST(request: NextRequest) {
 
     if (fetchError) {
       console.error('查询用户时出错:', fetchError)
-      return NextResponse.json(
-        {
-          success: false,
-          error: '邮箱或密码错误'
-        },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '邮箱或密码错误'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '邮箱或密码错误'
-        },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '邮箱或密码错误'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '邮箱或密码错误'
-        },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '邮箱或密码错误'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const token = generateToken({
@@ -80,14 +74,15 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json(
       {
-        success: true,
+        code: HttpStatus.OK,
+        msg: '登录成功',
         data: {
           token,
           user: userWithoutPassword,
           message: '登录成功'
         }
       },
-      { status: 200 }
+      { status: HttpStatus.OK }
     )
 
     response.cookies.set('token', token, {

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabase } from '@/lib/supabase'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 const registerSchema = z.object({
   name: z.string().min(2).max(50),
@@ -18,10 +20,12 @@ export async function POST(request: NextRequest) {
     const validationResult = registerSchema.safeParse(body)
 
     if (!validationResult.success) {
-      return NextResponse.json(
-        { error: '请求数据格式错误', details: validationResult.error.issues },
-        { status: 400 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '请求数据格式错误',
+        data: { details: validationResult.error.issues }
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     const { name, email, password, phone, wechat } = validationResult.data
@@ -34,17 +38,19 @@ export async function POST(request: NextRequest) {
 
     if (checkError && checkError.code !== 'PGRST116') {
       console.error('检查用户时出错:', checkError)
-      return NextResponse.json(
-        { error: '服务器错误，请稍后重试' },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '服务器错误，请稍后重试'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: '该邮箱已被注册' },
-        { status: 409 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.CONFLICT,
+        msg: '该邮箱已被注册'
+      };
+      return NextResponse.json(response, { status: HttpStatus.CONFLICT });
     }
 
     const saltRounds = 10
@@ -71,9 +77,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(
-      {
-        message: '注册成功',
+    const response: ApiResponse = {
+      code: HttpStatus.CREATED,
+      msg: '注册成功',
+      data: {
         user: {
           id: newUser.id,
           email: newUser.email,
@@ -81,13 +88,14 @@ export async function POST(request: NextRequest) {
           role: newUser.role,
         },
       },
-      { status: 201 }
-    )
+    };
+    return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
     console.error('注册接口错误:', error)
-    return NextResponse.json(
-      { error: '服务器错误，请稍后重试' },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }
