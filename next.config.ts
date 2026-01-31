@@ -18,6 +18,33 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // 添加跨域配置，允许 127.0.0.1 访问
+  async headers() {
+    return [
+      {
+        // 应用于所有路由
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: 'http://127.0.0.1:3000',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization',
+          },
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

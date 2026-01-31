@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, X, Clock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // 申请数据类型定义
 interface Application {
@@ -21,6 +22,7 @@ interface Application {
 
 export default function ApplicationsPage() {
   const router = useRouter();
+  const { user, token, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -28,37 +30,70 @@ export default function ApplicationsPage() {
   // 获取申请列表数据
   const fetchApplications = async () => {
     try {
+      console.log('开始获取申请数据...');
+      console.log('认证状态:', { isAuthenticated, token, user });
+      
+      // 检查认证状态
+      if (!isAuthenticated || !token) {
+        console.log('未登录，跳转到登录页面');
+        setError('请先登录');
+        setApplications([]);
+        setIsLoading(false);
+        // 跳转到登录页面
+        router.push('/login?redirect=/applications');
+        return;
+      }
+
       setIsLoading(true);
       setError('');
       
       // 调用申请列表 API
-      const response = await fetch('/api/applications?&isPublisher=true');
+      console.log('准备调用 API...');
+      const response = await fetch('/api/applications?&isPublisher=true', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log('API 响应状态:', response.status);
+      console.log('API 响应头:', Object.fromEntries(response.headers.entries()));
       
       if (!response.ok) {
-        throw new Error('获取申请列表失败');
+        const errorText = await response.text();
+        console.error('API 响应错误:', errorText);
+        throw new Error(`获取申请列表失败: ${response.status} ${errorText}`);
       }
       
       const data = await response.json();
+      console.log('API 响应数据:', data);
       
       if (!data.success) {
         throw new Error(data.error || '获取申请列表失败');
       }
       
       // 转换申请数据格式以匹配前端期望的结构
-      const formattedApplications = data.data.map((app: any) => ({
-        id: app.id,
-        petId: app.pet_id,
-        petName: app.pet?.name || '未知宠物',
-        petImage: app.pet?.photos?.[0] || '/images/用户未上传.png',
-        applicantName: app.applicant?.name || '未知申请人',
-        applicantEmail: app.applicant?.email || '未知邮箱',
-        submitDate: app.created_at,
-        status: app.status.toUpperCase() as 'PENDING' | 'APPROVED' | 'REJECTED',
-        reason: app.message || '',
-        experience: '',
-        environment: ''
-      }));
+      let formattedApplications = [];
       
+      // 确保 data.data 是一个数组
+      if (Array.isArray(data.data)) {
+        formattedApplications = data.data.map((app: any) => ({
+          id: app.id,
+          petId: app.pet_id,
+          petName: app.pet?.name || '未知宠物',
+          petImage: app.pet?.photos?.[0] || '/images/用户未上传.png',
+          applicantName: app.applicant?.name || '未知申请人',
+          applicantEmail: app.applicant?.email || '未知邮箱',
+          submitDate: app.created_at,
+          status: app.status.toUpperCase() as 'PENDING' | 'APPROVED' | 'REJECTED',
+          reason: app.message || '',
+          experience: '',
+          environment: ''
+        }));
+      }
+      
+      console.log('格式化后的申请数据:', formattedApplications);
+      console.log('当前登录用户:', user);
       setApplications(formattedApplications);
     } catch (err) {
       console.error('获取申请列表错误:', err);
@@ -70,10 +105,10 @@ export default function ApplicationsPage() {
     }
   };
 
-  // 组件挂载时获取数据
+  // 组件挂载时获取数据，认证状态变化时重新获取
   useEffect(() => {
     fetchApplications();
-  }, []);
+  }, [isAuthenticated, token]);
 
   // 格式化日期
   const formatDate = (dateString: string) => {

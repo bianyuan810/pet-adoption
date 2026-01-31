@@ -135,23 +135,20 @@ app/api/
 ```
 
 #### 3.2 API 响应格式
+定义响应接口
 ```typescript
-// 成功响应
-{
-  success: true,
-  data: { /* 数据 */ },
-  message: "操作成功"
-}
-
-// 错误响应
-{
-  success: false,
-  error: {
-    code: "ERROR_CODE",
-    message: "错误信息"
+  interface ApiResponse<T> {
+  code: number
+  msg: string
+  data?: T
+  meta?: {
+    total: number
+    page: number
+    limit: number
   }
 }
 ```
+
 
 #### 3.3 HTTP 方法使用
 - GET：获取资源

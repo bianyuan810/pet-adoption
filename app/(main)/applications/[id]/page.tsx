@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Calendar, ArrowLeft, PawPrint, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // 定义Application接口
 interface Application {
@@ -33,14 +34,21 @@ interface Application {
   environment?: string;
 }
 
-// 申请详情页面（管理员视角）
+// 申请详情页面
 export default function ApplicationDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useAuth();
   const [application, setApplication] = useState<Application | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // 检查当前用户是否是宠物发布者
+  const isPublisher = () => {
+    if (!user || !application) return false;
+    return user.id === application.publisher_id;
+  };
 
   // 获取申请详情
   useEffect(() => {
@@ -279,7 +287,8 @@ export default function ApplicationDetailPage() {
         </div>
       </main>
 
-      {application.status === 'pending' && (
+      {/* 只有当当前用户是发布者且申请状态为待审核时，才显示底部操作栏 */}
+      {application.status === 'pending' && isPublisher() && (
         <footer className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-gray-100 dark:border-white/10 p-6 flex justify-center z-[60]">
           <div className="w-full max-w-7xl flex items-center justify-between">
             <div className="hidden sm:flex flex-col">

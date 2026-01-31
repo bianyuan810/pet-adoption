@@ -10,6 +10,8 @@ test('用户登录流程测试', async ({ page }) => {
   await page.fill('#email', randomEmail);
   await page.fill('#password', 'Test123!');
   await page.fill('#confirmPassword', 'Test123!');
+  // 勾选同意协议
+  await page.check('input[type="checkbox"]');
   await page.click('button[type="submit"]');
   
   // 验证注册成功后显示成功消息
@@ -18,11 +20,8 @@ test('用户登录流程测试', async ({ page }) => {
   // 点击前往登录按钮
   await page.click('a:has-text("前往登录")');
   
-  // 访问登录页面
-  await page.goto('/login');
-  
-  // 验证页面内容
-  await expect(page.locator('h1')).toContainText('欢迎回来');
+  // 验证登录页面内容
+  await expect(page.locator('h2')).toContainText('欢迎回来');
   
   // 填写登录表单
   await page.fill('#email', randomEmail);

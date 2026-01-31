@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // 定义宠物类型
 type FilterStatus = 'all' | 'available' | 'adopted' | 'processing';
@@ -24,6 +25,7 @@ interface Pet {
 // 我发布的宠物列表页面
 export default function MyPetsPage() {
   const router = useRouter();
+  const { user, token, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [pets, setPets] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,70 +35,69 @@ export default function MyPetsPage() {
   useEffect(() => {
     const fetchMyPets = async () => {
       try {
+        console.log('开始获取宠物数据...');
+        console.log('认证状态:', { isAuthenticated, token, user });
+        
+        // 检查认证状态
+        if (!isAuthenticated || !token) {
+          console.log('未登录，跳转到登录页面');
+          setError('请先登录');
+          setPets([]);
+          setIsLoading(false);
+          // 跳转到登录页面
+          router.push('/login?redirect=/my-pets');
+          return;
+        }
+
         setIsLoading(true);
         setError(null);
         
-        // 这里应该调用 API 获取当前用户发布的宠物
-        // 暂时使用模拟数据
-        const mockPets: Pet[] = [
-          {
-            id: '1',
-            name: '小白',
-            breed: '金毛寻回犬',
-            age: 2,
-            gender: 'male',
-            location: '北京',
-            status: 'available',
-            photos: ['/images/用户未上传.png'],
-            views: 1240,
-            publishDate: '2024-01-20',
-            applicationsCount: 5
-          },
-          {
-            id: '2',
-            name: '小黑',
-            breed: '中华田园犬',
-            age: 1,
-            gender: 'male',
-            location: '上海',
-            status: 'adopted',
-            photos: ['/images/用户未上传.png'],
-            views: 890,
-            publishDate: '2024-01-18',
-            applicationsCount: 3
-          },
-          {
-            id: '3',
-            name: '咪咪',
-            breed: '英短蓝猫',
-            age: 1,
-            gender: 'female',
-            location: '广州',
-            status: 'available',
-            photos: ['/images/用户未上传.png'],
-            views: 2100,
-            publishDate: '2024-01-15',
-            applicationsCount: 8
-          },
-          {
-            id: '4',
-            name: '花花',
-            breed: '布偶猫',
-            age: 2,
-            gender: 'female',
-            location: '深圳',
-            status: 'pending',
-            photos: ['/images/用户未上传.png'],
-            views: 560,
-            publishDate: '2024-01-10',
-            applicationsCount: 2
+        // 调用 API 获取当前用户发布的宠物
+        console.log('准备调用 API...');
+        const response = await fetch('/api/pets?&isPublisher=true', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
-        ];
-
-        // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        setPets(mockPets);
+        });
+        
+        console.log('API 响应状态:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API 响应错误:', errorText);
+          throw new Error(`获取宠物数据失败: ${response.status} ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log('API 响应数据:', data);
+        
+        if (!data.success) {
+          throw new Error(data.error || '获取宠物数据失败');
+        }
+        
+        // 转换 API 返回的数据格式以匹配前端期望的结构
+        let formattedPets: Pet[] = [];
+        
+        // 确保 data.data 是一个数组
+        if (Array.isArray(data.data)) {
+          formattedPets = data.data.map((pet: any) => ({
+            id: pet.id,
+            name: pet.name,
+            breed: pet.breed,
+            age: pet.age,
+            gender: pet.gender,
+            location: pet.location,
+            status: pet.status,
+            photos: pet.photos || ['/images/用户未上传.png'],
+            views: pet.view_count || 0,
+            publishDate: pet.created_at,
+            applicationsCount: pet.applications_count || 0
+          }));
+        }
+        
+        console.log('格式化后的宠物数据:', formattedPets);
+        setPets(formattedPets);
       } catch (err) {
         setError('获取数据失败，请稍后重试');
         console.error('获取宠物数据失败:', err);
@@ -106,7 +107,7 @@ export default function MyPetsPage() {
     };
 
     fetchMyPets();
-  }, []);
+  }, [isAuthenticated, token, router]);
 
   // 过滤宠物
   const filteredPets = pets.filter(pet => {

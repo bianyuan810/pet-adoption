@@ -83,15 +83,16 @@ export default function PetsPage() {
       const response = await fetch(`/api/pets?${queryParams.toString()}`);
       const data = await response.json();
       
-      if (data.success && data.data && data.data.pets) {
-        // 处理宠物数据，添加照片信息
-        const petsWithPhotos = data.data.pets.map((pet: any) => ({
+      console.log('API 响应数据:', data);
+      
+      if (data.success && data.data) {
+        // 处理宠物数据，添加分类信息
+        const petsWithCategory = data.data.map((pet: any) => ({
           ...pet,
-          photos: data.data.photos && data.data.photos[pet.id] ? data.data.photos[pet.id].map((photo: any) => photo.photo_url) : [],
           category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
                    pet.breed.includes('猫') ? 'cat' : 'other'
         }));
-        setPets(petsWithPhotos);
+        setPets(petsWithCategory);
       }
     } catch (error) {
       console.error('获取宠物列表失败:', error);

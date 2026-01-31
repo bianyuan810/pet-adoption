@@ -129,23 +129,44 @@ export async function POST(request: NextRequest) {
 
 
 
-// 设置API路由缓存配置
-export const revalidate = 3600 // 缓存1小时
-export const fetchCache = 'force-cache' // 使用强制缓存
+// 设置API路由缓存配置 - 禁用缓存以确保数据实时性
+export const revalidate = 0 // 禁用缓存
+export const fetchCache = 'force-no-store' // 强制不存储缓存
 
 // 获取宠物列表，支持筛选
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    // 验证用户认证（可选，仅用于发布者视角）
+    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
+    let payload = null
     
+    if (token) {
+      payload = verifyToken(token)
+    }
+
+    // 即使没有token也允许访问，因为宠物列表是公开的
+
+    const { searchParams } = new URL(request.url)
     
     // 获取筛选参数、搜索关键词和排序方式
     const keyword = searchParams.get('keyword')
     const breed = searchParams.get('breed')
     const age = searchParams.get('age')
-    const gender = searchParams.get('gender') as 'male' | 'female' | undefined
+    const genderParam = searchParams.get('gender')
     const location = searchParams.get('location')
     const sortBy = searchParams.get('sortBy')
+    const isPublisher = searchParams.get('isPublisher') === 'true'
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit') || '0') : 0
+
+    // 映射中文性别到英文
+    const genderMap: Record<string, 'male' | 'female' | 'unknown'> = {
+      '公': 'male',
+      '母': 'female',
+      '未知': 'unknown'
+    }
+
+    // 处理性别参数
+    const gender = genderParam && genderMap[genderParam] ? genderMap[genderParam] : undefined
 
     // 构建查询 - 先获取宠物数据（不带照片），确保排序和去重正确
     let query = supabase
@@ -154,6 +175,11 @@ export async function GET(request: NextRequest) {
         id, name, breed, age, gender, location, status, created_at, view_count
       `)
     //  .eq('status', 'available') // 只返回可领养状态的宠物
+
+    // 如果是发布者视角，只返回当前用户发布的宠物
+    if (isPublisher && payload) {
+      query = query.eq('publisher_id', payload.userId);
+    }
 
     // 设置排序方式
     if (sortBy === 'newest') {
@@ -171,6 +197,11 @@ export async function GET(request: NextRequest) {
     } else {
       // 默认按创建时间倒序
       query = query.order('created_at', { ascending: false })
+    }
+
+    // 添加限制数量
+    if (limit > 0) {
+      query = query.limit(limit)
     }
 
     // 添加关键词搜索
@@ -250,15 +281,25 @@ export async function GET(request: NextRequest) {
     }
     
     // 准备返回的宠物数据（保持原始排序顺序）
-    const pets = petsData || [];
+    const pets = (petsData || []).map((pet: any) => {
+      // 获取当前宠物的照片
+      const petPhotos = photosByPetId[pet.id] || [];
+      // 提取照片 URL 数组，按是否为主照片排序
+      const photoUrls = petPhotos
+        .sort((a: any, b: any) => (b.is_primary ? 1 : -1))
+        .map((photo: any) => photo.photo_url);
+      
+      return {
+        ...pet,
+        photos: photoUrls.length > 0 ? photoUrls : ['/images/用户未上传.png'],
+        applications_count: 0 // 暂时设置为 0，后续可以从数据库中查询
+      };
+    });
 
     return NextResponse.json(
       {
         success: true,
-        data: {
-          pets: pets || [],
-          photos: photosByPetId
-        },
+        data: pets,
         meta: {
           total: pets.length,
           page: 1,

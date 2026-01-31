@@ -35,13 +35,13 @@ export default function Home() {
         const response = await fetch('/api/pets?sortBy=newest&limit=4');
         const data = await response.json();
         
-        if (data.success && data.data && data.data.pets) {
+        if (data.success && data.data) {
           // 处理宠物数据，添加照片信息，并只保留可领养的宠物
-          const petsWithPhotos = data.data.pets
+          const petsWithPhotos = data.data
             .filter((pet: any) => pet.status === 'available') // 只保留可领养的宠物
             .map((pet: any) => ({
               ...pet,
-              photos: data.data.photos && data.data.photos[pet.id] ? data.data.photos[pet.id].map((photo: any) => photo.photo_url) : [],
+              photos: pet.photos || [],
               category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
                        pet.breed.includes('猫') ? 'cat' : 'other'
             }));
