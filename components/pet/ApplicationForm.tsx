@@ -55,7 +55,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
     setSuccess(null);
 
     try {
-      console.log('token',token);
       
       const response = await fetch('/api/applications', {
         method: 'POST',

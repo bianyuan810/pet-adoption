@@ -5,9 +5,10 @@
 - [x] 宠物详情页面取消会定点排尿,与其它宠物友好,对小孩优化等信息
 - [x] 测试__tests__\e2e\approve.spec.ts
 - [x] 测试__tests__\e2e\reject.spec.ts
-- [ ] 使用next-rate-limit 实现接口限流，防止恶意刷接口
+- [x] 使用next-rate-limit 实现接口限流，防止恶意刷接口
+- [x] 缓存问题
+- [x] 代码规范
 - [ ] 定义前后端数据传输格式
-- [ ] 缓存问题
 ```
   interface ApiResponse<T> {
   code: number

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import type { Pet } from '@/types/supabase';
 import { Search, ChevronDown, MapPin, ArrowUpDown, Heart } from 'lucide-react';
 
@@ -13,7 +13,6 @@ interface PetWithPhotos extends Pet {
 }
 
 export default function PetsPage() {
-  const router = useRouter();
   const [pets, setPets] = useState<PetWithPhotos[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [keyword, setKeyword] = useState<string>('');
@@ -26,7 +25,6 @@ export default function PetsPage() {
   const [sortBy, setSortBy] = useState('newest');
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [openSort, setOpenSort] = useState(false);
-  const [refresh, setRefresh] = useState<string>('');
 
   // 筛选选项数据源
   const filterOptions = {
@@ -65,7 +63,7 @@ export default function PetsPage() {
   };
 
   // 获取宠物列表数据
-  const fetchPets = async () => {
+  const fetchPets = useCallback(async () => {
     try {
       setIsLoading(true);
       // 构建查询参数
@@ -83,11 +81,10 @@ export default function PetsPage() {
       const response = await fetch(`/api/pets?${queryParams.toString()}`);
       const data = await response.json();
       
-      console.log('API 响应数据:', data);
       
       if (data.success && data.data) {
         // 处理宠物数据，添加分类信息
-        const petsWithCategory = data.data.map((pet: any) => ({
+        const petsWithCategory = data.data.map((pet: Pet) => ({
           ...pet,
           category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
                    pet.breed.includes('猫') ? 'cat' : 'other'
@@ -97,9 +94,9 @@ export default function PetsPage() {
     } catch (error) {
       console.error('获取宠物列表失败:', error);
     } finally {
-      setIsLoading(false);
-    }
-  };
+        setIsLoading(false);
+      }
+  }, [keyword, filters, sortBy]);
 
   // 监听 URL 中的 timestamp 参数变化
   useEffect(() => {
@@ -113,12 +110,12 @@ export default function PetsPage() {
       // 强制刷新数据
       fetchPets();
     }
-  }, []);
+  }, [fetchPets]);
 
   // 监听筛选条件和排序变化
   useEffect(() => {
     fetchPets();
-  }, [keyword, filters, sortBy]);
+  }, [fetchPets]);
 
   return (
     <div className="animate-in fade-in duration-500 max-w-7xl mx-auto px-6 py-12">
@@ -306,7 +303,7 @@ export default function PetsPage() {
           pets.map((pet) => (
             <Link key={pet.id} href={`/pets/${pet.id}`} className="pet-card group bg-white dark:bg-white/5 rounded-xl overflow-hidden border border-[#f5f1f0] dark:border-white/10 transition-all hover:shadow-2xl hover:shadow-black/10">
               <div className="relative aspect-square overflow-hidden">
-                <img alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={pet.photos?.[0] || '/images/用户未上传.png'} />
+                <Image alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={pet.photos?.[0] || '/images/用户未上传.png'} width={300} height={300} />
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-primary border border-primary/20">{pet.status === 'available' ? '待领养' : pet.status === 'adopted' ? '已领养' : '审核中'}</span>
                 </div>

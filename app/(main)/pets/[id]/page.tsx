@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import type { Pet } from '@/types/supabase';
 import { Home, MapPin, Heart, Share2, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
 
@@ -52,8 +53,6 @@ export default function PetDetailPage() {
     try {
       // 获取表单数据
       const formData = new FormData(e.currentTarget as HTMLFormElement);
-      const name = formData.get('name') as string;
-      const email = formData.get('email') as string;
       const reason = formData.get('reason') as string;
       
       // 调用申请API
@@ -115,7 +114,9 @@ export default function PetDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8 flex flex-col gap-8">
           <div className="w-full bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm group relative">
-            <img alt={pet.name} className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105" src={pet.photos?.[0] || 'https://via.placeholder.com/800x500?text=No+Image'} />
+            <div className="aspect-[16/10] w-full">
+              <Image alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src={pet.photos?.[0] || 'https://via.placeholder.com/800x500?text=No+Image'} width={800} height={500} />
+            </div>
             <div className="absolute top-4 left-4 flex gap-2">
               <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full tracking-wider">新发布</span>
               <span className="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full tracking-wider">健康</span>

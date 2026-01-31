@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Check, X, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -20,22 +21,38 @@ interface Application {
   environment: string;
 }
 
+// API返回的申请数据类型
+interface AppData {
+  id: string;
+  pet_id: string;
+  pet?: {
+    name: string;
+    photos: string[];
+  };
+  applicant?: {
+    name: string;
+    email: string;
+  };
+  submit_date: string;
+  status: string;
+  reason: string;
+  experience: string;
+  environment: string;
+}
+
 export default function ApplicationsPage() {
   const router = useRouter();
-  const { user, token, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user, token, isAuthenticated } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
   // 获取申请列表数据
-  const fetchApplications = async () => {
+  const fetchApplications = useCallback(async () => {
     try {
-      console.log('开始获取申请数据...');
-      console.log('认证状态:', { isAuthenticated, token, user });
       
       // 检查认证状态
       if (!isAuthenticated || !token) {
-        console.log('未登录，跳转到登录页面');
         setError('请先登录');
         setApplications([]);
         setIsLoading(false);
@@ -48,7 +65,6 @@ export default function ApplicationsPage() {
       setError('');
       
       // 调用申请列表 API
-      console.log('准备调用 API...');
       const response = await fetch('/api/applications?&isPublisher=true', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -56,8 +72,6 @@ export default function ApplicationsPage() {
         }
       });
       
-      console.log('API 响应状态:', response.status);
-      console.log('API 响应头:', Object.fromEntries(response.headers.entries()));
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -66,7 +80,6 @@ export default function ApplicationsPage() {
       }
       
       const data = await response.json();
-      console.log('API 响应数据:', data);
       
       if (!data.success) {
         throw new Error(data.error || '获取申请列表失败');
@@ -77,23 +90,21 @@ export default function ApplicationsPage() {
       
       // 确保 data.data 是一个数组
       if (Array.isArray(data.data)) {
-        formattedApplications = data.data.map((app: any) => ({
+        formattedApplications = data.data.map((app: AppData) => ({
           id: app.id,
           petId: app.pet_id,
           petName: app.pet?.name || '未知宠物',
           petImage: app.pet?.photos?.[0] || '/images/用户未上传.png',
           applicantName: app.applicant?.name || '未知申请人',
           applicantEmail: app.applicant?.email || '未知邮箱',
-          submitDate: app.created_at,
+          submitDate: app.submit_date,
           status: app.status.toUpperCase() as 'PENDING' | 'APPROVED' | 'REJECTED',
-          reason: app.message || '',
-          experience: '',
-          environment: ''
+          reason: app.reason || '',
+          experience: app.experience || '',
+          environment: app.environment || ''
         }));
       }
       
-      console.log('格式化后的申请数据:', formattedApplications);
-      console.log('当前登录用户:', user);
       setApplications(formattedApplications);
     } catch (err) {
       console.error('获取申请列表错误:', err);
@@ -101,14 +112,14 @@ export default function ApplicationsPage() {
       // 显示空状态，不使用模拟数据
       setApplications([]);
     } finally {
-      setIsLoading(false);
-    }
-  };
+    setIsLoading(false);
+  }
+}, [isAuthenticated, token, user, router]);
 
   // 组件挂载时获取数据，认证状态变化时重新获取
   useEffect(() => {
     fetchApplications();
-  }, [isAuthenticated, token]);
+  }, [fetchApplications]);
 
   // 格式化日期
   const formatDate = (dateString: string) => {
@@ -194,7 +205,9 @@ export default function ApplicationsPage() {
           applications.map((app) => (
             <div key={app.id} className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-white/10 flex flex-col md:flex-row md:items-center hover:shadow-md transition-all gap-4">
               <div className="flex items-center gap-4 w-64 shrink-0 ">
-                <img src={app.petImage} className="size-14 rounded-xl object-cover shadow-sm" alt={app.petName} />
+                <div className="size-14 rounded-xl overflow-hidden shadow-sm">
+                  <Image src={app.petImage} width={56} height={56} alt={app.petName} className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <h3 className="font-bold text-zinc-900 dark:text-white">{app.petName}</h3>
                   <p className="text-xs text-gray-500">申请对象</p>
@@ -202,7 +215,7 @@ export default function ApplicationsPage() {
               </div>
               <div className="flex-1 flex items-center gap-3">
                 <div className="size-10 rounded-full bg-gray-200 border border-white dark:border-white/10 overflow-hidden">
-                  <img src={`https://i.pravatar.cc/150?u=${app.id}`} alt={app.applicantName} />
+                  <Image src={`https://i.pravatar.cc/150?u=${app.id}`} width={40} height={40} alt={app.applicantName} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-zinc-900 dark:text-white">{app.applicantName}</p>

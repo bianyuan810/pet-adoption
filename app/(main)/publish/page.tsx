@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Check, ArrowRight, Camera } from 'lucide-react';
 
 export default function PublishPage() {
@@ -229,8 +230,10 @@ export default function PublishPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {formData.photos.map((file, index) => (
                   <div key={index} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img 
+                    <Image 
                       src={URL.createObjectURL(file)} 
+                      width={200} 
+                      height={200} 
                       alt={`宠物照片 ${index + 1}`} 
                       className="w-full h-full object-cover"
                     />

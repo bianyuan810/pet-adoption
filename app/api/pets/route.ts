@@ -280,19 +280,55 @@ export async function GET(request: NextRequest) {
       }
     }
     
+    // 照片类型定义
+    interface Photo {
+      id: string;
+      pet_id: string;
+      photo_url: string;
+      is_primary: boolean;
+      created_at: string;
+    }
+
+    // 实际照片数据类型
+    interface PetPhoto {
+      photo_url: string;
+      is_primary: boolean;
+    }
+
+    // 数据库返回的宠物数据类型
+    interface DbPet {
+      id: any;
+      name: any;
+      breed: any;
+      age: any;
+      gender: any;
+      location: any;
+      status: any;
+      created_at: any;
+      view_count: any;
+      description?: any;
+      publisher_id?: any;
+      updated_at?: any;
+      applications_count?: any;
+    }
+
     // 准备返回的宠物数据（保持原始排序顺序）
-    const pets = (petsData || []).map((pet: any) => {
+    const pets = (petsData || []).map((pet: DbPet) => {
       // 获取当前宠物的照片
       const petPhotos = photosByPetId[pet.id] || [];
       // 提取照片 URL 数组，按是否为主照片排序
       const photoUrls = petPhotos
-        .sort((a: any, b: any) => (b.is_primary ? 1 : -1))
-        .map((photo: any) => photo.photo_url);
+        .sort((a: PetPhoto, b: PetPhoto) => (b.is_primary ? 1 : -1))
+        .map((photo: PetPhoto) => photo.photo_url);
       
       return {
         ...pet,
         photos: photoUrls.length > 0 ? photoUrls : ['/images/用户未上传.png'],
-        applications_count: 0 // 暂时设置为 0，后续可以从数据库中查询
+        applications_count: pet.applications_count || 0,
+        description: pet.description || '',
+        publisher_id: pet.publisher_id || '',
+        updated_at: pet.updated_at || pet.created_at,
+        view_count: pet.view_count || 0
       };
     });
 

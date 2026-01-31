@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,38 +23,48 @@ interface Pet {
   applicationsCount?: number;
 }
 
+// API返回的宠物数据类型
+interface PetData {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  gender: string;
+  location: string;
+  status: string;
+  photos: string[];
+  created_at: string;
+  view_count?: number;
+  applications_count?: number;
+}
+
 // 我发布的宠物列表页面
 export default function MyPetsPage() {
   const router = useRouter();
-  const { user, token, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { user, token, isAuthenticated } = useAuth();
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [pets, setPets] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // 获取我发布的宠物数据
-  useEffect(() => {
-    const fetchMyPets = async () => {
-      try {
-        console.log('开始获取宠物数据...');
-        console.log('认证状态:', { isAuthenticated, token, user });
-        
-        // 检查认证状态
-        if (!isAuthenticated || !token) {
-          console.log('未登录，跳转到登录页面');
-          setError('请先登录');
-          setPets([]);
-          setIsLoading(false);
-          // 跳转到登录页面
-          router.push('/login?redirect=/my-pets');
-          return;
-        }
+  const fetchMyPets = useCallback(async () => {
+    try {
+      
+      // 检查认证状态
+      if (!isAuthenticated || !token) {
+        setError('请先登录');
+        setPets([]);
+        setIsLoading(false);
+        // 跳转到登录页面
+        router.push('/login?redirect=/my-pets');
+        return;
+      }
 
-        setIsLoading(true);
-        setError(null);
-        
-        // 调用 API 获取当前用户发布的宠物
-        console.log('准备调用 API...');
+      setIsLoading(true);
+      setError(null);
+      
+      // 调用 API 获取当前用户发布的宠物
         const response = await fetch('/api/pets?&isPublisher=true', {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -61,7 +72,6 @@ export default function MyPetsPage() {
           }
         });
         
-        console.log('API 响应状态:', response.status);
         
         if (!response.ok) {
           const errorText = await response.text();
@@ -70,7 +80,6 @@ export default function MyPetsPage() {
         }
         
         const data = await response.json();
-        console.log('API 响应数据:', data);
         
         if (!data.success) {
           throw new Error(data.error || '获取宠物数据失败');
@@ -81,7 +90,7 @@ export default function MyPetsPage() {
         
         // 确保 data.data 是一个数组
         if (Array.isArray(data.data)) {
-          formattedPets = data.data.map((pet: any) => ({
+          formattedPets = data.data.map((pet: PetData) => ({
             id: pet.id,
             name: pet.name,
             breed: pet.breed,
@@ -102,12 +111,14 @@ export default function MyPetsPage() {
         setError('获取数据失败，请稍后重试');
         console.error('获取宠物数据失败:', err);
       } finally {
-        setIsLoading(false);
-      }
-    };
+          setIsLoading(false);
+        }
+  }, [isAuthenticated, token, user, router]);
 
+  // 组件挂载时获取数据，认证状态变化时重新获取
+  useEffect(() => {
     fetchMyPets();
-  }, [isAuthenticated, token, router]);
+  }, [fetchMyPets]);
 
   // 过滤宠物
   const filteredPets = pets.filter(pet => {
@@ -217,8 +228,10 @@ export default function MyPetsPage() {
             >
               {/* 宠物图片 */}
               <div className="w-full md:w-56 h-40 rounded-xl overflow-hidden shrink-0">
-                <img
+                <Image
                   src={pet.photos?.[0] || '/images/用户未上传.png'}
+                  width={224}
+                  height={160}
                   alt={pet.name}
                   className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${
                     pet.status === 'adopted' ? 'grayscale' : ''

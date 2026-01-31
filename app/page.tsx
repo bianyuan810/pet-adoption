@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Dog, Cat, Rabbit, Bird, MoreHorizontal, Grid, ArrowRight, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, MapPin } from 'lucide-react';
 
 // 宠物类型定义
 interface Pet {
@@ -99,7 +100,7 @@ export default function Home() {
               pets.map((pet) => (
                 <Link key={pet.id} href={`/pets/${pet.id}`} className="group bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                   <div className="relative h-[224px] w-full">
-                    <img alt={pet.name} className="w-full h-full object-cover" src={pet.photos?.[0] || '/images/用户未上传.png'} />
+                    <Image alt={pet.name} className="w-full h-full object-cover" src={pet.photos?.[0] || '/images/用户未上传.png'} width={300} height={224} />
                     <span className="absolute top-3 left-3 bg-white/90 dark:bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 text-zinc-800 dark:text-white">
                       {pet.category === 'dog' ? '狗狗 🐕' : pet.category === 'cat' ? '猫咪 🐈' : '宠物'}
                     </span>

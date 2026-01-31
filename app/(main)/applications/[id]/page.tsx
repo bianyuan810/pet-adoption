@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Calendar, ArrowLeft, PawPrint, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 // 定义Application接口
@@ -209,7 +209,7 @@ export default function ApplicationDetailPage() {
             </div>
             <div className="space-y-4 mb-8">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">申请理由</label>
-              <p className="text-sm leading-relaxed text-zinc-700 dark:text-gray-300">"{application.message || '暂无申请理由'}"</p>
+              <p className="text-sm leading-relaxed text-zinc-700 dark:text-gray-300">{application.message || '暂无申请理由'}</p>
             </div>
             <div className="border-t border-gray-100 dark:border-white/10 pt-8">
               <div className="flex items-center justify-between mb-4">

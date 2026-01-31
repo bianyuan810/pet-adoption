@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { MoreHorizontal, PlusCircle, Send } from 'lucide-react';
 
 // 消息类型定义
@@ -231,11 +232,15 @@ export default function MessagesPage() {
                   className={`w-full flex items-center gap-4 p-5 hover:bg-gray-50 dark:hover:bg-white/5 transition-all relative ${selectedConversation?.id === conversation.id ? 'bg-primary/5 dark:bg-primary/10 after:content-[] after:absolute after:left-0 after:top-0 after:bottom-0 after:w-1 after:bg-primary' : ''}`}
                 >
                   <div className="relative">
-                    <img 
-                      src={conversation.userAvatar || `https://i.pravatar.cc/150?u=${conversation.userId}`} 
-                      className="size-12 rounded-2xl object-cover shadow-sm" 
-                      alt={conversation.userName} 
-                    />
+                    <div className="size-12 rounded-2xl overflow-hidden shadow-sm">
+                      <Image 
+                        src={conversation.userAvatar || `https://i.pravatar.cc/150?u=${conversation.userId}`} 
+                        width={48} 
+                        height={48} 
+                        alt={conversation.userName} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
                     {conversation.unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 size-3 bg-red-500 rounded-full border-2 border-white dark:border-zinc-900"></span>
                     )}
@@ -267,11 +272,15 @@ export default function MessagesPage() {
             <>
               <header className="px-8 py-4 border-b border-gray-100 dark:border-white/10 flex items-center justify-between bg-white dark:bg-zinc-900">
                 <div className="flex items-center gap-4">
-                  <img 
-                    src={selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}`} 
-                    className="size-10 rounded-xl object-cover" 
-                    alt={selectedConversation.userName} 
-                  />
+                  <div className="size-10 rounded-xl overflow-hidden">
+                    <Image 
+                      src={selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}`} 
+                      width={40} 
+                      height={40} 
+                      alt={selectedConversation.userName} 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
                   <div>
                     <h3 className="font-bold text-zinc-900 dark:text-white">{selectedConversation.userName}</h3>
                     <p className="text-[10px] text-green-500 font-bold uppercase tracking-wider">在线</p>
@@ -303,13 +312,17 @@ export default function MessagesPage() {
                         )}
                         
                         <div className={`flex items-start gap-4 max-w-lg ${isIncoming ? '' : 'ml-auto flex-row-reverse'}`}>
-                          <img 
-                            src={isIncoming 
-                              ? selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}` 
-                              : `https://i.pravatar.cc/150?u=me`} 
-                            className="size-9 rounded-xl shrink-0" 
-                            alt={isIncoming ? selectedConversation.userName : 'Me'} 
-                          />
+                          <div className="size-9 rounded-xl overflow-hidden shrink-0">
+                            <Image 
+                              src={isIncoming 
+                                ? selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}` 
+                                : `https://i.pravatar.cc/150?u=me`} 
+                              width={36} 
+                              height={36} 
+                              alt={isIncoming ? selectedConversation.userName : 'Me'} 
+                              className="w-full h-full object-cover" 
+                            />
+                          </div>
                           <div className={`${isIncoming 
                             ? 'bg-white dark:bg-zinc-900 p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 dark:border-white/10' 
                             : 'bg-primary p-4 rounded-2xl rounded-tr-none shadow-lg shadow-primary/20 text-white'}`}>

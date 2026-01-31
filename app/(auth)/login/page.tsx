@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { PawPrint, MessageCircle } from 'lucide-react';
 import LoginForm from '@/components/auth/LoginForm';
 
@@ -28,7 +29,7 @@ export default function LoginPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <button className="flex items-center justify-center gap-2 h-12 rounded-2xl border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-              <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="Google" />
+              <Image src="/icons/google-favicon.ico" width={16} height={16} alt="Google" className="w-4 h-4" />
               <span className="text-sm font-bold">Google</span>
             </button>
             <button className="flex items-center justify-center gap-2 h-12 rounded-2xl border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all">

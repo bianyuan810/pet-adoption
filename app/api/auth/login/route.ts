@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { supabase } from '@/lib/supabase'
 import { generateToken } from '@/lib/auth'
 
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),

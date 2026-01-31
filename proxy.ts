@@ -1,13 +1,22 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/auth'
+import { rateLimitCheck } from '@/lib/rate-limit'
 
 const publicPaths = ['/login', '/register', '/api/auth/login', '/api/auth/register']
 
 const adminPaths = ['/admin']
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // 对所有API请求进行限流检查
+  if (pathname.startsWith('/api')) {
+    const rateLimitResult = await rateLimitCheck(request)
+    if (rateLimitResult) {
+      return rateLimitResult
+    }
+  }
 
   if (publicPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.next()

@@ -58,15 +58,17 @@ const Navbar: React.FC = () => {
 
               <div className="relative">
                 <div
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="h-9 w-9 rounded-full bg-gray-200 dark:bg-white/10 overflow-hidden cursor-pointer border border-[#e6dedb] dark:border-white/20 hover:ring-2 hover:ring-primary/20 transition-all"
-                >
-                  <img
-                    alt="User Avatar"
-                    className="w-full h-full object-cover"
-                    src="/images/user-avatar.png"
-                  />
-                </div>
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="h-9 w-9 rounded-full bg-gray-200 dark:bg-white/10 overflow-hidden cursor-pointer border border-[#e6dedb] dark:border-white/20 hover:ring-2 hover:ring-primary/20 transition-all"
+                  >
+                    <Image
+                      alt="User Avatar"
+                      className="w-full h-full object-cover"
+                      src="/images/user-avatar.png"
+                      width={36}
+                      height={36}
+                    />
+                  </div>
 
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-gray-100 dark:border-white/10 py-2 z-50">

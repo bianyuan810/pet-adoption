@@ -15,8 +15,12 @@ const nextConfig: NextConfig = {
       },{
         protocol: 'https',
         hostname: 'plus.unsplash.com',
+      },{
+        protocol: 'https',
+        hostname: 'xvohtgkpxugulnrnafpb.supabase.co',
       },
     ],
+    unoptimized: true,
   },
   // 添加跨域配置，允许 127.0.0.1 访问
   async headers() {
