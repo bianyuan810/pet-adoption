@@ -81,8 +81,8 @@ export default function ApplicationsPage() {
       
       const data = await response.json();
       
-      if (!data.success) {
-        throw new Error(data.error || '获取申请列表失败');
+      if (data.code !== 200) {
+        throw new Error(data.msg || '获取申请列表失败');
       }
       
       // 转换申请数据格式以匹配前端期望的结构

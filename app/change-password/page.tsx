@@ -61,7 +61,7 @@ export default function ChangePasswordPage() {
       });
       
       if (response.ok) {
-        setSuccess('密码修改成功');
+        setSuccess('密码修改成功，请重新登录');
         // 重置表单
         setFormData({
           currentPassword: '',
@@ -69,13 +69,13 @@ export default function ChangePasswordPage() {
           confirmPassword: ''
         });
         
-        // 3秒后跳转到首页
+        // 3秒后跳转到登录页面
         setTimeout(() => {
-          router.push('/');
+          router.push('/login');
         }, 3000);
       } else {
         const errorData = await response.json();
-        setError(errorData.error || '修改密码失败，请稍后重试');
+        setError(errorData.msg || '修改密码失败，请稍后重试');
       }
     } catch (error) {
       console.error('修改密码失败:', error);

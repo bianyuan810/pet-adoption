@@ -81,8 +81,8 @@ export default function MyPetsPage() {
         
         const data = await response.json();
         
-        if (!data.success) {
-          throw new Error(data.error || '获取宠物数据失败');
+        if (data.code !== 200) {
+          throw new Error(data.msg || '获取宠物数据失败');
         }
         
         // 转换 API 返回的数据格式以匹配前端期望的结构

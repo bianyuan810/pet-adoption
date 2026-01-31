@@ -36,7 +36,7 @@ export default function Home() {
         const response = await fetch('/api/pets?sortBy=newest&limit=4');
         const data = await response.json();
         
-        if (data.success && data.data) {
+        if (data.code === 200 && data.data) {
           // 处理宠物数据，添加照片信息，并只保留可领养的宠物
           const petsWithPhotos = data.data
             .filter((pet: any) => pet.status === 'available') // 只保留可领养的宠物

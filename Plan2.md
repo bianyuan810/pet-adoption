@@ -8,7 +8,7 @@
 - [x] 使用next-rate-limit 实现接口限流，防止恶意刷接口
 - [x] 缓存问题
 - [x] 代码规范
-- [ ] 定义前后端数据传输格式
+- [x] 定义前后端数据传输格式
 ```
   interface ApiResponse<T> {
   code: number

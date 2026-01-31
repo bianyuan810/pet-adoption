@@ -23,7 +23,7 @@ const store = new MemoryStore()
 // 配置
 const CONFIG = {
   // 每个IP在指定时间窗口内的最大请求数
-  limit: 10, // 测试用，设置为10个请求
+  limit: 100, // 测试用，设置为10个请求
   // 时间窗口（毫秒）
   window: 60 * 1000, // 1分钟
 }

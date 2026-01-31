@@ -56,7 +56,7 @@ export default function MyApplicationsPage() {
         
         if (response.ok) {
           // 确保 applications 始终是数组
-          if (data.success && Array.isArray(data.data)) {
+          if (data.code === 200 && Array.isArray(data.data)) {
             setApplications(data.data as Application[]);
           } else if (Array.isArray(data)) {
             // 兼容直接返回数组的情况
@@ -65,7 +65,7 @@ export default function MyApplicationsPage() {
             setApplications([]);
           }
         } else {
-          setError(data.error || '获取申请列表失败');
+          setError(data.msg || '获取申请列表失败');
           setApplications([]);
         }
       } catch (err) {

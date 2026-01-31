@@ -59,8 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
 
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || '登录失败')
+    if (!response.ok || data.code !== 200) {
+      throw new Error(data.msg || '登录失败')
     }
 
     setToken(data.data.token)
@@ -93,8 +93,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.ok) {
         const data = await response.json()
-        setUser(data.user)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        setUser(data.data.user)
+        localStorage.setItem('user', JSON.stringify(data.data.user))
       }
     } catch (error) {
       console.error('刷新用户信息失败:', error)

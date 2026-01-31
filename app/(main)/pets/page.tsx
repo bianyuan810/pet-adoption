@@ -82,7 +82,7 @@ export default function PetsPage() {
       const data = await response.json();
       
       
-      if (data.success && data.data) {
+      if (response.ok && data.code === 200 && data.data) {
         // 处理宠物数据，添加分类信息
         const petsWithCategory = data.data.map((pet: Pet) => ({
           ...pet,

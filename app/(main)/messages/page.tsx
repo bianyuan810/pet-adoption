@@ -51,9 +51,9 @@ export default function MessagesPage() {
         const response = await fetch('/api/messages');
         const data = await response.json();
         
-        if (data.messages) {
+        if (data.code === 200 && data.data) {
           // 处理消息数据
-          const allMessages = data.messages as Message[];
+          const allMessages = data.data as Message[];
           
           // 按对话分组
           const conversationsMap = new Map<string, Conversation>();
@@ -120,15 +120,15 @@ export default function MessagesPage() {
       setSelectedConversation(conversation);
       
       // 获取与该用户的聊天记录
-      const response = await fetch(`/api/messages?chatId=${conversation.id}`);
-      const data = await response.json();
-      
-      if (data.messages) {
-        // 按时间排序
-        const sortedMessages = (data.messages as Message[]).sort(
-          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-        setMessages(sortedMessages);
+        const response = await fetch(`/api/messages?chatId=${conversation.id}`);
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data) {
+          // 按时间排序
+          const sortedMessages = (data.data as Message[]).sort(
+            (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+          setMessages(sortedMessages);
         
         // 标记未读消息为已读
         sortedMessages
@@ -173,7 +173,7 @@ export default function MessagesPage() {
       
       if (response.ok) {
         const data = await response.json();
-        if (data.data) {
+        if (data.code === 201 && data.data) {
           // 添加新消息到列表
           setMessages(prev => [...prev, data.data as Message]);
           setNewMessage('');
@@ -191,7 +191,7 @@ export default function MessagesPage() {
         }
       } else {
         const errorData = await response.json();
-        alert(`发送消息失败: ${errorData.error || '请稍后重试'}`);
+        alert(`发送消息失败: ${errorData.msg || '请稍后重试'}`);
       }
     } catch (error) {
       console.error('发送消息失败:', error);
