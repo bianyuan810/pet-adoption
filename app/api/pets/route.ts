@@ -62,13 +62,11 @@ export async function POST(request: NextRequest) {
 
     if (insertError || !pet) {
       console.error('创建宠物时出错:', insertError)
-      return NextResponse.json(
-        {
-          success: false,
-          error: '创建宠物失败，请稍后重试'
-        },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '创建宠物失败，请稍后重试'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     const photoEntries = Array.from(formData.entries())
@@ -240,13 +238,11 @@ export async function GET(request: NextRequest) {
       
     if (queryError) {
       console.error('获取宠物列表时出错:', queryError)
-      return NextResponse.json(
-        {
-          success: false,
-          error: '获取宠物列表失败'
-        },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '获取宠物列表失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     // 如果有宠物数据，获取对应的照片数据

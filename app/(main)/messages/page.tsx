@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MoreHorizontal, PlusCircle, Send } from 'lucide-react';
+import { HttpStatus } from '@/types/api';
 
 // 消息类型定义
 interface Message {
@@ -51,7 +52,7 @@ export default function MessagesPage() {
         const response = await fetch('/api/messages');
         const data = await response.json();
         
-        if (data.code === 200 && data.data) {
+        if (data.code === HttpStatus.OK && data.data) {
           // 处理消息数据
           const allMessages = data.data as Message[];
           
@@ -123,7 +124,7 @@ export default function MessagesPage() {
         const response = await fetch(`/api/messages?chatId=${conversation.id}`);
         const data = await response.json();
         
-        if (data.code === 200 && data.data) {
+        if (data.code === HttpStatus.OK && data.data) {
           // 按时间排序
           const sortedMessages = (data.data as Message[]).sort(
             (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -173,7 +174,7 @@ export default function MessagesPage() {
       
       if (response.ok) {
         const data = await response.json();
-        if (data.code === 201 && data.data) {
+        if (data.code === HttpStatus.CREATED && data.data) {
           // 添加新消息到列表
           setMessages(prev => [...prev, data.data as Message]);
           setNewMessage('');

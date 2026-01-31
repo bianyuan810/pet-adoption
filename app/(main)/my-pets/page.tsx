@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { HttpStatus } from '@/types/api';
 
 // 定义宠物类型
 type FilterStatus = 'all' | 'available' | 'adopted' | 'processing';
@@ -81,7 +82,7 @@ export default function MyPetsPage() {
         
         const data = await response.json();
         
-        if (data.code !== 200) {
+        if (data.code !== HttpStatus.OK) {
           throw new Error(data.msg || '获取宠物数据失败');
         }
         

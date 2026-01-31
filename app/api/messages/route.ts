@@ -56,10 +56,11 @@ export async function GET(request: NextRequest) {
 
     if (fetchError) {
       console.error('获取消息列表失败:', fetchError)
-      return NextResponse.json(
-        { error: '获取消息列表失败' },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '获取消息列表失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     const response: ApiResponse = {

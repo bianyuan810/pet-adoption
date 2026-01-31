@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/auth'
 import { rateLimitCheck } from '@/lib/rate-limit'
+import type { ApiResponse } from '@/types/api'
+import { HttpStatus } from '@/types/api'
 
 const publicPaths = ['/login', '/register', '/api/auth/login', '/api/auth/register']
 
@@ -26,10 +28,11 @@ export async function proxy(request: NextRequest) {
 
   if (!token) {
     if (pathname.startsWith('/api')) {
-      return NextResponse.json(
-        { error: '未授权访问' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
     return NextResponse.redirect(new URL('/login', request.url))
   }
@@ -38,10 +41,11 @@ export async function proxy(request: NextRequest) {
 
   if (!payload) {
     if (pathname.startsWith('/api')) {
-      return NextResponse.json(
-        { error: 'Token 无效或已过期' },
-        { status: 401 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: 'Token 无效或已过期'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
     const response = NextResponse.redirect(new URL('/login', request.url))
     response.cookies.delete('token')
@@ -51,10 +55,11 @@ export async function proxy(request: NextRequest) {
   if (adminPaths.some(path => pathname.startsWith(path))) {
     if (payload.role !== 'admin') {
       if (pathname.startsWith('/api')) {
-        return NextResponse.json(
-          { error: '权限不足' },
-          { status: 403 }
-        )
+        const response: ApiResponse = {
+          code: HttpStatus.FORBIDDEN,
+          msg: '权限不足'
+        };
+        return NextResponse.json(response, { status: HttpStatus.FORBIDDEN });
       }
       return NextResponse.redirect(new URL('/', request.url))
     }

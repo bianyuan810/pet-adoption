@@ -226,10 +226,11 @@ export async function PUT(
 
     if (updateError || !pet) {
       console.error('更新宠物时出错:', updateError)
-      return NextResponse.json(
-        { error: '更新宠物失败，请稍后重试' },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '更新宠物失败，请稍后重试'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     const response: ApiResponse = {

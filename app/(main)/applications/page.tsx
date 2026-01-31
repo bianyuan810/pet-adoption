@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { HttpStatus } from '@/types/api';
 
 // 申请数据类型定义
 interface Application {
@@ -81,7 +82,7 @@ export default function ApplicationsPage() {
       
       const data = await response.json();
       
-      if (data.code !== 200) {
+      if (data.code !== HttpStatus.OK) {
         throw new Error(data.msg || '获取申请列表失败');
       }
       

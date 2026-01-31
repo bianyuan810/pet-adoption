@@ -1,5 +1,5 @@
 // 前后端数据传输格式接口
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   code: number;
   msg: string;
   data?: T;

@@ -71,10 +71,11 @@ export async function POST(request: NextRequest) {
 
     if (insertError) {
       console.error('创建用户时出错:', insertError)
-      return NextResponse.json(
-        { error: '创建用户失败，请稍后重试' },
-        { status: 500 }
-      )
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '创建用户失败，请稍后重试'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     const response: ApiResponse = {

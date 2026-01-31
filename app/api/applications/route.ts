@@ -39,13 +39,11 @@ export async function GET(req: NextRequest) {
 
     if (error) {
       console.error('获取申请列表失败:', error);
-      return NextResponse.json(
-        {
-          success: false,
-          error: '获取申请列表失败'
-        }, 
-        { status: 500 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '获取申请列表失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     const response: ApiResponse = {
@@ -76,26 +74,22 @@ export async function POST(req: NextRequest) {
     const session = await auth(req);
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '未授权访问'
-        }, 
-        { status: 401 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.UNAUTHORIZED,
+        msg: '未授权访问'
+      };
+      return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
     const { petId, message } = await req.json();
 
     // 验证输入
     if (!petId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '宠物ID不能为空'
-        }, 
-        { status: 400 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '宠物ID不能为空'
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     // 获取宠物信息，验证宠物是否存在以及状态是否为可收养
@@ -105,33 +99,27 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (petError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '获取宠物信息失败'
-        }, 
-        { status: 500 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '获取宠物信息失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     if (!pet) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '宠物不存在'
-        }, 
-        { status: 404 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.NOT_FOUND,
+        msg: '宠物不存在'
+      };
+      return NextResponse.json(response, { status: HttpStatus.NOT_FOUND });
     }
 
     if (pet.status !== 'available') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '该宠物已被收养或不可申请'
-        }, 
-        { status: 400 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '该宠物已被收养或不可申请'
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     // 检查是否已经申请过该宠物
@@ -142,23 +130,19 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (existingError && existingError.code !== 'PGRST116') { // PGRST116 表示未找到记录
-      return NextResponse.json(
-        {
-          success: false,
-          error: '检查申请记录失败'
-        }, 
-        { status: 500 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '检查申请记录失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
     if (existingApplication) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: '您已经申请过该宠物'
-        }, 
-        { status: 400 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.BAD_REQUEST,
+        msg: '您已经申请过该宠物'
+      };
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
     }
 
     // 创建申请
@@ -172,33 +156,27 @@ export async function POST(req: NextRequest) {
 
     if (createError) {
       console.error('创建申请失败:', createError);
-      return NextResponse.json(
-        {
-          success: false,
-          error: '创建申请失败'
-        }, 
-        { status: 500 }
-      );
+      const response: ApiResponse = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        msg: '创建申请失败'
+      };
+      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: {
-          application: newApplication,
-          message: '申请提交成功'
-        }
-      }, 
-      { status: 201 }
-    );
+    const response: ApiResponse = {
+      code: HttpStatus.CREATED,
+      msg: '申请提交成功',
+      data: {
+        application: newApplication
+      }
+    };
+    return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
     console.error('服务器错误:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: '服务器错误'
-      }, 
-      { status: 500 }
-    );
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

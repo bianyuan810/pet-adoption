@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import type { User } from '@/types/supabase'
+import { HttpStatus } from '@/types/api'
 
 interface AuthContextType {
   user: User | null
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json()
 
-    if (!response.ok || data.code !== 200) {
+    if (!response.ok || data.code !== HttpStatus.OK) {
       throw new Error(data.msg || '登录失败')
     }
 

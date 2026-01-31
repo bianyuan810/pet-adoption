@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowRight, MapPin } from 'lucide-react';
+import { HttpStatus } from '@/types/api';
 
 // 宠物类型定义
 interface Pet {
@@ -36,7 +37,7 @@ export default function Home() {
         const response = await fetch('/api/pets?sortBy=newest&limit=4');
         const data = await response.json();
         
-        if (data.code === 200 && data.data) {
+        if (data.code === HttpStatus.OK && data.data) {
           // 处理宠物数据，添加照片信息，并只保留可领养的宠物
           const petsWithPhotos = data.data
             .filter((pet: any) => pet.status === 'available') // 只保留可领养的宠物

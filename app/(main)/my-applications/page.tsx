@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PawPrint, Calendar, Loader2 } from 'lucide-react';
+import { HttpStatus } from '@/types/api';
 
 // 申请状态类型
 type ApplicationStatusType = 'pending' | 'approved' | 'rejected';
@@ -56,7 +57,7 @@ export default function MyApplicationsPage() {
         
         if (response.ok) {
           // 确保 applications 始终是数组
-          if (data.code === 200 && Array.isArray(data.data)) {
+          if (data.code === HttpStatus.OK && Array.isArray(data.data)) {
             setApplications(data.data as Application[]);
           } else if (Array.isArray(data)) {
             // 兼容直接返回数组的情况

@@ -96,12 +96,10 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error) {
     console.error('登录接口错误:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: '服务器错误，请稍后重试'
-      },
-      { status: 500 }
-    )
+    const response: ApiResponse = {
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
+      msg: '服务器错误，请稍后重试'
+    };
+    return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
   }
 }

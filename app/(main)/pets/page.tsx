@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Pet } from '@/types/supabase';
 import { Search, ChevronDown, MapPin, ArrowUpDown, Heart } from 'lucide-react';
+import { HttpStatus } from '@/types/api';
 
 // 宠物类型定义
 interface PetWithPhotos extends Pet {
@@ -82,7 +83,7 @@ export default function PetsPage() {
       const data = await response.json();
       
       
-      if (response.ok && data.code === 200 && data.data) {
+      if (response.ok && data.code === HttpStatus.OK && data.data) {
         // 处理宠物数据，添加分类信息
         const petsWithCategory = data.data.map((pet: Pet) => ({
           ...pet,
