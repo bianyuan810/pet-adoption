@@ -95,7 +95,7 @@ export default function ApplicationsPage() {
           id: app.id,
           petId: app.pet_id,
           petName: app.pet?.name || '未知宠物',
-          petImage: app.pet?.photos?.[0] || '/images/用户未上传.png',
+          petImage: app.pet?.photos?.[0] || '/images/no-image.png',
           applicantName: app.applicant?.name || '未知申请人',
           applicantEmail: app.applicant?.email || '未知邮箱',
           submitDate: app.submit_date,

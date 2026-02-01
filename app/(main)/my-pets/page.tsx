@@ -99,7 +99,7 @@ export default function MyPetsPage() {
             gender: pet.gender,
             location: pet.location,
             status: pet.status,
-            photos: pet.photos || ['/images/用户未上传.png'],
+            photos: pet.photos || ['/images/no-image.png'],
             views: pet.view_count || 0,
             publishDate: pet.created_at,
             applicationsCount: pet.applications_count || 0
@@ -230,7 +230,7 @@ export default function MyPetsPage() {
               {/* 宠物图片 */}
               <div className="w-full md:w-56 h-40 rounded-xl overflow-hidden shrink-0">
                 <Image
-                  src={pet.photos?.[0] || '/images/用户未上传.png'}
+                  src={pet.photos?.[0] || '/images/no-image.png'}
                   width={224}
                   height={160}
                   alt={pet.name}

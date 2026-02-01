@@ -304,7 +304,7 @@ export default function PetsPage() {
           pets.map((pet) => (
             <Link key={pet.id} href={`/pets/${pet.id}`} className="pet-card group bg-white dark:bg-white/5 rounded-xl overflow-hidden border border-[#f5f1f0] dark:border-white/10 transition-all hover:shadow-2xl hover:shadow-black/10">
               <div className="relative aspect-square overflow-hidden">
-                <Image alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={pet.photos?.[0] || '/images/用户未上传.png'} width={300} height={300} />
+                <Image alt={pet.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={pet.photos?.[0] || '/images/no-image.png'} width={300} height={300} />
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-primary border border-primary/20">{pet.status === 'available' ? '待领养' : pet.status === 'adopted' ? '已领养' : '审核中'}</span>
                 </div>
