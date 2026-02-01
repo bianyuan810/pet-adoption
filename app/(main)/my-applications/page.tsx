@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PawPrint, Calendar, Loader2 } from 'lucide-react';
-import { HttpStatus } from '@/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 申请状态类型
 type ApplicationStatusType = 'pending' | 'approved' | 'rejected';

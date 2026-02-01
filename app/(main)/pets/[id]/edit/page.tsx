@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import PetForm from '@/components/pet/PetForm'
-import type { Pet } from '@/types/supabase'
+import PetForm from '@/app/components/pet/PetForm'
+import type { Pet } from '@/app/types/supabase'
 
 export default function EditPetPage() {
   const params = useParams()

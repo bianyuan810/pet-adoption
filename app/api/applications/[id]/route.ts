@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
-import type { ApiResponse } from '@/types/api';
-import { HttpStatus } from '@/types/api';
+import { auth } from '@/app/lib/auth';
+import { ApplicationService } from '@/app/services/application.service';
+import type { ApiResponse } from '@/app/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 获取单个申请详情
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -19,21 +19,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     // params是Promise，需要await解包
     const { id: applicationId } = await params;
 
-    // 查询申请详情
-    const { data: application, error } = await supabase
-      .from('applications')
-      .select('*, pet:pet_id(*), applicant:applicant_id(*)')
-      .eq('id', applicationId)
-      .single();
-
-    if (error) {
-      console.error('获取申请详情失败:', error);
-      const response: ApiResponse = {
-        code: HttpStatus.INTERNAL_SERVER_ERROR,
-        msg: '获取申请详情失败'
-      };
-      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
-    }
+    // 使用ApplicationService获取申请详情
+    const application = await ApplicationService.getApplicationById(applicationId);
 
     if (!application) {
       const response: ApiResponse = {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import ApplicationCard from '../components/pet/ApplicationCard'
+import ApplicationCard from '@/app/components/pet/ApplicationCard'
 
 // 创建mockPush引用
 const mockPush = vi.fn()
@@ -42,7 +42,7 @@ const mockApplication = {
 
 describe('ApplicationCard 组件', () => {
   it('应该正确渲染申请卡片', () => {
-    render(<ApplicationCard application={mockApplication} isPublisher={false} />)
+    render(<ApplicationCard application={mockApplication} />)
     
     // 检查宠物名称是否显示
     expect(screen.getByText('小白')).toBeInTheDocument()
@@ -57,7 +57,7 @@ describe('ApplicationCard 组件', () => {
   })
 
   it('应该显示正确的状态样式', () => {
-    render(<ApplicationCard application={mockApplication} isPublisher={false} />)
+    render(<ApplicationCard application={mockApplication} />)
     
     // 检查审核中状态的样式（获取所有状态元素，然后找到带有bg-yellow-100类的那个）
     const statusElements = screen.getAllByText('审核中')
@@ -70,13 +70,13 @@ describe('ApplicationCard 组件', () => {
   it('应该根据申请状态显示不同的状态文本和样式', () => {
     // 测试已通过状态
     const approvedApplication = { ...mockApplication, status: 'approved' as const }
-    render(<ApplicationCard application={approvedApplication} isPublisher={false} />)
+    render(<ApplicationCard application={approvedApplication} />)   
     const approvedElements = screen.getAllByText('已通过')
     expect(approvedElements.length).toBeGreaterThan(0)
     
     // 测试已拒绝状态
     const rejectedApplication = { ...mockApplication, status: 'rejected' as const }
-    render(<ApplicationCard application={rejectedApplication} isPublisher={false} />)
+    render(<ApplicationCard application={rejectedApplication} />)   
     const rejectedElements = screen.getAllByText('已拒绝')
     expect(rejectedElements.length).toBeGreaterThan(0)
   })
@@ -85,8 +85,8 @@ describe('ApplicationCard 组件', () => {
     // 重置mockPush的调用记录
     mockPush.mockClear()
     
-    render(<ApplicationCard application={mockApplication} isPublisher={false} />)
-    
+    render(<ApplicationCard application={mockApplication} />)
+        
     // 点击卡片 - 获取内部有onClick事件的div元素
     const cardElement = screen.getByText('小白').closest('div')?.parentElement?.parentElement
     fireEvent.click(cardElement!)
@@ -97,7 +97,7 @@ describe('ApplicationCard 组件', () => {
   })
 
   it('应该正确显示申请消息并限制显示行数', () => {
-    render(<ApplicationCard application={mockApplication} isPublisher={false} />)
+    render(<ApplicationCard application={mockApplication} />)
     
     // 检查申请消息是否显示
     const messageElement = screen.getByText(/我非常喜欢这只狗狗/)
@@ -107,7 +107,7 @@ describe('ApplicationCard 组件', () => {
   })
 
   it('应该显示正确的申请时间格式', () => {
-    render(<ApplicationCard application={mockApplication} isPublisher={false} />)
+    render(<ApplicationCard application={mockApplication} />)
     
     // 检查申请时间是否显示为本地日期格式
     const expectedDate = new Date(mockApplication.created_at).toLocaleDateString()

@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
+   outputDir: 'playwright/test-results',
   testDir: './__tests__/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -14,7 +15,8 @@ export default defineConfig({
   timeout: 60000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { open: 'never' }], // 禁用自动打开报告
+    ['html', { outputFolder: 'playwright/playwright-report', open: 'never' }], // 禁用自动打开报告
+    ['json', { outputFolder: 'playwright/test-results/results.json' }], // 禁用自动打开报告
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

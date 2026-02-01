@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { HttpStatus } from '@/types/api';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { HttpStatus } from '@/app/types/api';
 
 // 申请数据类型定义
 interface Application {

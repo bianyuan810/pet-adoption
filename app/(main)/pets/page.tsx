@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Pet } from '@/types/supabase';
+import type { Pet } from '@/app/types/supabase';
 import { Search, ChevronDown, MapPin, ArrowUpDown, Heart } from 'lucide-react';
-import { HttpStatus } from '@/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 宠物类型定义
 interface PetWithPhotos extends Pet {

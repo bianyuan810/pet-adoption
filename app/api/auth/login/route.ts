@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
-import { supabase } from '@/lib/supabase'
-import { generateToken } from '@/lib/auth'
-import type { ApiResponse } from '@/types/api'
-import { HttpStatus } from '@/types/api'
+import { supabase } from '@/app/lib/supabase'
+import { generateToken } from '@/app/lib/auth'
+import type { ApiResponse } from '@/app/types/api'
+import { HttpStatus } from '@/app/types/api'
 
 
 const loginSchema = z.object({

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MoreHorizontal, PlusCircle, Send } from 'lucide-react';
-import { HttpStatus } from '@/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 消息类型定义
 interface Message {

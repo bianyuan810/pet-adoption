@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { HttpStatus } from '@/types/api';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { HttpStatus } from '@/app/types/api';
 
 // 定义宠物类型
 type FilterStatus = 'all' | 'available' | 'adopted' | 'processing';

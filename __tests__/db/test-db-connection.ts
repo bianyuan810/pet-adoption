@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { testDatabaseConnection, testTables, getDatabaseStats } from '../lib/test-db'
+import { testDatabaseConnection, testTables, getDatabaseStats } from '@/app/lib/test-db'
 
 async function main() {
   console.log('========================================')

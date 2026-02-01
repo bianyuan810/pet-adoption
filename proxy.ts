@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyToken } from '@/lib/auth'
-import { rateLimitCheck } from '@/lib/rate-limit'
-import type { ApiResponse } from '@/types/api'
-import { HttpStatus } from '@/types/api'
+import { verifyToken } from '@/app/lib/auth'
+import { rateLimitCheck } from '@/app/lib/rate-limit'
+import type { ApiResponse } from '@/app/types/api'
+import { HttpStatus } from '@/app/types/api'
 
 const publicPaths = ['/login', '/register', '/api/auth/login', '/api/auth/register']
 

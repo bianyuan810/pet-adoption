@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
-import { supabase } from '@/lib/supabase';
-import type { ApiResponse } from '@/types/api';
-import { HttpStatus } from '@/types/api';
+import { auth } from '@/app/lib/auth';
+import { ApplicationService } from '@/app/services/application.service';
+import type { ApiResponse } from '@/app/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 拒绝收养申请
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -20,19 +20,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const { id: applicationId } = await params;
 
     // 1. 获取申请信息，验证权限
-    const { data: application, error: getAppError } = await supabase
-      .from('applications')
-      .select('id, publisher_id, status')
-      .eq('id', applicationId)
-      .single();
-
-    if (getAppError) {
-      const response: ApiResponse = {
-        code: HttpStatus.INTERNAL_SERVER_ERROR,
-        msg: '获取申请信息失败'
-      };
-      return NextResponse.json(response, { status: HttpStatus.INTERNAL_SERVER_ERROR });
-    }
+    const application = await ApplicationService.getApplicationById(applicationId);
 
     if (!application) {
       const response: ApiResponse = {
@@ -61,13 +49,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     }
 
     // 2. 更新申请状态为已拒绝
-    const { error: updateError } = await supabase
-      .from('applications')
-      .update({ status: 'rejected' })
-      .eq('id', applicationId);
+    const updatedApplication = await ApplicationService.updateApplicationStatus(applicationId, 'rejected');
 
-    if (updateError) {
-      console.error('拒绝申请失败:', updateError);
+    if (!updatedApplication) {
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '拒绝申请失败'

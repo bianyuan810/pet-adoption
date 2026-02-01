@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import PetForm from '../components/pet/PetForm'
+import PetForm from '@/app/components/pet/PetForm'
 
 // 模拟 useRouter
 vi.mock('next/navigation', () => ({

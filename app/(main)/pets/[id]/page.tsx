@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import type { Pet } from '@/types/supabase';
+import type { Pet } from '@/app/types/supabase';
 import { Home, MapPin, Heart, Share2, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
 
 // 宠物详情类型定义

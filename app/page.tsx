@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowRight, MapPin } from 'lucide-react';
-import { HttpStatus } from '@/types/api';
+import { HttpStatus } from '@/app/types/api';
 
 // 宠物类型定义
 interface Pet {

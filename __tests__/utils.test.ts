@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { cn } from '../lib/utils'
+import { cn } from '@/app/lib/utils'
 
 describe('cn 函数', () => {
   it('应该正确合并类名', () => {

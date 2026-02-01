@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import PetCard from '../components/pet/PetCard'
-import type { Pet } from '../types/supabase'
+import PetCard from '@/app/components/pet/PetCard'
+import type { Pet } from '@/app/types//supabase'
 
 // 模拟 Pet 数据
 const mockPet: Pet = {
@@ -20,7 +20,9 @@ const mockPet: Pet = {
   health_status: '健康',
   vaccine_status: true,
   sterilized: true,
+  dewormed: true,
 }
+  
 
 // 模拟 primaryPhoto
 const mockPrimaryPhoto = 'https://example.com/photo.jpg'

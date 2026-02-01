@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { verifyToken } from '@/lib/auth'
-import type { ApiResponse } from '@/types/api'
-import { HttpStatus } from '@/types/api'
+import { supabase } from '@/app/lib/supabase'
+import { verifyToken } from '@/app/lib/auth'
+import type { ApiResponse } from '@/app/types/api'
+import { HttpStatus } from '@/app/types/api'
 
 export async function GET(
   request: NextRequest,

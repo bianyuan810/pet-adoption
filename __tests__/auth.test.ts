@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { auth, generateToken, verifyToken, decodeToken, JWTPayload } from '../lib/auth'
+import { auth, generateToken, verifyToken, decodeToken, JWTPayload } from '@/app/lib/auth'
 import { NextRequest } from 'next/server'
 
 describe('auth 模块', () => {
