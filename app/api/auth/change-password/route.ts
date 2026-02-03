@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 验证当前密码
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+    const isPasswordValid = await bcrypt.compare(currentPassword, (user as { password: string }).password)
 
     if (!isPasswordValid) {
       const response: ApiResponse = {
@@ -80,8 +80,14 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds)
 
     // 更新密码
-    const { error: updateError } = await supabase
-      .from('users')
+    const { error: updateError } = await (supabase
+      .from('users') as unknown as {
+        update: (data: { password: string }) => {
+          eq: (column: string, value: string) => Promise<{
+            error: unknown;
+          }>;
+        };
+      })
       .update({ password: hashedPassword })
       .eq('id', payload.userId)
 

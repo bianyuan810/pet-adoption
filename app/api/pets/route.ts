@@ -125,6 +125,7 @@ export async function GET(request: NextRequest) {
     const age = queryParams.age;
     const genderParam = queryParams.gender;
     const location = queryParams.location;
+    const status = queryParams.status;
     const sortBy = queryParams.sortBy || 'newest';
     const isPublisher = queryParams.isPublisher;
     const limit = queryParams.limit || 10;
@@ -147,6 +148,7 @@ export async function GET(request: NextRequest) {
       age: age || undefined,
       gender: gender || undefined,
       location: location || undefined,
+      status: status || undefined,
       sortBy: sortBy || 'newest',
       limit,
       page,

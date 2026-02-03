@@ -35,10 +35,16 @@ export function Button({
     lg: 'h-12 px-6 text-lg gap-3',
   };
 
+  // 确保button元素的type属性默认为button，防止触发表单提交
+  const buttonProps = {
+    ...props,
+    type: props.type || 'button'
+  };
+
   return (
     <button
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
-      {...props}
+      {...buttonProps}
     >
       {children}
     </button>

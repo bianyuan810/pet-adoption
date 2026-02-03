@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 
 // 定义Application接口
@@ -23,6 +23,7 @@ interface Application {
     gender: 'male' | 'female' | 'unknown';
     status: 'available' | 'adopted' | 'pending';
     location: string;
+    photos?: string[];
   };
   applicant: {
     id: string;
@@ -63,14 +64,20 @@ export default function ApplicationDetailPage() {
         if (response.ok) {
           const data = await response.json();
           
-          // 模拟养宠经验和居住环境数据
-          const enhancedApplication = {
-            ...data,
-            experience: data.experience || '我有5年的养狗经验，之前养过一只金毛和一只拉布拉多，都健康成长。我了解狗狗的基本护理和训练方法，能够提供良好的生活环境。',
-            environment: data.environment || '我住在北京市朝阳区，有一套80平米的公寓，带有一个封闭式阳台，适合狗狗活动。小区内有专门的宠物活动区域，附近也有公园可以遛狗。',
-          };
-          
-          setApplication(enhancedApplication);
+          // 检查API响应是否成功且包含数据
+          if (data.code === 200 && data.data) {
+            // 模拟养宠经验和居住环境数据
+            const enhancedApplication = {
+              ...data.data,
+              experience: data.data.experience || '我有5年的养狗经验，之前养过一只金毛和一只拉布拉多，都健康成长。我了解狗狗的基本护理和训练方法，能够提供良好的生活环境。',
+              environment: data.data.environment || '我住在北京市朝阳区，有一套80平米的公寓，带有一个封闭式阳台，适合狗狗活动。小区内有专门的宠物活动区域，附近也有公园可以遛狗。',
+            };
+            
+            setApplication(enhancedApplication);
+          } else {
+            setError('获取申请详情失败');
+            console.error('获取申请详情失败:', data);
+          }
         } else {
           setError('获取申请详情失败');
           console.error('获取申请详情失败');
@@ -117,6 +124,8 @@ export default function ApplicationDetailPage() {
       setIsSubmitting(false);
     }
   };
+
+
 
   if (isLoading) {
     return (
@@ -240,8 +249,18 @@ export default function ApplicationDetailPage() {
 
         <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden">
-            <div className="w-full h-48 bg-gray-100 dark:bg-white/10 flex items-center justify-center">
-              <PawPrint className="w-16 h-16 text-gray-400" />
+            <div className="w-full h-48 bg-gray-100 dark:bg-white/10 overflow-hidden">
+              {application.pet?.photos && application.pet.photos.length > 0 ? (
+                <img 
+                  src={application.pet.photos[0]} 
+                  alt={application.pet.name} 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <PawPrint className="w-16 h-16 text-gray-400" />
+                </div>
+              )}
             </div>
             <div className="p-6">
               <p className="text-[10px] font-bold text-primary uppercase mb-1">申请对象</p>
@@ -283,6 +302,20 @@ export default function ApplicationDetailPage() {
                 </div>
               </div>
             </div>
+            
+            {/* 发送消息按钮 */}
+            <div className="mt-8">
+              <button 
+                onClick={() => {
+                  // 跳转到消息中心
+                  router.push('/messages');
+                }}
+                className="w-full py-3 rounded-xl bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle size={16} />
+                发送消息
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -321,6 +354,8 @@ export default function ApplicationDetailPage() {
           <ArrowLeft size={16} /> 返回列表
         </button>
       </div>
+
+
     </div>
   );
 }

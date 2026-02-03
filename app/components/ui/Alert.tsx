@@ -6,9 +6,10 @@ interface AlertProps {
   type: 'success' | 'error' | 'warning' | 'info'
   message: string | ReactNode
   onClose?: () => void
+  className?: string
 }
 
-export default function Alert({ type, message, onClose }: AlertProps) {
+export default function Alert({ type, message, onClose, className = '' }: AlertProps) {
   // 类型对应的样式类
   const typeClasses = {
     success: 'bg-green-100 text-green-800 border-green-200',
@@ -42,7 +43,7 @@ export default function Alert({ type, message, onClose }: AlertProps) {
   }
 
   return (
-    <div className={`flex items-center p-4 mb-4 border rounded-lg ${typeClasses[type]}`} role="alert">
+    <div className={`flex items-center p-4 mb-4 border rounded-lg ${typeClasses[type]} ${className}`} role="alert">
       <div className="flex-shrink-0 mr-3">
         {typeIcons[type]}
       </div>

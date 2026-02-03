@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PawPrint, Calendar, Loader2 } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 // 申请状态类型
 type ApplicationStatusType = 'pending' | 'approved' | 'rejected';
@@ -26,6 +27,7 @@ interface Application {
     gender: string;
     location: string;
     status: string;
+    photos?: string[];
   };
   applicant: {
     id: string;
@@ -41,6 +43,7 @@ interface Application {
 
 export default function MyApplicationsPage() {
   const router = useRouter();
+  const { user, token, isAuthenticated } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -50,9 +53,24 @@ export default function MyApplicationsPage() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
+        // 检查认证状态
+        if (!isAuthenticated || !token) {
+          setError('请先登录');
+          setApplications([]);
+          setIsLoading(false);
+          // 跳转到登录页面
+          router.push('/login?redirect=/my-applications');
+          return;
+        }
+
         setIsLoading(true);
         setError('');
-        const response = await fetch('/api/applications');
+        const response = await fetch('/api/applications', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
         
         if (response.ok) {
@@ -79,7 +97,7 @@ export default function MyApplicationsPage() {
     };
 
     fetchApplications();
-  }, []);
+  }, [isAuthenticated, token, router]);
 
   // 按状态筛选申请
   const getFilteredApplications = () => {
@@ -179,8 +197,18 @@ export default function MyApplicationsPage() {
           <div className="divide-y divide-gray-100 dark:divide-white/10">
             {getFilteredApplications().map((app) => (
               <div key={app.id} className="flex flex-wrap items-center gap-6 p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
-                <div className="w-24 h-24 rounded-xl bg-gray-100 dark:bg-white/10 flex items-center justify-center shadow-sm">
-                  <PawPrint className="w-12 h-12 text-gray-400" />
+                <div className="w-24 h-24 rounded-xl bg-gray-100 dark:bg-white/10 overflow-hidden shadow-sm">
+                  {app.pet?.photos && app.pet.photos.length > 0 ? (
+                    <img 
+                      src={app.pet.photos[0]} 
+                      alt={app.pet.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <PawPrint className="w-12 h-12 text-gray-400" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-[200px]">
                   <h3 className="text-zinc-900 dark:text-white text-xl font-bold">{app.pet?.name || '未知宠物'}</h3>

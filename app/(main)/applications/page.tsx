@@ -15,6 +15,7 @@ interface Application {
   petImage: string;
   applicantName: string;
   applicantEmail: string;
+  applicantAvatar?: string;
   submitDate: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   reason: string;
@@ -27,18 +28,24 @@ interface AppData {
   id: string;
   pet_id: string;
   pet?: {
+    id: string;
     name: string;
+    breed: string;
+    age: number;
+    gender: string;
+    location: string;
+    status: string;
     photos: string[];
-  };
+  } | null;
   applicant?: {
+    id: string;
     name: string;
     email: string;
-  };
-  submit_date: string;
+    avatar_url?: string;
+  } | null;
+  created_at: string;
   status: string;
-  reason: string;
-  experience: string;
-  environment: string;
+  message: string;
 }
 
 export default function ApplicationsPage() {
@@ -95,14 +102,15 @@ export default function ApplicationsPage() {
           id: app.id,
           petId: app.pet_id,
           petName: app.pet?.name || '未知宠物',
-          petImage: app.pet?.photos?.[0] || '/images/no-image.png',
+          petImage: app.pet?.photos && app.pet.photos.length > 0 ? app.pet.photos[0] : '/images/no-image.png',
           applicantName: app.applicant?.name || '未知申请人',
           applicantEmail: app.applicant?.email || '未知邮箱',
-          submitDate: app.submit_date,
+          applicantAvatar: app.applicant?.avatar_url,
+          submitDate: app.created_at,
           status: app.status.toUpperCase() as 'PENDING' | 'APPROVED' | 'REJECTED',
-          reason: app.reason || '',
-          experience: app.experience || '',
-          environment: app.environment || ''
+          reason: app.message || '',
+          experience: '',
+          environment: ''
         }));
       }
       
@@ -125,6 +133,10 @@ export default function ApplicationsPage() {
   // 格式化日期
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+    // 检查日期是否有效
+    if (isNaN(date.getTime())) {
+      return '未知日期';
+    }
     return date.toLocaleDateString('zh-CN', {
       year: 'numeric',
       month: 'long',
@@ -216,7 +228,13 @@ export default function ApplicationsPage() {
               </div>
               <div className="flex-1 flex items-center gap-3">
                 <div className="size-10 rounded-full bg-gray-200 border border-white dark:border-white/10 overflow-hidden">
-                  <Image src={`https://i.pravatar.cc/150?u=${app.id}`} width={40} height={40} alt={app.applicantName} className="w-full h-full object-cover" />
+                  <Image 
+                    src={app.applicantAvatar || `https://i.pravatar.cc/150?u=${app.id}`} 
+                    width={40} 
+                    height={40} 
+                    alt={app.applicantName} 
+                    className="w-full h-full object-cover" 
+                  />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-zinc-900 dark:text-white">{app.applicantName}</p>

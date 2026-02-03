@@ -1,4 +1,4 @@
-import { supabase } from '@/app/lib/supabase';
+import { supabase, supabaseAdmin } from '@/app/lib/supabase';
 import type { User } from '@/app/types/supabase';
 
 /**
@@ -77,7 +77,7 @@ export class UserService {
       .from('users')
       .update(userData)
       .eq('id', id)
-      .select()
+      .select('id, email, password, name, phone, wechat, avatar_url, role, created_at, updated_at')
       .single();
 
     if (error) {
@@ -164,6 +164,59 @@ export class UserService {
       users: users || [],
       total: count || 0
     };
+  }
+
+  /**
+   * 上传用户头像
+   * @param userId 用户 ID
+   * @param file 头像文件
+   * @returns 更新后的用户
+   */
+  static async uploadAvatar(userId: string, file: File): Promise<User | null> {
+    try {
+      // 检查是否在服务端环境中
+      if (typeof window !== 'undefined' || !supabaseAdmin) {
+        console.error('上传头像失败: 只能在服务端环境中上传文件');
+        return null;
+      }
+
+      // 生成文件名
+      const fileName = `avatars/${userId}_${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+      
+      // 上传文件到存储
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('pet-photos')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error('上传文件失败:', uploadError);
+        return null;
+      }
+
+      // 获取头像URL
+      const avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/pet-photos/${fileName}`;
+
+      // 更新用户的avatar_url字段
+      const { data: user, error: updateError } = await supabase
+        .from('users')
+        .update({
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId)
+        .select('id, email, password, name, phone, wechat, avatar_url, role, created_at, updated_at')
+        .single();
+
+      if (updateError) {
+        console.error('更新用户头像失败:', updateError);
+        return null;
+      }
+
+      return user;
+    } catch (error) {
+      console.error('上传头像失败:', error);
+      return null;
+    }
   }
 }
 

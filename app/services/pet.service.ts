@@ -17,6 +17,7 @@ export class PetService {
     age?: string;
     gender?: string;
     location?: string;
+    status?: string;
     sortBy?: string;
     limit?: number;
     isPublisher?: boolean;
@@ -29,6 +30,7 @@ export class PetService {
       age,
       gender,
       location,
+      status,
       sortBy = 'newest',
       limit = 10,
       isPublisher = false,
@@ -104,6 +106,11 @@ export class PetService {
     
     if (location) {
       query = query.ilike('location', `%${location}%`);
+    }
+    
+    // 状态过滤
+    if (status) {
+      query = query.eq('status', status);
     }
 
     // 执行查询
@@ -251,6 +258,11 @@ export class PetService {
       const fileName = `${petId}_${Date.now()}_${file.name}`;
       
       // 上传文件到存储
+      if (!supabaseAdmin) {
+        console.error('上传文件失败: 管理员客户端未初始化');
+        return null;
+      }
+
       const { error: uploadError } = await supabaseAdmin.storage
         .from('pet-photos')
         .upload(fileName, file);

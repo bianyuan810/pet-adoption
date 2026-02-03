@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { Pet } from '@/app/types/supabase';
 import { Home, MapPin, Heart, Share2, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 // 宠物详情类型定义
 interface PetDetail extends Pet {
@@ -21,6 +22,7 @@ interface PetDetail extends Pet {
 export default function PetDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { user, isLoading: authLoading } = useAuth();
   const [pet, setPet] = useState<PetDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,10 +33,11 @@ export default function PetDetailPage() {
         const response = await fetch(`/api/pets/${params.id}`);
         const data = await response.json();
         
-        if (data.pet) {
+        // 检查API响应是否成功且包含数据
+        if (data.code === 200 && data.data && data.data.pet) {
           setPet({
-            ...data.pet,
-            photos: data.photos || []
+            ...data.data.pet,
+            photos: data.data.photos || []
           });
         }
       } catch (error) {
@@ -51,6 +54,13 @@ export default function PetDetailPage() {
     e.preventDefault();
     
     try {
+      // 检查用户是否登录
+      if (!user) {
+        alert('请先登录后再申请领养');
+        router.push('/login');
+        return;
+      }
+      
       // 获取表单数据
       const formData = new FormData(e.currentTarget as HTMLFormElement);
       const reason = formData.get('reason') as string;
@@ -72,7 +82,7 @@ export default function PetDetailPage() {
         router.push('/my-applications');
       } else {
         const errorData = await response.json();
-        alert(`申请失败: ${errorData.error || '请稍后重试'}`);
+        alert(`申请失败: ${errorData.msg || '请稍后重试'}`);
       }
     } catch (error) {
       console.error('提交申请失败:', error);

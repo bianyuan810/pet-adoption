@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, Mail } from "lucide-react";
+import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, Mail, User } from "lucide-react";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { user, logout } = useAuth();
 
   const navLinks = [
     { label: "首页", path: "/" },
@@ -61,41 +63,67 @@ const Navbar: React.FC = () => {
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className="h-9 w-9 rounded-full bg-gray-200 dark:bg-white/10 overflow-hidden cursor-pointer border border-[#e6dedb] dark:border-white/20 hover:ring-2 hover:ring-primary/20 transition-all"
                   >
-                    <Image
-                      alt="User Avatar"
-                      className="w-full h-full object-cover"
-                      src="/images/user-avatar.png"
-                      width={36}
-                      height={36}
-                    />
+                    {user?.avatar_url ? (
+                      <Image
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                        src={user.avatar_url}
+                        width={36}
+                        height={36}
+                      />
+                    ) : user ? (
+                      <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-semibold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                    ) : (
+                      <Image
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                        src="/images/user-avatar.png"
+                        width={36}
+                        height={36}
+                      />
+                    )}
                   </div>
 
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-gray-100 dark:border-white/10 py-2 z-50">
-                    <Link
-                      href="/login"
-                      onClick={() => setShowUserMenu(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                    >
-                      <LogIn className="text-sm" /> 登录/注册
-                    </Link>
-                    <Link
-                      href="/change-password"
-                      onClick={() => setShowUserMenu(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                    >
-                      <Lock className="text-sm" /> 修改密码
-                    </Link>
-                    <div className="h-px bg-gray-100 dark:bg-white/5 my-1 mx-2"></div>
-                    <button
-                      onClick={() => {
-                        setShowUserMenu(false);
-                        router.push("/login");
-                      }}
-                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-                    >
-                      <LogOut className="text-sm" /> 退出登录
-                    </button>
+                    {user ? (
+                      <>
+                        <Link
+                          href="/profile"
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                        >
+                          <User className="text-sm" /> 个人中心
+                        </Link>
+                        <Link
+                          href="/change-password"
+                          onClick={() => setShowUserMenu(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                        >
+                          <Lock className="text-sm" /> 修改密码
+                        </Link>
+                        <div className="h-px bg-gray-100 dark:bg-white/5 my-1 mx-2"></div>
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            logout();
+                          }}
+                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                        >
+                          <LogOut className="text-sm" /> 退出登录
+                        </button>
+                      </>
+                    ) : (
+                      <Link
+                        href="/login"
+                        onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                      >
+                        <LogIn className="text-sm" /> 登录/注册
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>

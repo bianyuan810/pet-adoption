@@ -34,14 +34,12 @@ export default function Home() {
     const fetchRecommendedPets = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/pets?sortBy=newest&limit=4');
+        const response = await fetch('/api/pets?sortBy=newest&limit=4&status=available');
         const data = await response.json();
         
         if (data.code === HttpStatus.OK && data.data) {
-          // 处理宠物数据，添加照片信息，并只保留可领养的宠物
-          const petsWithPhotos = data.data
-            .filter((pet: any) => pet.status === 'available') // 只保留可领养的宠物
-            .map((pet: any) => ({
+          // 处理宠物数据，添加照片信息
+          const petsWithPhotos = data.data.map((pet: any) => ({
               ...pet,
               photos: pet.photos || [],
               category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 

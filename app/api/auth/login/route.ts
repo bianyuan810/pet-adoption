@@ -6,6 +6,19 @@ import { generateToken } from '@/app/lib/auth'
 import type { ApiResponse } from '@/app/types/api'
 import { HttpStatus } from '@/app/types/api'
 
+// 定义登录查询返回的用户数据类型
+interface UserLoginData {
+  id: string
+  email: string
+  name: string
+  password: string
+  role: 'admin' | 'user'
+  phone?: string
+  wechat?: string
+  avatar_url?: string
+  created_at: string
+}
+
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -31,9 +44,9 @@ export async function POST(request: NextRequest) {
 
     const { data: user, error: fetchError } = await supabase
       .from('users')
-      .select('id, email, name, password, role, phone, wechat, created_at')
+      .select('id, email, name, password, role, phone, wechat, avatar_url, created_at')
       .eq('email', email)
-      .single()
+      .single() as { data: UserLoginData | null; error: unknown }
 
     if (fetchError) {
       console.error('查询用户时出错:', fetchError)
