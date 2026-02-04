@@ -140,6 +140,26 @@ interface ApplicationCountResult {
   error: unknown;
 }
 
+// 宠物查询返回类型
+interface PetQueryResult {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  gender: string;
+  location: string;
+  status: string;
+  pet_photos?: { photo_url: string }[];
+}
+
+// 用户查询返回类型
+interface UserQueryResult {
+  id: string;
+  name: string;
+  email: string;
+  avatar_url?: string;
+}
+
 // 宠物状态更新操作返回类型
 interface PetUpdateResult {
   error: unknown;
@@ -323,7 +343,7 @@ export class ApplicationService {
       .from('applications') as unknown as {
         select: (columns: string) => {
           eq: (column: string, value: string) => {
-            single: () => Promise<{ data: RawApplication | null }>;
+            single: () => Promise<{ data: RawApplication | null; error: unknown }>;
           };
         };
       })

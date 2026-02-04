@@ -138,15 +138,15 @@ const Navbar: React.FC = () => {
 const Footer: React.FC = () => (
   <footer className="bg-white dark:bg-white/5 border-t border-[#e6dedb] dark:border-white/10 pt-16 pb-8">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-        <div className="col-span-1">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+        <div className="flex-1">
           <div className="flex items-center gap-2 mb-6">
             <PawPrint className="text-primary text-3xl" />
             <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
               宠物领养中心
             </span>
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed max-w-xs">
             我们致力于为每一只宠物找到温暖的家，为每一个家庭找到合适的伙伴。
             让我们一起传递爱心，让更多的生命感受到关怀。
           </p>
@@ -159,32 +159,8 @@ const Footer: React.FC = () => (
             </button>
           </div>
         </div>
-        <div>
-          <h4 className="font-bold mb-6 text-zinc-900 dark:text-white">快速导航</h4>
-          <ul className="space-y-4 text-sm text-gray-500 dark:text-gray-400">
-            <li>
-              <Link href="/" className="hover:text-primary transition-colors">
-                首页
-              </Link>
-            </li>
-            <li>
-              <Link href="/pets" className="hover:text-primary transition-colors">
-                宠物列表
-              </Link>
-            </li>
-            <li>
-              <Link href="/publish" className="hover:text-primary transition-colors">
-                发布宠物
-              </Link>
-            </li>
-            <li>
-              <Link href="/my-applications" className="hover:text-primary transition-colors">
-                我的申请
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div>
+
+        <div className="flex-shrink-0">
           <h4 className="font-bold mb-6 text-zinc-900 dark:text-white">关于我们</h4>
           <ul className="space-y-4 text-sm text-gray-500 dark:text-gray-400">
             <li>
@@ -198,22 +174,7 @@ const Footer: React.FC = () => (
             </li>
           </ul>
         </div>
-        <div>
-          <h4 className="font-bold mb-6 text-zinc-900 dark:text-white">订阅通讯</h4>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            订阅我们的通讯，获取最新的宠物领养信息和活动通知
-          </p>
-          <div className="flex gap-2">
-            <input
-              className="flex-1 bg-[#f5f1f0] dark:bg-white/5 border-none rounded-xl text-sm focus:ring-primary h-11 px-4"
-              placeholder="请输入邮箱"
-              type="email"
-            />
-            <button className="px-6 py-2 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all h-11 flex items-center justify-center">
-              <Mail className="text-sm" />
-            </button>
-          </div>
-        </div>
+
       </div>
       <div className="border-t border-[#e6dedb] dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="text-xs text-gray-500 dark:text-gray-400">

@@ -14,7 +14,6 @@ interface ProfileFormData {
   name: string
   phone?: string
   wechat?: string
-  avatar_url?: string
 }
 
 export default function ProfilePage() {
@@ -25,8 +24,7 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     phone: '',
-    wechat: '',
-    avatar_url: ''
+    wechat: ''
   })
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -36,8 +34,7 @@ export default function ProfilePage() {
       setFormData({
         name: user.name,
         phone: user.phone || '',
-        wechat: user.wechat || '',
-        avatar_url: user.avatar_url || ''
+        wechat: user.wechat || ''
       })
     }
   }, [user])
@@ -117,8 +114,7 @@ export default function ProfilePage() {
       const updatedUser = await UserService.updateUser(user.id, {
         name: formData.name,
         phone: formData.phone || undefined,
-        wechat: formData.wechat || undefined,
-        avatar_url: formData.avatar_url || undefined
+        wechat: formData.wechat || undefined
       })
 
       if (!updatedUser) {
@@ -258,31 +254,7 @@ export default function ProfilePage() {
                 />
               </div>
 
-              <div>
-                <label htmlFor="avatar_url" className="block text-sm font-medium text-gray-700 mb-1">
-                  头像URL
-                </label>
-                <div className="relative">
-                  <Input
-                    id="avatar_url"
-                    name="avatar_url"
-                    value={formData.avatar_url}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="w-full pr-10"
-                    placeholder="输入头像图片URL"
-                  />
-                  {isEditing && formData.avatar_url && (
-                    <button
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, avatar_url: '' }))}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
-                      清除
-                    </button>
-                  )}
-                </div>
-              </div>
+
 
               <div className="flex space-x-4 pt-4">
                 <Button 
