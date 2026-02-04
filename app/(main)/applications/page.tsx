@@ -229,7 +229,7 @@ export default function ApplicationsPage() {
               <div className="flex-1 flex items-center gap-3">
                 <div className="size-10 rounded-full bg-gray-200 border border-white dark:border-white/10 overflow-hidden">
                   <Image 
-                    src={app.applicantAvatar || `https://i.pravatar.cc/150?u=${app.id}`} 
+                    src={app.applicantAvatar || `/images/user-avatar.png`} 
                     width={40} 
                     height={40} 
                     alt={app.applicantName} 
@@ -257,8 +257,7 @@ export default function ApplicationsPage() {
               </div>
               <div className="flex items-center gap-2 ml-auto">
                 <button onClick={() => router.push(`/applications/${app.id}`)} className="px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-all shadow-sm shadow-primary/20">查看详情</button>
-                <button className="size-10 flex items-center justify-center bg-teal-100 text-teal-600 rounded-xl hover:bg-teal-600 hover:text-white transition-all"><Check size={20} /></button>
-                <button className="size-10 flex items-center justify-center bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"><X size={20} /></button>
+   
               </div>
             </div>
           ))

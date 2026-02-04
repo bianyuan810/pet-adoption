@@ -301,10 +301,9 @@ export default function MyPetsPage() {
                     </div>
                   </>
                 ) : pet.status === 'adopted' ? (
-                  <button className="w-full flex items-center justify-center gap-2 h-10 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 text-sm font-bold rounded-xl hover:bg-gray-200 transition-all">
-                    <BarChart2 size={18} />
-                    回访记录
-                  </button>
+                  <div className="w-full h-10 flex items-center justify-center text-gray-400 text-xs font-bold bg-gray-50 dark:bg-white/5 rounded-xl border border-dashed border-gray-200 dark:border-white/10">
+                    已领养
+                  </div>
                 ) : (
                   <div className="w-full h-10 flex items-center justify-center text-gray-400 text-xs font-bold bg-gray-50 dark:bg-white/5 rounded-xl border border-dashed border-gray-200 dark:border-white/10">
                     等待平台审核
@@ -327,23 +326,6 @@ export default function MyPetsPage() {
           </div>
         )}
       </div>
-
-      {/* 底部统计卡片 */}
-      {pets.length > 0 && (
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex items-center gap-5 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
-              <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                {stat.icon}
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-1">{stat.label}</p>
-                <p className="text-2xl font-black text-zinc-900 dark:text-white">{stat.value}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

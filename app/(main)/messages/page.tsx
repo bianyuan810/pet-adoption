@@ -14,16 +14,16 @@ interface Message {
   is_read: boolean;
   created_at: string;
   pet_id?: string;
-  sender?: {
+  sender: {
     id: string;
     name: string;
     avatar_url?: string;
-  };
-  receiver?: {
+  } | null;
+  receiver: {
     id: string;
     name: string;
     avatar_url?: string;
-  };
+  } | null;
 }
 
 // 聊天会话类型定义
@@ -43,6 +43,55 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [newMessage, setNewMessage] = useState('');
+  const [user, setUser] = useState<any>(null);
+  
+  useEffect(() => {
+    // 只在客户端获取用户信息
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+    }
+  }, []);
+  
+  useEffect(() => {
+    // 当用户信息加载完成后处理URL参数
+    if (typeof window !== 'undefined' && user) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get('userId');
+      const userName = urlParams.get('userName');
+      
+      if (userId && userName && user.id) {
+        // 确定对话ID（两个用户ID的组合，按字母顺序排序）
+        const conversationId = [user.id, userId].sort().join('_');
+        
+        // 创建新对话
+        const newConversation: Conversation = {
+          id: conversationId,
+          userId: userId,
+          userName: userName,
+          lastMessage: '',
+          lastMessageTime: new Date().toLocaleString(),
+          unreadCount: 0
+        };
+        
+        // 直接更新状态，确保新对话被添加
+        setConversations(prev => {
+          // 检查新对话是否已经存在于当前状态中
+          const newConversationExists = prev.find(c => c.id === conversationId);
+          if (newConversationExists) {
+            return prev;
+          }
+          return [newConversation, ...prev];
+        });
+        
+        // 选择新对话
+        setSelectedConversation(newConversation);
+        
+        // 清除URL参数
+        window.history.replaceState({}, document.title, '/messages');
+      }
+    }
+  }, [user]);
 
   // 获取消息列表并分组为会话
   useEffect(() => {
@@ -61,36 +110,49 @@ export default function MessagesPage() {
           
           allMessages.forEach(msg => {
             // 确定对话ID（两个用户ID的组合，按字母顺序排序）
-            const currentUserId = msg.sender_id === msg.sender?.id ? msg.sender_id : msg.receiver_id;
+            const currentUserId = user.id;
             const otherUserId = msg.sender_id === currentUserId ? msg.receiver_id : msg.sender_id;
             const conversationId = [currentUserId, otherUserId].sort().join('_');
             
-            // 获取对方用户信息
-            const otherUser = msg.sender_id === currentUserId ? msg.receiver : msg.sender;
+            // 计算未读消息数
+            const unreadCount = allMessages.filter(m => 
+              m.receiver_id === currentUserId && 
+              m.sender_id === otherUserId && 
+              !m.is_read
+            ).length;
             
-            if (otherUser) {
-              // 计算未读消息数
-              const unreadCount = allMessages.filter(m => 
-                m.receiver_id === currentUserId && 
-                m.sender_id === otherUserId && 
-                !m.is_read
-              ).length;
+            // 尝试获取对方用户信息
+            let otherUserName = '未知用户';
+            let otherUserAvatar = undefined;
+            
+            // 检查是否有sender信息
+            if (msg.sender && msg.sender.id === otherUserId) {
+              otherUserName = msg.sender.name || '未知用户';
+              otherUserAvatar = msg.sender.avatar_url ? msg.sender.avatar_url.replace(/[`\s\"]/g, '') : undefined;
+            }
+            
+            // 检查是否有receiver信息
+            if (msg.receiver && msg.receiver.id === otherUserId) {
+              otherUserName = msg.receiver.name || '未知用户';
+              otherUserAvatar = msg.receiver.avatar_url ? msg.receiver.avatar_url.replace(/[`\s\"]/g, '') : undefined;
+            }
+            
+            // 更新或创建对话
+            const existingConversation = conversationsMap.get(conversationId);
+            const messageTime = new Date(msg.created_at).toLocaleString();
+            
+            if (!existingConversation || new Date(msg.created_at) > new Date(existingConversation.lastMessageTime)) {
+              const newConversation = {
+                id: conversationId,
+                userId: otherUserId,
+                userName: otherUserName,
+                userAvatar: otherUserAvatar,
+                lastMessage: msg.content,
+                lastMessageTime: messageTime,
+                unreadCount
+              };
               
-              // 更新或创建对话
-              const existingConversation = conversationsMap.get(conversationId);
-              const messageTime = new Date(msg.created_at).toLocaleString();
-              
-              if (!existingConversation || new Date(msg.created_at) > new Date(existingConversation.lastMessageTime)) {
-                conversationsMap.set(conversationId, {
-                  id: conversationId,
-                  userId: otherUserId,
-                  userName: otherUser.name,
-                  userAvatar: otherUser.avatar_url,
-                  lastMessage: msg.content,
-                  lastMessageTime: messageTime,
-                  unreadCount
-                });
-              }
+              conversationsMap.set(conversationId, newConversation);
             }
           });
           
@@ -98,11 +160,53 @@ export default function MessagesPage() {
           const sortedConversations = Array.from(conversationsMap.values())
             .sort((a, b) => new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime());
           
-          setConversations(sortedConversations);
+          // 检查是否有通过URL参数创建的新对话
+          let finalConversations = sortedConversations;
           
-          // 默认选择第一个对话
-          if (sortedConversations.length > 0) {
-            selectConversation(sortedConversations[0]);
+          if (typeof window !== 'undefined' && user) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            const userName = urlParams.get('userName');
+            
+            if (userId && userName && user.id) {
+              // 确定对话ID（两个用户ID的组合，按字母顺序排序）
+              const conversationId = [user.id, userId].sort().join('_');
+              
+              // 检查新对话是否已经存在于从API获取的对话列表中
+              const newConversationExists = sortedConversations.find(c => c.id === conversationId);
+              
+              if (!newConversationExists) {
+                // 创建新对话
+                const newConversation: Conversation = {
+                  id: conversationId,
+                  userId: userId,
+                  userName: userName,
+                  lastMessage: '',
+                  lastMessageTime: new Date().toLocaleString(),
+                  unreadCount: 0
+                };
+                
+                // 将新对话添加到列表顶部
+                finalConversations = [newConversation, ...sortedConversations];
+              }
+            }
+          }
+          
+          // 设置最终的对话列表
+          setConversations(finalConversations);
+          
+          // 只有当没有通过URL参数创建的新对话时，才默认选择第一个对话
+          if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            
+            if (!userId && finalConversations.length > 0) {
+              // 默认选择第一个对话
+              selectConversation(finalConversations[0]);
+            }
+          } else if (finalConversations.length > 0) {
+            // 默认选择第一个对话
+            selectConversation(finalConversations[0]);
           }
         }
       } catch (error) {
@@ -112,8 +216,11 @@ export default function MessagesPage() {
       }
     };
 
-    fetchMessages();
-  }, []);
+    // 只有当用户信息加载完成后才获取消息列表
+    if (user) {
+      fetchMessages();
+    }
+  }, [user]);
 
   // 选择对话并获取聊天记录
   const selectConversation = async (conversation: Conversation) => {
@@ -133,7 +240,7 @@ export default function MessagesPage() {
         
         // 标记未读消息为已读
         sortedMessages
-          .filter(msg => msg.receiver_id === msg.receiver?.id && !msg.is_read)
+          .filter(msg => msg.receiver_id === user.id && !msg.is_read)
           .forEach(async (msg) => {
             try {
               await fetch(`/api/messages/${msg.id}/read`, {
@@ -316,11 +423,11 @@ export default function MessagesPage() {
                           <div className="size-9 rounded-xl overflow-hidden shrink-0">
                             <Image 
                               src={isIncoming 
-                                ? selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}` 
-                                : `https://i.pravatar.cc/150?u=me`} 
+                                ? ((msg.receiver?.avatar_url || '').replace(/[`\s\"]/g, '') || selectedConversation.userAvatar || `https://i.pravatar.cc/150?u=${selectedConversation.userId}`) 
+                                : ((user?.avatar_url || '').replace(/[`\s\"]/g, '') || `https://i.pravatar.cc/150?u=me`)} 
                               width={36} 
                               height={36} 
-                              alt={isIncoming ? selectedConversation.userName : 'Me'} 
+                              alt={isIncoming ? (msg.receiver?.name || selectedConversation.userName) : (user?.name || 'Me')} 
                               className="w-full h-full object-cover" 
                             />
                           </div>

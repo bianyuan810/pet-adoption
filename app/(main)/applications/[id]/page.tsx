@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
@@ -30,9 +31,6 @@ interface Application {
     name: string;
     email: string;
   };
-  // 扩展字段，模拟养宠经验和居住环境
-  experience?: string;
-  environment?: string;
 }
 
 // 申请详情页面
@@ -66,14 +64,7 @@ export default function ApplicationDetailPage() {
           
           // 检查API响应是否成功且包含数据
           if (data.code === 200 && data.data) {
-            // 模拟养宠经验和居住环境数据
-            const enhancedApplication = {
-              ...data.data,
-              experience: data.data.experience || '我有5年的养狗经验，之前养过一只金毛和一只拉布拉多，都健康成长。我了解狗狗的基本护理和训练方法，能够提供良好的生活环境。',
-              environment: data.data.environment || '我住在北京市朝阳区，有一套80平米的公寓，带有一个封闭式阳台，适合狗狗活动。小区内有专门的宠物活动区域，附近也有公园可以遛狗。',
-            };
-            
-            setApplication(enhancedApplication);
+            setApplication(data.data);
           } else {
             setError('获取申请详情失败');
             console.error('获取申请详情失败:', data);
@@ -182,8 +173,8 @@ export default function ApplicationDetailPage() {
 
   return (
     <div className="animate-in fade-in duration-500 flex flex-col min-h-screen">
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8 pb-32">
-        <div className="lg:col-span-2 space-y-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-12 flex flex-col lg:flex-row gap-8 pb-32">
+        <div className="lg:w-[66.666%] space-y-8 flex flex-col">
           <header className="flex items-center justify-between mb-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-3xl font-black tracking-tight">申请编号 #{application.id}</h2>
@@ -197,26 +188,12 @@ export default function ApplicationDetailPage() {
             </div>
           </header>
 
-          <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm flex flex-col flex-1">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <PawPrint className="text-primary" />
               申请人档案
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div className="space-y-4">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">养宠经验</label>
-                <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl text-sm leading-relaxed">
-                  {application.experience || '暂无相关信息'}
-                </div>
-              </div>
-              <div className="space-y-4">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">居住环境</label>
-                <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl text-sm leading-relaxed">
-                  {application.environment || '暂无相关信息'}
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4 mb-8">
+            <div className="space-y-4 mb-8 flex-1">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">申请理由</label>
               <p className="text-sm leading-relaxed text-zinc-700 dark:text-gray-300">{application.message || '暂无申请理由'}</p>
             </div>
@@ -247,7 +224,7 @@ export default function ApplicationDetailPage() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="lg:w-[33.333%] space-y-6 flex flex-col justify-between">
           <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden">
             <div className="w-full h-48 bg-gray-100 dark:bg-white/10 overflow-hidden">
               {application.pet?.photos && application.pet.photos.length > 0 ? (
@@ -266,9 +243,9 @@ export default function ApplicationDetailPage() {
               <p className="text-[10px] font-bold text-primary uppercase mb-1">申请对象</p>
               <h4 className="text-xl font-bold">{application.pet?.name || '未知宠物'}</h4>
               <p className="text-gray-500 text-sm mb-4">{application.pet?.breed || '未知品种'} • {application.pet?.age || 0} 岁</p>
-              <button className="w-full py-2 rounded-full border border-gray-100 dark:border-white/10 text-sm font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
+              <Link href={`/pets/${application.pet?.id}`} className="w-full py-2 rounded-full border border-gray-100 dark:border-white/10 text-sm font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
                 查看详细档案 <span className="text-sm">→</span>
-              </button>
+              </Link>
             </div>
           </div>
           <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
@@ -307,8 +284,13 @@ export default function ApplicationDetailPage() {
             <div className="mt-8">
               <button 
                 onClick={() => {
-                  // 跳转到消息中心
-                  router.push('/messages');
+                  // 确定对话的另一方用户ID
+                  const otherUserId = user?.id === application.publisher_id 
+                    ? application.applicant_id 
+                    : application.publisher_id;
+                  
+                  // 跳转到消息中心并传递对话用户ID
+                  router.push(`/messages?userId=${otherUserId}&userName=${encodeURIComponent(application.applicant?.name || '未知用户')}`);
                 }}
                 className="w-full py-3 rounded-xl bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors flex items-center justify-center gap-2"
               >

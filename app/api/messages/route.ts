@@ -8,7 +8,7 @@ import { HttpStatus } from '@/app/types/api'
 // 获取用户消息列表
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
+    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');
 
     if (!token) {
       const response: ApiResponse = {
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(response, { status: HttpStatus.UNAUTHORIZED });
     }
 
-    const payload = verifyToken(token)
+    const payload = verifyToken(token);
 
     if (!payload) {
       const response: ApiResponse = {
@@ -35,11 +35,12 @@ export async function GET(request: NextRequest) {
 
     // 使用MessageService获取消息列表
     const { messages, total } = await MessageService.getMessages({
-      receiverId: payload.userId,
+      senderId: payload.userId,
       page,
       limit
     });
-
+      console.log("查询数据:",messages);
+      
     const response: ApiResponse = {
       code: HttpStatus.OK,
       msg: '获取消息列表成功',
@@ -50,9 +51,10 @@ export async function GET(request: NextRequest) {
         limit
       }
     };
+    
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('获取消息接口错误:', error)
+    console.error('获取消息接口错误:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'
@@ -97,6 +99,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 使用MessageService创建消息
+    console.log("sender_id", payload.userId);
+    console.log("receiver_id",receiver_id);
+    
     const message = await MessageService.createMessage({
       sender_id: payload.userId,
       receiver_id,

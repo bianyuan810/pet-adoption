@@ -14,6 +14,7 @@ interface ProfileFormData {
   name: string
   phone?: string
   wechat?: string
+  avatar_url?: string
 }
 
 export default function ProfilePage() {
@@ -24,7 +25,8 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     phone: '',
-    wechat: ''
+    wechat: '',
+    avatar_url: ''
   })
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -34,7 +36,8 @@ export default function ProfilePage() {
       setFormData({
         name: user.name,
         phone: user.phone || '',
-        wechat: user.wechat || ''
+        wechat: user.wechat || '',
+        avatar_url: user.avatar_url || ''
       })
     }
   }, [user])
@@ -162,7 +165,7 @@ export default function ProfilePage() {
             <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
               {user.avatar_url ? (
                 <img 
-                  src={user.avatar_url} 
+                  src={user.avatar_url.replace(/[`\s"]/g, '')} 
                   alt="用户头像" 
                   className="w-full h-full object-cover"
                 />
