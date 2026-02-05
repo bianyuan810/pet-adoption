@@ -1,22 +1,7 @@
 import { supabaseAdmin } from '@/app/lib/supabase';
 import type { Application } from '@/app/types/supabase';
 
-// 宠物照片类型
-interface PetPhoto {
-  photo_url: string;
-}
 
-// 带照片的宠物类型
-interface PetWithPhotos {
-  id: string;
-  name: string;
-  breed: string;
-  age: number;
-  gender: string;
-  location: string;
-  status: string;
-  pet_photos?: PetPhoto[];
-}
 
 // 用户类型
 interface User {
@@ -104,12 +89,6 @@ interface ApplicationsQueryResult {
   data: RawApplication[] | null;
   error: unknown;
   count: number | null;
-}
-
-// 申请详情查询返回类型
-interface ApplicationQueryResult {
-  data: RawApplication | null;
-  error: unknown;
 }
 
 // 单个申请操作返回类型
@@ -495,7 +474,8 @@ export class ApplicationService {
 
     // 如果状态为 approved，更新宠物状态为已领养
     if (status === 'approved' && application) {
-      const { error: petError } = await (supabaseAdmin!
+      // 忽略错误，继续返回申请
+      await (supabaseAdmin!
         .from('pets') as unknown as {
           update: (data: { status: 'adopted' }) => {
             eq: (column: string, value: string) => Promise<PetUpdateResult>;
@@ -503,8 +483,6 @@ export class ApplicationService {
         })
         .update({ status: 'adopted' })
         .eq('id', application.pet_id);
-      
-      // 忽略错误，继续返回申请
     }
 
     return application;

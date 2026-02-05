@@ -7,6 +7,7 @@ import type { Pet } from '@/app/types/supabase';
 import { Home, MapPin, Heart, Share2, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { petLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 // 宠物详情类型定义
 interface PetDetail extends Pet {
@@ -23,7 +24,7 @@ interface PetDetail extends Pet {
 export default function PetDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
   const [pet, setPet] = useState<PetDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,15 +32,14 @@ export default function PetDetailPage() {
     const fetchPetDetail = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/pets/${params.id}`);
-        const data = await response.json();
+        const data = await api.get<{ pet: unknown, photos?: string[] }>(`/pets/${params.id}`);
         
         // 检查API响应是否成功且包含数据
         if (data.code === 200 && data.data && data.data.pet) {
           setPet({
             ...data.data.pet,
             photos: data.data.photos || []
-          });
+          } as PetDetail);
         }
       } catch (error) {
         petLogger.error('获取宠物详情失败:', error);
@@ -67,23 +67,16 @@ export default function PetDetailPage() {
       const reason = formData.get('reason') as string;
       
       // 调用申请API
-      const response = await fetch('/api/applications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          petId: params.id,
-          message: reason
-        }),
+      const data = await api.post('/applications', {
+        petId: params.id,
+        message: reason
       });
       
-      if (response.ok) {
+      if (data.code === 200) {
         // 申请成功后跳转到我的申请页面
         router.push('/my-applications');
       } else {
-        const errorData = await response.json();
-        alert(`申请失败: ${errorData.msg || '请稍后重试'}`);
+        alert(`申请失败: ${data.msg || '请稍后重试'}`);
       }
     } catch (error) {
       petLogger.error('提交申请失败:', error);

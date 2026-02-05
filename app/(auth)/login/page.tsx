@@ -2,8 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { PawPrint, MessageCircle } from 'lucide-react';
+import { PawPrint } from 'lucide-react';
 import LoginForm from '@/app/components/auth/LoginForm';
 
 export default function LoginPage() {

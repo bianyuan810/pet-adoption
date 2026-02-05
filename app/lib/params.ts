@@ -5,9 +5,9 @@ import { NextRequest } from 'next/server';
  * @param request Next.js 请求对象
  * @returns 解析后的查询参数对象
  */
-export function parseQueryParams(request: NextRequest): Record<string, any> {
+export function parseQueryParams(request: NextRequest): Record<string, string | number | boolean> {
   const { searchParams } = new URL(request.url);
-  const params: Record<string, any> = {};
+  const params: Record<string, string | number | boolean> = {};
 
   searchParams.forEach((value, key) => {
     // 尝试转换为数字
@@ -32,7 +32,7 @@ export function parseQueryParams(request: NextRequest): Record<string, any> {
  * @param params 查询参数对象
  * @returns 构建的查询字符串
  */
-export function buildQueryString(params: Record<string, any>): string {
+export function buildQueryString(params: Record<string, string | number | boolean | undefined | null>): string {
   const searchParams = new URLSearchParams();
   
   Object.entries(params).forEach(([key, value]) => {
@@ -52,7 +52,7 @@ export function buildQueryString(params: Record<string, any>): string {
 export async function getRequestBody<T>(request: NextRequest): Promise<T> {
   try {
     return await request.json();
-  } catch (error) {
+  } catch {
     return {} as T;
   }
 }
@@ -62,9 +62,9 @@ export async function getRequestBody<T>(request: NextRequest): Promise<T> {
  * @param request Next.js 请求对象
  * @returns 解析后的表单数据
  */
-export async function getFormData(request: NextRequest): Promise<Record<string, any>> {
+export async function getFormData(request: NextRequest): Promise<Record<string, string | number | boolean | File>> {
   const formData = await request.formData();
-  const data: Record<string, any> = {};
+  const data: Record<string, string | number | boolean | File> = {};
 
   formData.forEach((value, key) => {
     if (value instanceof File) {
@@ -88,7 +88,7 @@ export async function getFormData(request: NextRequest): Promise<Record<string, 
  * @returns 验证结果
  */
 export function validateRequiredParams(
-  params: Record<string, any>,
+  params: Record<string, string | number | boolean | undefined | null>,
   requiredFields: string[]
 ): { isValid: boolean; missingFields: string[] } {
   const missingFields: string[] = [];

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 import { useRouter } from 'next/navigation'
 import type { User } from '@/app/types/supabase'
 import { HttpStatus } from '@/app/types/api'
@@ -50,29 +51,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include', // 包含cookie
-    })
+    const data = await api.post<{ token: string; user: User }>('/auth/login', { email, password })
 
-    const data = await response.json()
-
-    if (!response.ok || data.code !== HttpStatus.OK) {
+    if (data.code !== HttpStatus.OK) {
       throw new Error(data.msg || '登录失败')
     }
 
-    setToken(data.data.token)
-    setUser(data.data.user)
+    if (data.data) {
+      setToken(data.data.token)
+      setUser(data.data.user)
 
-    localStorage.setItem('token', data.data.token)
-    localStorage.setItem('user', JSON.stringify(data.data.user))
+      localStorage.setItem('token', data.data.token)
+      localStorage.setItem('user', JSON.stringify(data.data.user))
 
-    // 使用 window.location.href 跳转到首页，确保 cookie 正确设置和 middleware 生效
-    window.location.href = '/'
+      // 使用 window.location.href 跳转到首页，确保 cookie 正确设置和 middleware 生效
+      window.location.href = '/'
+    }
   }
 
   const logout = () => {
@@ -87,14 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!token) return
 
     try {
-      const response = await fetch('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
+      const data = await api.get<{ user: User }>('/auth/me')
+      
+      if (data.code === HttpStatus.OK && data.data) {
         setUser(data.data.user)
         localStorage.setItem('user', JSON.stringify(data.data.user))
       }

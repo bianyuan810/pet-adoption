@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { PawPrint, Calendar, Loader2 } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { applicationLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 // 申请状态类型
 type ApplicationStatusType = 'pending' | 'approved' | 'rejected';
@@ -44,7 +46,7 @@ interface Application {
 
 export default function MyApplicationsPage() {
   const router = useRouter();
-  const { user, token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -66,26 +68,15 @@ export default function MyApplicationsPage() {
 
         setIsLoading(true);
         setError('');
-        const response = await fetch('/api/applications', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        const data = await response.json();
+        const data = await api.get('/applications');
         
-        if (response.ok) {
-          // 确保 applications 始终是数组
-          if (data.code === HttpStatus.OK && Array.isArray(data.data)) {
-            setApplications(data.data as Application[]);
-          } else if (Array.isArray(data)) {
-            // 兼容直接返回数组的情况
-            setApplications(data as Application[]);
-          } else {
-            setApplications([]);
-          }
+        // 确保 applications 始终是数组
+        if (data.code === HttpStatus.OK && Array.isArray(data.data)) {
+          setApplications(data.data as Application[]);
+        } else if (Array.isArray(data)) {
+          // 兼容直接返回数组的情况
+          setApplications(data as Application[]);
         } else {
-          setError(data.msg || '获取申请列表失败');
           setApplications([]);
         }
       } catch (err) {
@@ -200,9 +191,11 @@ export default function MyApplicationsPage() {
               <div key={app.id} className="flex flex-wrap items-center gap-6 p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
                 <div className="w-24 h-24 rounded-xl bg-gray-100 dark:bg-white/10 overflow-hidden shadow-sm">
                   {app.pet?.photos && app.pet.photos.length > 0 ? (
-                    <img 
+                    <Image 
                       src={app.pet.photos[0]} 
                       alt={app.pet.name} 
+                      width={100} 
+                      height={100} 
                       className="w-full h-full object-cover"
                     />
                   ) : (

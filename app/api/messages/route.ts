@@ -31,8 +31,8 @@ export async function GET(request: NextRequest) {
 
     // 使用parseQueryParams解析查询参数
     const queryParams = parseQueryParams(request);
-    const page = queryParams.page || 1;
-    const limit = queryParams.limit || 10;
+    const page = Number(queryParams.page) || 1;
+    const limit = Number(queryParams.limit) || 10;
 
     // 使用MessageService获取消息列表
     const { messages, total } = await MessageService.getMessages({

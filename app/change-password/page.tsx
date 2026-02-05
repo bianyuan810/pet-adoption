@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, UnlockIcon, Lock, Shield, Info, Eye, EyeOff } from 'lucide-react';
 import { authLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -50,18 +51,12 @@ export default function ChangePasswordPage() {
       setError('');
       
       // 调用修改密码API
-      const response = await fetch('/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          currentPassword: formData.currentPassword,
-          newPassword: formData.newPassword
-        })
+      const data = await api.post('/auth/change-password', {
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
       });
       
-      if (response.ok) {
+      if (data.code === 200) {
         setSuccess('密码修改成功，请重新登录');
         // 重置表单
         setFormData({
@@ -75,8 +70,7 @@ export default function ChangePasswordPage() {
           router.push('/login');
         }, 3000);
       } else {
-        const errorData = await response.json();
-        setError(errorData.msg || '修改密码失败，请稍后重试');
+        setError(data.msg || '修改密码失败，请稍后重试');
       }
     } catch (error) {
       authLogger.error('修改密码失败:', error);

@@ -3,10 +3,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Check, X, Clock, UserX } from 'lucide-react';
+import { Clock, UserX } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { applicationLogger } from '@/app/lib';
 import { HttpStatus } from '@/app/types/api';
+import { api } from '@/app/lib/request';
 
 // 申请数据类型定义
 interface Application {
@@ -51,7 +52,7 @@ interface AppData {
 
 export default function ApplicationsPage() {
   const router = useRouter();
-  const { user, token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated } = useAuth();
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
@@ -74,28 +75,14 @@ export default function ApplicationsPage() {
       setError('');
       
       // 调用申请列表 API
-      const response = await fetch('/api/applications?&isPublisher=true', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        applicationLogger.error('API 响应错误:', errorText);
-        throw new Error(`获取申请列表失败: ${response.status} ${errorText}`);
-      }
-      
-      const data = await response.json();
+      const data = await api.get<AppData[]>('/applications?&isPublisher=true');
       
       if (data.code !== HttpStatus.OK) {
         throw new Error(data.msg || '获取申请列表失败');
       }
       
       // 转换申请数据格式以匹配前端期望的结构
-      let formattedApplications = [];
+      let formattedApplications: Application[] = [];
       
       // 确保 data.data 是一个数组
       if (Array.isArray(data.data)) {
@@ -124,7 +111,7 @@ export default function ApplicationsPage() {
     } finally {
     setIsLoading(false);
   }
-}, [isAuthenticated, token, user, router]);
+}, [isAuthenticated, token, router]);
 
   // 组件挂载时获取数据，认证状态变化时重新获取
   useEffect(() => {

@@ -60,7 +60,7 @@ export function isValidDate(date: Date | string): boolean {
  * @param wait 等待时间(毫秒)
  * @returns 防抖处理后的函数
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -81,7 +81,7 @@ export function debounce<T extends (...args: any[]) => any>(
  * @param limit 时间限制(毫秒)
  * @returns 节流处理后的函数
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -105,16 +105,16 @@ export function throttle<T extends (...args: any[]) => any>(
  */
 export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object') return obj
-  if (obj instanceof Date) return new Date(obj.getTime()) as any
-  if (obj instanceof Array) return obj.map(item => deepClone(item)) as any
+  if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T
+  if (obj instanceof Array) return obj.map(item => deepClone(item)) as unknown as T
   if (typeof obj === 'object') {
-    const clonedObj: Record<string, any> = {}
+    const clonedObj: Record<string, unknown> = {}
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
-        clonedObj[key] = deepClone(obj[key])
+        clonedObj[key] = deepClone((obj as Record<string, unknown>)[key])
       }
     }
-    return clonedObj as T
+    return clonedObj as unknown as T
   }
   return obj
 }
@@ -193,7 +193,7 @@ export function uniqueArray<T>(arr: T[], key?: keyof T): T[] {
   if (!key) {
     return [...new Set(arr)]
   }
-  const seen = new Set<any>()
+  const seen = new Set<unknown>()
   return arr.filter(item => {
     const value = item[key]
     if (seen.has(value)) {
@@ -280,7 +280,7 @@ export function delay(ms: number): Promise<void> {
  * @param value 要检查的值
  * @returns 是否为空
  */
-export function isEmpty(value: any): boolean {
+export function isEmpty(value: unknown): boolean {
   if (value === null || value === undefined) return true
   if (typeof value === 'string') return value.trim() === ''
   if (Array.isArray(value)) return value.length === 0
@@ -295,18 +295,18 @@ export function isEmpty(value: any): boolean {
  * @param defaultValue 默认值
  * @returns 属性值或默认值
  */
-export function getNestedProperty<T>(obj: any, path: string, defaultValue: T): T {
+export function getNestedProperty<T>(obj: unknown, path: string, defaultValue: T): T {
   const keys = path.split('.')
-  let result = obj
+  let result: unknown = obj
   
   for (const key of keys) {
     if (result === null || result === undefined) {
       return defaultValue
     }
-    result = result[key]
+    result = (result as Record<string, unknown>)[key]
   }
   
-  return result === undefined ? defaultValue : result
+  return result === undefined ? defaultValue : (result as T)
 }
 
 

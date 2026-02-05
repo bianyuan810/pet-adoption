@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { applicationLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 // 定义Application接口
 interface Application {
@@ -56,23 +58,14 @@ export default function ApplicationDetailPage() {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await fetch(`/api/applications/${params.id}`, {
-          cache: 'no-store',
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          
-          // 检查API响应是否成功且包含数据
-          if (data.code === 200 && data.data) {
-            setApplication(data.data);
-          } else {
-            setError('获取申请详情失败');
-            applicationLogger.error('获取申请详情失败:', data);
-          }
+        const data = await api.get<Application>(`/applications/${params.id}`);
+        
+        // 检查API响应是否成功且包含数据
+        if (data.code === 200 && data.data) {
+          setApplication(data.data);
         } else {
           setError('获取申请详情失败');
-          applicationLogger.error('获取申请详情失败');
+          applicationLogger.error('获取申请详情失败:', data);
         }
       } catch (error) {
         setError('获取申请详情失败，请稍后重试');
@@ -92,22 +85,15 @@ export default function ApplicationDetailPage() {
     try {
       setIsSubmitting(true);
       
-      const response = await fetch(`/api/applications/${params.id}/${action}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const data = await api.post<Application>(`/applications/${params.id}/${action}`);
 
-      if (response.ok) {
+      if (data.code === 200 && data.data) {
         // 刷新页面数据
-        const data = await response.json();
-        setApplication(data);
+        setApplication(data.data);
         // 显示成功提示
         alert(action === 'approve' ? '申请已通过' : '申请已拒绝');
       } else {
-        const errorData = await response.json();
-        alert('操作失败: ' + (errorData.error || '未知错误'));
+        alert('操作失败: ' + (data.msg || '未知错误'));
       }
     } catch (error) {
       applicationLogger.error('审核操作失败:', error);
@@ -229,9 +215,11 @@ export default function ApplicationDetailPage() {
           <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden">
             <div className="w-full h-48 bg-gray-100 dark:bg-white/10 overflow-hidden">
               {application.pet?.photos && application.pet.photos.length > 0 ? (
-                <img 
+                <Image 
                   src={application.pet.photos[0]} 
                   alt={application.pet.name} 
+                  width={400} 
+                  height={300} 
                   className="w-full h-full object-cover"
                 />
               ) : (

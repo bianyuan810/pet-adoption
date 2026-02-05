@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ApplicationCard from './ApplicationCard';
+import { api } from '@/app/lib/request';
 
 interface Application {
   id: string;
@@ -52,21 +53,22 @@ const ApplicationList: React.FC<ApplicationListProps> = ({ isPublisher, petId })
       setError(null);
 
       try {
-        const url = new URL('/api/applications', window.location.origin);
-        url.searchParams.set('isPublisher', isPublisher.toString());
+        const params = new URLSearchParams();
+        params.set('isPublisher', isPublisher.toString());
         if (petId) {
-          url.searchParams.set('petId', petId);
+          params.set('petId', petId);
         }
 
-        const response = await fetch(url);
-        const data = await response.json();
+        const data = await api.get<unknown[]>(`/applications?${params.toString()}`);
 
-        if (!response.ok) {
-          throw new Error(data.error || '获取申请列表失败');
+        if (data.code !== 200) {
+          throw new Error(data.msg || '获取申请列表失败');
         }
 
-        setApplications(data);
-        setFilteredApplications(data);
+        if (data.data) {
+          setApplications(data.data as Application[]);
+          setFilteredApplications(data.data as Application[]);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '获取申请列表失败');
       } finally {

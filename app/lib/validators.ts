@@ -14,7 +14,7 @@ export interface ValidationResult {
  * @param fieldName 字段名称
  * @returns 验证结果
  */
-export function validateRequired(value: any, fieldName: string): ValidationResult {
+export function validateRequired(value: unknown, fieldName: string): ValidationResult {
   if (value === undefined || value === null || value === '') {
     return {
       isValid: false,
@@ -95,8 +95,8 @@ export function validatePhone(phone: string): ValidationResult {
  * @param validators 验证器数组
  * @returns 组合后的验证器
  */
-export function composeValidators(...validators: ((value: any) => ValidationResult)[]): (value: any) => ValidationResult {
-  return (value: any) => {
+export function composeValidators(...validators: ((value: unknown) => ValidationResult)[]): (value: unknown) => ValidationResult {
+  return (value: unknown) => {
     const errors: string[] = [];
     
     for (const validator of validators) {
@@ -157,7 +157,7 @@ export const schemas = {
  * @param value 要验证的值
  * @returns 验证结果
  */
-export function validateWithSchema<T>(schema: z.ZodSchema<T>, value: any): ValidationResult {
+export function validateWithSchema<T>(schema: z.ZodSchema<T>, value: unknown): ValidationResult {
   const result = schema.safeParse(value);
   
   if (!result.success) {
@@ -179,8 +179,8 @@ export function validateWithSchema<T>(schema: z.ZodSchema<T>, value: any): Valid
  * @returns 验证结果
  */
 export function validateObject(
-  data: Record<string, any>,
-  validations: Record<string, (value: any) => ValidationResult>
+  data: Record<string, unknown>,
+  validations: Record<string, (value: unknown) => ValidationResult>
 ): ValidationResult {
   const errors: string[] = [];
   

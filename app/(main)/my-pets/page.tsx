@@ -3,10 +3,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
+import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { petLogger, logger } from '@/app/lib';
 import { HttpStatus } from '@/app/types/api';
+import { api } from '@/app/lib/request';
 
 // 定义宠物类型
 type FilterStatus = 'all' | 'available' | 'adopted' | 'processing';
@@ -43,7 +44,7 @@ interface PetData {
 // 我发布的宠物列表页面
 export default function MyPetsPage() {
   const router = useRouter();
-  const { user, token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated } = useAuth();
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [pets, setPets] = useState<Pet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,21 +68,7 @@ export default function MyPetsPage() {
       setError(null);
       
       // 调用 API 获取当前用户发布的宠物
-        const response = await fetch('/api/pets?&isPublisher=true', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          petLogger.error('API 响应错误:', errorText);
-          throw new Error(`获取宠物数据失败: ${response.status} ${errorText}`);
-        }
-        
-        const data = await response.json();
+        const data = await api.get('/pets?&isPublisher=true');
         
         if (data.code !== HttpStatus.OK) {
           throw new Error(data.msg || '获取宠物数据失败');
@@ -97,9 +84,9 @@ export default function MyPetsPage() {
             name: pet.name,
             breed: pet.breed,
             age: pet.age,
-            gender: pet.gender,
+            gender: (pet.gender === 'male' || pet.gender === 'female' || pet.gender === 'unknown') ? pet.gender : 'unknown',
             location: pet.location,
-            status: pet.status,
+            status: (pet.status === 'pending' || pet.status === 'available' || pet.status === 'adopted') ? pet.status : 'available',
             photos: pet.photos || ['/images/no-image.png'],
             views: pet.view_count || 0,
             publishDate: pet.created_at,
@@ -115,7 +102,7 @@ export default function MyPetsPage() {
       } finally {
           setIsLoading(false);
         }
-  }, [isAuthenticated, token, user, router]);
+  }, [isAuthenticated, token, router]);
 
   // 组件挂载时获取数据，认证状态变化时重新获取
   useEffect(() => {
@@ -131,24 +118,7 @@ export default function MyPetsPage() {
     return true;
   });
 
-  // 统计数据
-  const stats = [
-    {
-      label: '累计浏览量',
-      value: pets.reduce((sum, pet) => sum + (pet.views || 0), 0).toLocaleString() + ' 次',
-      icon: <Eye size={24} />
-    },
-    {
-      label: '收到申请',
-      value: pets.reduce((sum, pet) => sum + (pet.applicationsCount || 0), 0) + ' 份',
-      icon: <MessageSquare size={24} />
-    },
-    {
-      label: '成功领养',
-      value: pets.filter(pet => pet.status === 'adopted').length + ' 个生命',
-      icon: <Heart size={24} />
-    }
-  ];
+
 
   if (isLoading) {
     return (

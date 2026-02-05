@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { api } from '@/app/lib/request';
 
 interface ApplicationFormProps {
   petId: string;
@@ -16,8 +17,8 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
-  // 获取认证状态和token
-  const { isAuthenticated, token } = useAuth();
+  // 获取认证状态
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   // 打开申请表单
@@ -56,25 +57,16 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ petId, onSuccess }) =
 
     try {
       
-      const response = await fetch('/api/applications', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // 发送认证token
-        },
-        body: JSON.stringify({
-          petId,
-          message: message.trim(),
-        }),
+      const data = await api.post('/applications', {
+        petId,
+        message: message.trim(),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || '申请失败，请重试');
+      if (data.code !== 200) {
+        throw new Error(data.msg || '申请失败，请重试');
       }
 
-      setSuccess(data.message || '申请提交成功');
+      setSuccess(data.msg || '申请提交成功');
       setMessage('');
       
       // 调用成功回调

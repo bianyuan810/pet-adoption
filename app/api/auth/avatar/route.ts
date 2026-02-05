@@ -42,13 +42,14 @@ export async function POST(request: NextRequest) {
     }
 
     // 验证文件类型
-    if (!avatar.type.startsWith('image/')) {
+    if (!avatar || typeof avatar !== 'object' || !('type' in avatar) || !avatar.type.startsWith('image/')) {
       const response: ApiResponse = {
         code: HttpStatus.BAD_REQUEST,
         msg: '只能上传图片文件'
-      };
-      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST });
+      }
+      return NextResponse.json(response, { status: HttpStatus.BAD_REQUEST })
     }
+
 
     // 验证文件大小
     if (avatar.size > 5 * 1024 * 1024) {

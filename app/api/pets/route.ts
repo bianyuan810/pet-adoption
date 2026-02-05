@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { petLogger } from '@/app/lib';
-import { supabaseAdmin } from '@/app/lib/supabase'
 import { verifyToken } from '@/app/lib/auth'
 import { parseQueryParams, getFormData } from '@/app/lib/params'
 import { PetService } from '@/app/services/pet.service'
@@ -128,9 +127,9 @@ export async function GET(request: NextRequest) {
     const location = queryParams.location;
     const status = queryParams.status;
     const sortBy = queryParams.sortBy || 'newest';
-    const isPublisher = queryParams.isPublisher;
-    const limit = queryParams.limit || 10;
-    const page = queryParams.page || 1;
+    const isPublisher = Boolean(queryParams.isPublisher);
+    const limit = Number(queryParams.limit) || 10;
+    const page = Number(queryParams.page) || 1;
 
     // 映射中文性别到英文
     const genderMap: Record<string, 'male' | 'female' | 'unknown'> = {
@@ -140,17 +139,17 @@ export async function GET(request: NextRequest) {
     }
 
     // 处理性别参数
-    const gender = genderParam && genderMap[genderParam] ? genderMap[genderParam] : undefined
+    const gender = typeof genderParam === 'string' && genderMap[genderParam] ? genderMap[genderParam] : undefined
 
     // 使用PetService获取宠物列表
     const { pets: petsData, total } = await PetService.getPets({
-      keyword: keyword || undefined,
-      breed: breed || undefined,
-      age: age || undefined,
+      keyword: typeof keyword === 'string' ? keyword : undefined,
+      breed: typeof breed === 'string' ? breed : undefined,
+      age: typeof age === 'string' ? age : undefined,
       gender: gender || undefined,
-      location: location || undefined,
-      status: status || undefined,
-      sortBy: sortBy || 'newest',
+      location: typeof location === 'string' ? location : undefined,
+      status: typeof status === 'string' ? status : undefined,
+      sortBy: typeof sortBy === 'string' ? sortBy : 'newest',
       limit,
       page,
       isPublisher,

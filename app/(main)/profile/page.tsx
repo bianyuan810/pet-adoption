@@ -1,14 +1,15 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useAuth } from '@/app/contexts/AuthContext'
 import { Button } from '@/app/components/ui/Button'
 import { Input } from '@/app/components/ui/Input'
 import Alert from '@/app/components/ui/Alert'
 import { Card } from '@/app/components/ui/Card'
 import { UserService } from '@/app/services/user.service'
-import type { User } from '@/app/types/supabase'
 import { Camera } from 'lucide-react'
+import { api } from '@/app/lib/request'
 
 interface ProfileFormData {
   name: string
@@ -78,17 +79,13 @@ export default function ProfilePage() {
       const formData = new FormData()
       formData.append('avatar', file)
 
-      const response = await fetch('/api/auth/avatar', {
-        method: 'POST',
+      const data = await api.post('/auth/avatar', formData, {
         headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
+          'Content-Type': 'multipart/form-data'
+        }
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
+      if (data.code !== 200) {
         throw new Error(data.msg || '上传头像失败')
       }
 
@@ -164,9 +161,11 @@ export default function ProfilePage() {
           <div className="relative mb-4">
             <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
               {user.avatar_url ? (
-                <img 
+                <Image 
                   src={user.avatar_url.replace(/[`\s"]/g, '')} 
                   alt="用户头像" 
+                  width={128} 
+                  height={128} 
                   className="w-full h-full object-cover"
                 />
               ) : (

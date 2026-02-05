@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Check, ArrowRight, Camera } from 'lucide-react';
 import { petLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 export default function PublishPage() {
   const [step, setStep] = useState(1);
@@ -81,17 +82,17 @@ export default function PublishPage() {
       });
       
       // 调用发布API
-      const response = await fetch('/api/pets', {
-        method: 'POST',
-        body: data
+      const responseData = await api.post('/pets', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       
-      if (response.ok) {
+      if (responseData.code === 200) {
         // 发布成功后跳转到"我发布的宠物"列表页面
         router.push('/my-pets');
       } else {
-        const errorData = await response.json();
-        alert(`发布失败: ${errorData.error || '请稍后重试'}`);
+        alert(`发布失败: ${responseData.msg || '请稍后重试'}`);
       }
     } catch (error) {
       petLogger.error('发布宠物失败:', error);

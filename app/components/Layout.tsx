@@ -3,13 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, Mail, User, UserX } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, User, UserX } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { user, logout } = useAuth();
 

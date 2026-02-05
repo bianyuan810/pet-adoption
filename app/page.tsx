@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
 import { petLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 // 宠物类型定义
 interface Pet {
@@ -35,17 +36,27 @@ export default function Home() {
     const fetchRecommendedPets = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/pets?sortBy=newest&limit=4&status=available');
-        const data = await response.json();
+        const data = await api.get<unknown[]>('/pets?sortBy=newest&limit=4&status=available');
         
         if (data.code === HttpStatus.OK && data.data) {
           // 处理宠物数据，添加照片信息
-          const petsWithPhotos = data.data.map((pet: any) => ({
-              ...pet,
-              photos: pet.photos || [],
-              category: pet.breed.includes('犬') || pet.breed.includes('狗') ? 'dog' : 
-                       pet.breed.includes('猫') ? 'cat' : 'other'
-            }));
+          const petsWithPhotos = data.data.map((pet: unknown) => {
+              // 确保 pet 是一个对象
+              if (typeof pet !== 'object' || pet === null) {
+                return null;
+              }
+              
+              return {
+                  ...(pet as PetWithPhotos),
+                  photos: Array.isArray((pet as Record<string, unknown>).photos) ? (pet as Record<string, unknown>).photos : [],
+                  category: (() => {
+                      const breed = (pet as Record<string, unknown>).breed;
+                      const breedStr = typeof breed === 'string' ? breed : '';
+                      return breedStr.includes('犬') || breedStr.includes('狗') ? 'dog' :
+                             breedStr.includes('猫') ? 'cat' : 'other';
+                  })()
+              } as PetWithPhotos;
+          }).filter((pet) => pet !== null);
           setPets(petsWithPhotos);
         }
       } catch (error) {

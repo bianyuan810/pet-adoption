@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken'
 import { NextRequest } from 'next/server'
 
-const JWT_SECRET = process.env.JWT_SECRET!
+// 检查是否在服务端环境中运行
+const isServer = typeof window === 'undefined'
 
-if (!JWT_SECRET) {
+// 只在服务端环境中检查 JWT_SECRET
+const JWT_SECRET = isServer ? process.env.JWT_SECRET : ''
+
+if (isServer && !JWT_SECRET) {
   throw new Error('JWT_SECRET 环境变量未配置')
 }
 
@@ -54,12 +58,24 @@ export async function auth(req?: NextRequest): Promise<Session | null> {
 }
 
 export function generateToken(payload: JWTPayload): string {
+  if (!isServer) {
+    throw new Error('generateToken 只能在服务端环境中使用')
+  }
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: '7d',
   })
 }
 
 export function verifyToken(token: string): JWTPayload | null {
+  if (!isServer) {
+    // 在客户端环境中，我们无法验证 token 的有效性，因为 JWT_SECRET 是服务端专用的
+    // 这里我们可以尝试解码 token 来获取基本信息，但不能验证其有效性
+    try {
+      return jwt.decode(token) as JWTPayload
+    } catch {
+      return null
+    }
+  }
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
   } catch {

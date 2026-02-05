@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import Image from 'next/image'
+import { api } from '@/app/lib/request'
 
 const petSchema = z.object({
   id: z.string().optional(),
@@ -114,18 +115,25 @@ export default function PetForm({ initialData, isEdit = false, onSuccess }: PetF
         formDataToSend.append(`photo_${index}`, photo)
       })
 
-      const url = isEdit ? `/api/pets/${initialData?.id}` : '/api/pets'
-      const method = isEdit ? 'PUT' : 'POST'
+      const url = isEdit ? `/pets/${initialData?.id}` : '/pets'
+      
+      let data;
+      if (isEdit) {
+        data = await api.put(url, formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        data = await api.post(url, formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      }
 
-      const response = await fetch(url, {
-        method,
-        body: formDataToSend,
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || '发布宠物失败，请稍后重试')
+      if (data.code !== 200) {
+        throw new Error(data.msg || '发布宠物失败，请稍后重试')
       }
 
       if (onSuccess) {

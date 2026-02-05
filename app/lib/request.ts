@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { logger } from './logger';
 import type { ApiResponse } from '@/app/types/api';
 
@@ -6,7 +6,7 @@ import type { ApiResponse } from '@/app/types/api';
  * 请求选项接口
  */
 export interface RequestOptions extends Omit<AxiosRequestConfig, 'url'> {
-  params?: Record<string, any>;
+  params?: Record<string, string | number | boolean>;
   timeout?: number;
 }
 
@@ -19,12 +19,13 @@ const createAxiosInstance = (): AxiosInstance => {
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json'
-    }
+    },
+    withCredentials: true
   });
 
   // 请求拦截器
   instance.interceptors.request.use(
-    (config) => {
+    (config: InternalAxiosRequestConfig) => {
       // 从 cookie 中获取 token
       const token = document.cookie
         .split('; ')
@@ -33,26 +34,27 @@ const createAxiosInstance = (): AxiosInstance => {
 
       // 如果有 token 则添加到请求头
       if (token) {
+        config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
       }
 
       return config;
     },
-    (error) => {
+    (error: unknown) => {
       return Promise.reject(error);
     }
   );
 
   // 响应拦截器
   instance.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
       return response;
     },
-    (error) => {
+    (error: unknown) => {
       // 处理响应错误
-      if (error.response) {
+      if (error && typeof error === 'object' && 'response' in error) {
         // 服务器返回错误状态码
-        const { status, data } = error.response;
+        const { status, data } = error.response as { status: number; data: unknown };
         
         switch (status) {
           case 401:
@@ -72,14 +74,19 @@ const createAxiosInstance = (): AxiosInstance => {
             logger.error('服务器内部错误');
             break;
           default:
-            logger.error(data?.msg || '请求失败');
+            // 安全地访问 data.msg
+            logger.error(
+              data && typeof data === 'object' && 'msg' in data 
+                ? String(data.msg) 
+                : '请求失败'
+            );
         }
-      } else if (error.request) {
+      } else if (error && typeof error === 'object' && 'request' in error) {
         // 请求已发送但没有收到响应
         logger.error('网络错误，服务器未响应');
       } else {
         // 请求配置出错
-        logger.error('请求配置错误:', error.message);
+        logger.error('请求配置错误:', error instanceof Error ? error.message : '未知错误');
       }
 
       return Promise.reject(error);
@@ -137,7 +144,7 @@ export const api = {
    * @param options 请求选项
    * @returns API 响应数据
    */
-  post: <T>(url: string, data?: any, options?: RequestOptions) =>
+  post: <T, D = unknown>(url: string, data?: D, options?: RequestOptions) =>
     fetchApi<T>(url, {
       ...options,
       method: 'POST',
@@ -151,7 +158,7 @@ export const api = {
    * @param options 请求选项
    * @returns API 响应数据
    */
-  put: <T>(url: string, data?: any, options?: RequestOptions) =>
+  put: <T, D = unknown>(url: string, data?: D, options?: RequestOptions) =>
     fetchApi<T>(url, {
       ...options,
       method: 'PUT',
@@ -177,7 +184,7 @@ export const api = {
    * @param options 请求选项
    * @returns API 响应数据
    */
-  patch: <T>(url: string, data?: any, options?: RequestOptions) =>
+  patch: <T, D = unknown>(url: string, data?: D, options?: RequestOptions) =>
     fetchApi<T>(url, {
       ...options,
       method: 'PATCH',

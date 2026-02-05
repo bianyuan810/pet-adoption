@@ -12,6 +12,17 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 忽略 pawadopt 目录
+    "pawadopt/**/*",
+    // 其他常见的忽略项
+    "node_modules/**/*",
+    "dist/**/*",
+    "*.log",
+    ".env",
+    ".env.local",
+    ".env.development.local",
+    ".env.test.local",
+    ".env.production.local",
   ]),
 ]);
 

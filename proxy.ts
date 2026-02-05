@@ -5,7 +5,7 @@ import { rateLimitCheck } from '@/app/lib/rate-limit'
 import type { ApiResponse } from '@/app/types/api'
 import { HttpStatus } from '@/app/types/api'
 
-const publicPaths = ['/login', '/register', '/api/auth/login', '/api/auth/register','/images']
+const publicPaths = ['/login', '/register', '/auth/login', '/auth/register','/images']
 
 const adminPaths = ['/admin']
 

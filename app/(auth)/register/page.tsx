@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { UserPlus, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { api } from '@/app/lib/request';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -45,18 +46,10 @@ export default function RegisterPage() {
 
     try {
       // 调用注册API
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+      const data = await api.post('/auth/register', { name, email, password });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || '注册失败');
+      if (data.code !== 200) {
+        throw new Error(data.msg || '注册失败');
       }
 
       // 注册成功

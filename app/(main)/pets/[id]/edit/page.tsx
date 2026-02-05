@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import PetForm from '@/app/components/pet/PetForm'
 import type { Pet } from '@/app/types/supabase'
-import { petLogger } from '@/app/lib'
+import { petLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 export default function EditPetPage() {
   const params = useParams()
@@ -14,11 +15,10 @@ export default function EditPetPage() {
   useEffect(() => {
     const fetchPetDetail = async () => {
       try {
-        const response = await fetch(`/api/pets/${params.id}`)
-        const data = await response.json()
+        const data = await api.get<{ pet: unknown, photos?: string[] }>(`/pets/${params.id}`)
 
-        if (response.ok) {
-          setPet(data.pet)
+        if (data.code === 200 && data.data && data.data.pet) {
+          setPet(data.data.pet as Pet)
         }
       } catch (error) {
         petLogger.error('获取宠物详情失败:', error)

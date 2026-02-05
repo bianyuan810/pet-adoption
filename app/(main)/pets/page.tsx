@@ -7,6 +7,7 @@ import type { Pet } from '@/app/types/supabase';
 import { Search, ChevronDown, MapPin, ArrowUpDown, Heart } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
 import { petLogger } from '@/app/lib';
+import { api } from '@/app/lib/request';
 
 // 宠物类型定义
 interface PetWithPhotos extends Pet {
@@ -80,11 +81,9 @@ export default function PetsPage() {
       // 添加时间戳参数，确保每次请求都刷新缓存
       queryParams.append('timestamp', Date.now().toString());
 
-      const response = await fetch(`/api/pets?${queryParams.toString()}`);
-      const data = await response.json();
+      const data = await api.get<Pet[]>(`/pets?${queryParams.toString()}`);
       
-      
-      if (response.ok && data.code === HttpStatus.OK && data.data) {
+      if (data.code === HttpStatus.OK && data.data) {
         // 处理宠物数据，添加分类信息
         const petsWithCategory = data.data.map((pet: Pet) => ({
           ...pet,

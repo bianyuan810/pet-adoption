@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     // 根据用户角色设置筛选参数
     const params = {
-      petId: petId || undefined,
+      petId: petId ? String(petId) : undefined,
       applicantId: isPublisher ? undefined : session.user.id,
       publisherId: isPublisher ? session.user.id : undefined
     };

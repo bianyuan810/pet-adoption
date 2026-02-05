@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { MoreHorizontal, PlusCircle, Send, UserX } from "lucide-react";
 import { HttpStatus } from "@/app/types/api";
 import { supabase } from "@/app/lib/supabase";
 import { messageLogger, logger } from "@/app/lib";
+import { api } from "@/app/lib/request";
+import type { User } from "@/app/types/supabase";
 
 // 消息类型定义
 interface Message {
@@ -45,7 +47,43 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [newMessage, setNewMessage] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+
+  // 选择对话并获取聊天记录
+  const selectConversation = useCallback(async (conversation: Conversation) => {
+    try {
+      setSelectedConversation(conversation);
+
+      // 获取与该用户的聊天记录
+      const data = await api.get(`/messages?chatId=${conversation.id}`);
+
+      if (data.code === HttpStatus.OK && data.data && user) {
+        // 按时间排序
+        const sortedMessages = (data.data as Message[]).sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        setMessages(sortedMessages);
+
+        // 标记未读消息为已读
+        sortedMessages
+          .filter((msg) => msg.receiver_id === user.id && !msg.is_read)
+          .forEach(async (msg) => {
+            try {
+              await api.put(`/messages/${msg.id}/read`);
+            } catch (error) {
+              messageLogger.error("标记消息已读失败:", error);
+            }
+          });
+
+        // 更新会话的未读计数
+        setConversations((prev) =>
+          prev.map((c) => (c.id === conversation.id ? { ...c, unreadCount: 0 } : c))
+        );
+      }
+    } catch (error) {
+      messageLogger.error("获取聊天记录失败:", error);
+    }
+  }, [user]);
 
   useEffect(() => {
     // 只在客户端获取用户信息
@@ -74,7 +112,7 @@ export default function MessagesPage() {
           lastMessage: "",
           lastMessageTime: new Date().toLocaleString(),
           unreadCount: 0,
-        };
+        }
 
         // 直接更新状态，确保新对话被添加
         setConversations((prev) => {
@@ -98,10 +136,12 @@ export default function MessagesPage() {
   // 获取消息列表并分组为会话
   useEffect(() => {
     const fetchMessages = async () => {
+      // 由于我们已经在调用前检查了 user，这里可以安全使用
+      if (!user) return;
+
       try {
         setIsLoading(true);
-        const response = await fetch("/api/messages");
-        const data = await response.json();
+        const data = await api.get("/messages");
 
         if (data.code === HttpStatus.OK && data.data) {
           // 处理消息数据
@@ -157,7 +197,7 @@ export default function MessagesPage() {
                 lastMessage: msg.content,
                 lastMessageTime: messageTime,
                 unreadCount,
-              };
+              }
 
               conversationsMap.set(conversationId, newConversation);
             }
@@ -194,7 +234,7 @@ export default function MessagesPage() {
                   lastMessage: "",
                   lastMessageTime: new Date().toLocaleString(),
                   unreadCount: 0,
-                };
+                }
 
                 // 将新对话添加到列表顶部
                 finalConversations = [newConversation, ...sortedConversations];
@@ -230,53 +270,60 @@ export default function MessagesPage() {
     if (user) {
       fetchMessages();
     }
-  }, [user]);
+  }, [user, selectConversation]);
 
-  // 选择对话并获取聊天记录
-  const selectConversation = async (conversation: Conversation) => {
-    try {
-      setSelectedConversation(conversation);
+  // 处理URL参数中的聊天ID
+  useEffect(() => {
+    const handleChatIdParam = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const chatId = urlParams.get('chatId');
 
-      // 获取与该用户的聊天记录
-      const response = await fetch(`/api/messages?chatId=${conversation.id}`);
-      const data = await response.json();
+      if (chatId && user) {
+        // 查找对应的对话
+        const existingConversation = conversations.find((c) => c.id === chatId);
 
-      if (data.code === HttpStatus.OK && data.data) {
-        // 按时间排序
-        const sortedMessages = (data.data as Message[]).sort(
-          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-        setMessages(sortedMessages);
+        if (existingConversation) {
+          // 如果找到对话，直接选择
+          selectConversation(existingConversation);
+        } else {
+          // 如果没有找到对话，尝试创建一个新的对话
+          // 解析chatId获取对方用户ID
+          const parts = chatId.split('_');
+          const otherUserId = parts.find((id) => id !== user.id);
 
-        // 标记未读消息为已读
-        sortedMessages
-          .filter((msg) => msg.receiver_id === user.id && !msg.is_read)
-          .forEach(async (msg) => {
-            try {
-              await fetch(`/api/messages/${msg.id}/read`, {
-                method: "PUT",
-              });
-            } catch (error) {
-              messageLogger.error("标记消息已读失败:", error);
-            }
-          });
+          if (otherUserId) {
+            // 创建新对话
+            const newConversation: Conversation = {
+              id: chatId,
+              userId: otherUserId,
+              userName: "未知用户",
+              userAvatar: undefined,
+              lastMessage: "",
+              lastMessageTime: new Date().toLocaleString(),
+              unreadCount: 0,
+            };
 
-        // 更新会话的未读计数
-        setConversations((prev) =>
-          prev.map((c) => (c.id === conversation.id ? { ...c, unreadCount: 0 } : c))
-        );
+            // 选择新对话
+            setSelectedConversation(newConversation);
+
+            // 清除URL参数
+            window.history.replaceState({}, document.title, "/messages");
+          }
+        }
       }
-    } catch (error) {
-      messageLogger.error("获取聊天记录失败:", error);
-    }
-  };
+    };
+
+    handleChatIdParam();
+  }, [user, selectConversation, conversations]);
 
   // 更新对话列表的辅助函数
-  const updateConversationsList = (newMessage: any) => {
+  const updateConversationsList = useCallback((newMessage: Message) => {
+    // 检查 user 是否存在
+    if (!user) return;
+
     setConversations((prev) => {
       const currentUserId = user.id;
-      const otherUserId =
-        newMessage.sender_id === currentUserId ? newMessage.receiver_id : newMessage.sender_id;
+      const otherUserId = newMessage.sender_id === currentUserId ? newMessage.receiver_id : newMessage.sender_id;
       const conversationId = [currentUserId, otherUserId].sort().join("_");
 
       // 尝试获取对方用户信息
@@ -335,7 +382,7 @@ export default function MessagesPage() {
         return [newConversation, ...prev];
       }
     });
-  };
+  }, [user]);
 
   // 实时订阅消息
   useEffect(() => {
@@ -450,7 +497,10 @@ export default function MessagesPage() {
 
               // 更新对话列表
               logger.debug("更新对话列表");
-              updateConversationsList(payload.new);
+              // 确保 payload.new 符合 Message 类型的要求
+              if (payload.new && typeof payload.new === 'object') {
+                updateConversationsList(payload.new as Message);
+              }
             }
           }
         )
@@ -484,13 +534,13 @@ export default function MessagesPage() {
         supabase.removeChannel(channel);
       };
     }
-  }, [user, selectedConversation]);
+  }, [user, selectedConversation, updateConversationsList]);
 
   // 发送消息
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!newMessage.trim() || !selectedConversation) return;
+    if (!newMessage.trim() || !selectedConversation || !user) return;
 
     try {
       // 立即添加消息到UI（乐观更新）
@@ -529,22 +579,15 @@ export default function MessagesPage() {
       setNewMessage("");
 
       // 然后发送到服务器
-      const response = await fetch("/api/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          receiver_id: selectedConversation.userId,
-          content: newMessage,
-        }),
+      const data = await api.post("/messages", {
+        receiver_id: selectedConversation.userId,
+        content: newMessage,
       });
 
-      if (!response.ok) {
+      if (data.code !== HttpStatus.CREATED) {
         // 发送失败，从UI中移除临时消息
         setMessages((prev) => prev.filter((msg) => msg.id !== tempMessage.id));
-        const errorData = await response.json();
-        alert(`发送消息失败: ${errorData.msg || "请稍后重试"}`);
+        alert(`发送消息失败: ${data.msg || "请稍后重试"}`);
       }
       // 发送成功后，实时订阅会处理服务器返回的消息
     } catch (error) {
@@ -696,11 +739,10 @@ export default function MessagesPage() {
                         >
                           <div className="size-9 rounded-xl overflow-hidden shrink-0 flex items-center justify-center bg-gray-100 dark:bg-white/10">
                             {isIncoming ? (
-                              (msg.receiver?.avatar_url || "").replace(/[`\s\"]/g, "") || selectedConversation.userAvatar ? (
+                              ((msg.receiver?.avatar_url || "").replace(/[`\s\"]/g, "") || selectedConversation.userAvatar) ? (
                                 <Image
                                   src={
-                                    (msg.receiver?.avatar_url || "").replace(/[`\s\"]/g, "") ||
-                                    selectedConversation.userAvatar
+                                    ((msg.receiver?.avatar_url || "").replace(/[`\s\"]/g, "") || selectedConversation.userAvatar) as string
                                   }
                                   width={36}
                                   height={36}
