@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { PawPrint, Calendar, Loader2 } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { applicationLogger } from '@/app/lib';
 
 // 申请状态类型
 type ApplicationStatusType = 'pending' | 'approved' | 'rejected';
@@ -88,7 +89,7 @@ export default function MyApplicationsPage() {
           setApplications([]);
         }
       } catch (err) {
-        console.error('获取申请列表失败:', err);
+        applicationLogger.error('获取申请列表失败:', err);
         setError('获取申请列表失败，请稍后重试');
         setApplications([]);
       } finally {

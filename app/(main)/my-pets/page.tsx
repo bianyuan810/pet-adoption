@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Calendar, Eye, MessageSquare, Heart, Edit, Archive, Plus, BarChart2 } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { petLogger, logger } from '@/app/lib';
 import { HttpStatus } from '@/app/types/api';
 
 // 定义宠物类型
@@ -76,7 +77,7 @@ export default function MyPetsPage() {
         
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('API 响应错误:', errorText);
+          petLogger.error('API 响应错误:', errorText);
           throw new Error(`获取宠物数据失败: ${response.status} ${errorText}`);
         }
         
@@ -106,11 +107,11 @@ export default function MyPetsPage() {
           }));
         }
         
-        console.log('格式化后的宠物数据:', formattedPets);
+        logger.debug('格式化后的宠物数据:', formattedPets);
         setPets(formattedPets);
       } catch (err) {
         setError('获取数据失败，请稍后重试');
-        console.error('获取宠物数据失败:', err);
+        petLogger.error('获取宠物数据失败:', err);
       } finally {
           setIsLoading(false);
         }

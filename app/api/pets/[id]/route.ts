@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { petLogger } from '@/app/lib';
 import { supabase } from '@/app/lib/supabase'
 import { verifyToken } from '@/app/lib/auth'
 import type { ApiResponse } from '@/app/types/api'
@@ -58,7 +59,7 @@ export async function GET(
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('获取宠物详情接口错误:', error)
+    petLogger.error('获取宠物详情接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'
@@ -122,7 +123,7 @@ export async function DELETE(
       .eq('id', id)
 
     if (deleteError) {
-      console.error('删除宠物时出错:', deleteError)
+      petLogger.error('删除宠物时出错:', deleteError)
       return NextResponse.json(
         { error: '删除失败，请稍后重试' },
         { status: 500 }
@@ -135,7 +136,7 @@ export async function DELETE(
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('删除宠物接口错误:', error)
+    petLogger.error('删除宠物接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'
@@ -225,7 +226,7 @@ export async function PUT(
       .single()
 
     if (updateError || !pet) {
-      console.error('更新宠物时出错:', updateError)
+      petLogger.error('更新宠物时出错:', updateError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '更新宠物失败，请稍后重试'
@@ -242,7 +243,7 @@ export async function PUT(
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('更新宠物接口错误:', error)
+    petLogger.error('更新宠物接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

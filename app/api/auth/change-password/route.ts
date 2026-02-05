@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabase } from '@/app/lib/supabase'
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (fetchError || !user) {
-      console.error('获取用户信息失败:', fetchError)
+      authLogger.error('获取用户信息失败:', fetchError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '获取用户信息失败'
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
       .eq('id', payload.userId)
 
     if (updateError) {
-      console.error('更新密码失败:', updateError)
+      authLogger.error('更新密码失败:', updateError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '更新密码失败，请稍后重试'
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('修改密码接口错误:', error)
+    authLogger.error('修改密码接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

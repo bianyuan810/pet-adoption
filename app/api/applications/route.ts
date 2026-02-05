@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { applicationLogger } from '@/app/lib';
 import { auth } from '@/app/lib/auth';
 import { parseQueryParams, getRequestBody } from '@/app/lib/params';
 import { ApplicationService } from '@/app/services/application.service';
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('服务器错误:', error);
+    applicationLogger.error('服务器错误:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误'
@@ -136,7 +137,7 @@ export async function POST(req: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
-    console.error('服务器错误:', error);
+    applicationLogger.error('服务器错误:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误'

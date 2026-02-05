@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { messageLogger, logger } from '@/app/lib';
 import { verifyToken } from '@/app/lib/auth'
 import { parseQueryParams, getRequestBody } from '@/app/lib/params'
 import { MessageService } from '@/app/services/message.service'
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('获取消息接口错误:', error);
+    messageLogger.error('获取消息接口错误:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'
@@ -98,8 +99,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 使用MessageService创建消息
-    console.log("sender_id", payload.userId);
-    console.log("receiver_id",receiver_id);
+    logger.debug("sender_id", payload.userId);
+    logger.debug("receiver_id",receiver_id);
     
     const message = await MessageService.createMessage({
       sender_id: payload.userId,
@@ -109,7 +110,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!message) {
-      console.error('发送消息失败');
+      messageLogger.error('发送消息失败');
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '发送消息失败，请稍后重试'
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
-    console.error('发送消息接口错误:', error)
+    messageLogger.error('发送消息接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

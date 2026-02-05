@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { verifyToken } from '@/app/lib/auth'
 import { UserService } from '@/app/services/user.service'
 import { getFormData } from '@/app/lib/params'
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('上传头像接口错误:', error);
+    authLogger.error('上传头像接口错误:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

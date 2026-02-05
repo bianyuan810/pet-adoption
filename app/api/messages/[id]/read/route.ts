@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { messageLogger } from '@/app/lib';
 import { supabase } from '@/app/lib/supabase'
 import { verifyToken } from '@/app/lib/auth'
 import type { ApiResponse } from '@/app/types/api'
@@ -53,7 +54,7 @@ export async function PUT(
       .eq('id', id)
 
     if (updateError) {
-      console.error('标记消息已读失败:', updateError)
+      messageLogger.error('标记消息已读失败:', updateError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '标记消息已读失败，请稍后重试'
@@ -67,7 +68,7 @@ export async function PUT(
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('标记消息已读接口错误:', error)
+    messageLogger.error('标记消息已读接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

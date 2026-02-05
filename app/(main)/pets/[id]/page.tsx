@@ -6,6 +6,7 @@ import Image from 'next/image';
 import type { Pet } from '@/app/types/supabase';
 import { Home, MapPin, Heart, Share2, ArrowRight, CheckCircle, ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { petLogger } from '@/app/lib';
 
 // 宠物详情类型定义
 interface PetDetail extends Pet {
@@ -41,7 +42,7 @@ export default function PetDetailPage() {
           });
         }
       } catch (error) {
-        console.error('获取宠物详情失败:', error);
+        petLogger.error('获取宠物详情失败:', error);
       } finally {
         setIsLoading(false);
       }
@@ -85,7 +86,7 @@ export default function PetDetailPage() {
         alert(`申请失败: ${errorData.msg || '请稍后重试'}`);
       }
     } catch (error) {
-      console.error('提交申请失败:', error);
+      petLogger.error('提交申请失败:', error);
       alert('提交申请失败，请稍后重试');
     }
   };

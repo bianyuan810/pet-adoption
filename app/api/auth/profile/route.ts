@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { verifyToken } from '@/app/lib/auth'
 import { supabase } from '@/app/lib/supabase'
 import type { ApiResponse } from '@/app/types/api'
@@ -59,7 +60,7 @@ export async function PUT(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('更新用户资料失败:', error)
+      authLogger.error('更新用户资料失败:', error)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '更新个人资料失败'
@@ -74,7 +75,7 @@ export async function PUT(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('个人资料更新接口错误:', error)
+    authLogger.error('个人资料更新接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

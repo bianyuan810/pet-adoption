@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, PawPrint, CheckCircle, XCircle, Clock, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { applicationLogger } from '@/app/lib';
 
 // 定义Application接口
 interface Application {
@@ -67,15 +68,15 @@ export default function ApplicationDetailPage() {
             setApplication(data.data);
           } else {
             setError('获取申请详情失败');
-            console.error('获取申请详情失败:', data);
+            applicationLogger.error('获取申请详情失败:', data);
           }
         } else {
           setError('获取申请详情失败');
-          console.error('获取申请详情失败');
+          applicationLogger.error('获取申请详情失败');
         }
       } catch (error) {
         setError('获取申请详情失败，请稍后重试');
-        console.error('获取申请详情失败:', error);
+        applicationLogger.error('获取申请详情失败:', error);
       } finally {
         setIsLoading(false);
       }
@@ -109,7 +110,7 @@ export default function ApplicationDetailPage() {
         alert('操作失败: ' + (errorData.error || '未知错误'));
       }
     } catch (error) {
-      console.error('审核操作失败:', error);
+      applicationLogger.error('审核操作失败:', error);
       alert('操作失败，请稍后重试');
     } finally {
       setIsSubmitting(false);

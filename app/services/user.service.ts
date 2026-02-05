@@ -1,5 +1,6 @@
 import { supabase, supabaseAdmin } from '@/app/lib/supabase';
 import type { User } from '@/app/types/supabase';
+import { authLogger } from '@/app/lib';
 
 /**
  * 用户服务类
@@ -19,7 +20,7 @@ export class UserService {
       .single();
 
     if (error) {
-      console.error('获取用户失败:', error);
+      authLogger.error('获取用户失败:', error);
       return null;
     }
 
@@ -39,7 +40,7 @@ export class UserService {
       .single();
 
     if (error) {
-      console.error('根据邮箱获取用户失败:', error);
+      authLogger.error('根据邮箱获取用户失败:', error);
       return null;
     }
 
@@ -59,7 +60,7 @@ export class UserService {
       .single();
 
     if (error) {
-      console.error('创建用户失败:', error);
+      authLogger.error('创建用户失败:', error);
       return null;
     }
 
@@ -81,7 +82,7 @@ export class UserService {
       .single();
 
     if (error) {
-      console.error('更新用户失败:', error);
+      authLogger.error('更新用户失败:', error);
       return null;
     }
 
@@ -101,7 +102,7 @@ export class UserService {
       .eq('id', id);
 
     if (error) {
-      console.error('修改密码失败:', error);
+      authLogger.error('修改密码失败:', error);
       return false;
     }
 
@@ -120,7 +121,7 @@ export class UserService {
       .eq('id', id);
 
     if (error) {
-      console.error('删除用户失败:', error);
+      authLogger.error('删除用户失败:', error);
       return false;
     }
 
@@ -156,7 +157,7 @@ export class UserService {
     const { data: users, error, count } = await query;
 
     if (error) {
-      console.error('获取用户列表失败:', error);
+      authLogger.error('获取用户列表失败:', error);
       return { users: [], total: 0 };
     }
 
@@ -176,7 +177,7 @@ export class UserService {
     try {
       // 检查是否在服务端环境中
       if (typeof window !== 'undefined' || !supabaseAdmin) {
-        console.error('上传头像失败: 只能在服务端环境中上传文件');
+        authLogger.error('上传头像失败: 只能在服务端环境中上传文件');
         return null;
       }
 
@@ -189,7 +190,7 @@ export class UserService {
         .upload(fileName, file);
 
       if (uploadError) {
-        console.error('上传文件失败:', uploadError);
+        authLogger.error('上传文件失败:', uploadError);
         return null;
       }
 
@@ -208,13 +209,13 @@ export class UserService {
         .single();
 
       if (updateError) {
-        console.error('更新用户头像失败:', updateError);
+        authLogger.error('更新用户头像失败:', updateError);
         return null;
       }
 
       return user;
     } catch (error) {
-      console.error('上传头像失败:', error);
+      authLogger.error('上传头像失败:', error);
       return null;
     }
   }

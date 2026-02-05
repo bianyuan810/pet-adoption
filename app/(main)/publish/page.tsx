@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Check, ArrowRight, Camera } from 'lucide-react';
+import { petLogger } from '@/app/lib';
 
 export default function PublishPage() {
   const [step, setStep] = useState(1);
@@ -93,7 +94,7 @@ export default function PublishPage() {
         alert(`发布失败: ${errorData.error || '请稍后重试'}`);
       }
     } catch (error) {
-      console.error('发布宠物失败:', error);
+      petLogger.error('发布宠物失败:', error);
       alert('发布宠物失败，请稍后重试');
     } finally {
       setIsSubmitting(false);

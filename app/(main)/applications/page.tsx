@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock, UserX } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import { applicationLogger } from '@/app/lib';
 import { HttpStatus } from '@/app/types/api';
 
 // 申请数据类型定义
@@ -83,7 +84,7 @@ export default function ApplicationsPage() {
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('API 响应错误:', errorText);
+        applicationLogger.error('API 响应错误:', errorText);
         throw new Error(`获取申请列表失败: ${response.status} ${errorText}`);
       }
       
@@ -116,7 +117,7 @@ export default function ApplicationsPage() {
       
       setApplications(formattedApplications);
     } catch (err) {
-      console.error('获取申请列表错误:', err);
+      applicationLogger.error('获取申请列表错误:', err);
       setError(err instanceof Error ? err.message : '获取申请列表失败');
       // 显示空状态，不使用模拟数据
       setApplications([]);

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { petLogger } from '@/app/lib';
 import { supabaseAdmin } from '@/app/lib/supabase'
 import { verifyToken } from '@/app/lib/auth'
 import { parseQueryParams, getFormData } from '@/app/lib/params'
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
-    console.error('发布宠物接口错误:', error)
+    petLogger.error('发布宠物接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'
@@ -181,7 +182,7 @@ export async function GET(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('获取宠物列表接口错误:', error)
+    petLogger.error('获取宠物列表接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

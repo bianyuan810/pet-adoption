@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { applicationLogger } from '@/app/lib';
 import { auth } from '@/app/lib/auth';
 import { ApplicationService } from '@/app/services/application.service';
 import type { ApiResponse } from '@/app/types/api';
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('同意申请失败:', error);
+    applicationLogger.error('同意申请失败:', error);
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: error instanceof Error ? error.message : '同意申请失败'

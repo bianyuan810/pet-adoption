@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MoreHorizontal, PlusCircle, Send, UserX } from "lucide-react";
 import { HttpStatus } from "@/app/types/api";
 import { supabase } from "@/app/lib/supabase";
+import { messageLogger, logger } from "@/app/lib";
 
 // 消息类型定义
 interface Message {
@@ -219,7 +220,7 @@ export default function MessagesPage() {
           }
         }
       } catch (error) {
-        console.error("获取消息失败:", error);
+        messageLogger.error("获取消息失败:", error);
       } finally {
         setIsLoading(false);
       }
@@ -256,7 +257,7 @@ export default function MessagesPage() {
                 method: "PUT",
               });
             } catch (error) {
-              console.error("标记消息已读失败:", error);
+              messageLogger.error("标记消息已读失败:", error);
             }
           });
 
@@ -266,7 +267,7 @@ export default function MessagesPage() {
         );
       }
     } catch (error) {
-      console.error("获取聊天记录失败:", error);
+      messageLogger.error("获取聊天记录失败:", error);
     }
   };
 
@@ -340,7 +341,7 @@ export default function MessagesPage() {
   useEffect(() => {
     // 当用户加载完成后，订阅消息变更
     if (user) {
-      console.log("开始订阅实时消息...");
+      logger.debug("开始订阅实时消息...");
 
       // 创建一个通道
       const channel = supabase.channel("messages-channel", {
@@ -361,13 +362,13 @@ export default function MessagesPage() {
             table: "messages",
           },
           (payload) => {
-            console.log("收到新消息:", payload);
+            logger.debug("收到新消息:", payload);
             // 检查是否是发给当前用户的消息，或者当前用户发送的消息
             const isRelevantMessage =
               payload.new.receiver_id === user.id || payload.new.sender_id === user.id;
 
             if (isRelevantMessage) {
-              console.log("处理相关消息:", payload.new);
+              logger.debug("处理相关消息:", payload.new);
               // 检查是否是当前选中对话的消息
               if (selectedConversation) {
                 const isCurrentConversation =
@@ -377,7 +378,7 @@ export default function MessagesPage() {
                     payload.new.receiver_id === user.id);
 
                 if (isCurrentConversation) {
-                  console.log("更新当前对话消息");
+                  logger.debug("更新当前对话消息");
                   // 添加新消息到当前对话
                   setMessages((prev) => {
                     // 检查消息是否已存在（避免重复）
@@ -392,13 +393,13 @@ export default function MessagesPage() {
                     );
                     
                     if (existsById) {
-                      console.log("消息已存在，跳过");
+                      logger.debug("消息已存在，跳过");
                       return prev;
                     }
                     
                     let updatedMessages;
                     if (existsByContent) {
-                      console.log("存在临时消息，替换为正式消息");
+                      logger.debug("存在临时消息，替换为正式消息");
                       // 移除临时消息，添加正式消息
                       updatedMessages = prev
                         .filter((msg) => 
@@ -448,7 +449,7 @@ export default function MessagesPage() {
               }
 
               // 更新对话列表
-              console.log("更新对话列表");
+              logger.debug("更新对话列表");
               updateConversationsList(payload.new);
             }
           }
@@ -461,7 +462,7 @@ export default function MessagesPage() {
             table: "messages",
           },
           (payload) => {
-            console.log("收到消息更新:", payload);
+            logger.debug("收到消息更新:", payload);
             // 检查是否是消息已读状态变更
             if (payload.new.is_read && !payload.old.is_read) {
               // 更新当前对话中的消息状态
@@ -474,12 +475,12 @@ export default function MessagesPage() {
           }
         )
         .subscribe((status) => {
-          console.log("订阅状态:", status);
+          logger.debug("订阅状态:", status);
         });
 
       // 清理订阅
       return () => {
-        console.log("清理订阅");
+        logger.debug("清理订阅");
         supabase.removeChannel(channel);
       };
     }
@@ -547,7 +548,7 @@ export default function MessagesPage() {
       }
       // 发送成功后，实时订阅会处理服务器返回的消息
     } catch (error) {
-      console.error("发送消息失败:", error);
+      messageLogger.error("发送消息失败:", error);
       alert("发送消息失败，请稍后重试");
     }
   };

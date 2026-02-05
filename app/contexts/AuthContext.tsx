@@ -1,6 +1,7 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authLogger } from '@/app/lib';
 import { useRouter } from 'next/navigation'
 import type { User } from '@/app/types/supabase'
 import { HttpStatus } from '@/app/types/api'
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setToken(storedToken)
           setUser(parsedUser)
         } catch (error) {
-          console.error('解析用户信息失败:', error)
+          authLogger.error('解析用户信息失败:', error)
           localStorage.removeItem('token')
           localStorage.removeItem('user')
         }
@@ -98,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('user', JSON.stringify(data.data.user))
       }
     } catch (error) {
-      console.error('刷新用户信息失败:', error)
+      authLogger.error('刷新用户信息失败:', error)
     }
   }
 

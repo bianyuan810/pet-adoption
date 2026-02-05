@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
+import { petLogger } from '@/app/lib';
 
 // 宠物类型定义
 interface Pet {
@@ -48,7 +49,7 @@ export default function Home() {
           setPets(petsWithPhotos);
         }
       } catch (error) {
-        console.error('获取推荐宠物失败:', error);
+        petLogger.error('获取推荐宠物失败:', error);
       } finally {
         setIsLoading(false);
       }

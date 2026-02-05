@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, UnlockIcon, Lock, Shield, Info, Eye, EyeOff } from 'lucide-react';
+import { authLogger } from '@/app/lib';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -78,7 +79,7 @@ export default function ChangePasswordPage() {
         setError(errorData.msg || '修改密码失败，请稍后重试');
       }
     } catch (error) {
-      console.error('修改密码失败:', error);
+      authLogger.error('修改密码失败:', error);
       setError('修改密码失败，请稍后重试');
     } finally {
       setIsLoading(false);

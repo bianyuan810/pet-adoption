@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabase } from '@/app/lib/supabase'
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
       .single() as { data: UserLoginData | null; error: unknown }
 
     if (fetchError) {
-      console.error('查询用户时出错:', fetchError)
+      authLogger.error('查询用户时出错:', fetchError)
       const response: ApiResponse = {
         code: HttpStatus.UNAUTHORIZED,
         msg: '邮箱或密码错误'
@@ -108,7 +109,7 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('登录接口错误:', error)
+    authLogger.error('登录接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

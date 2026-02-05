@@ -1,5 +1,6 @@
 import { supabase, supabaseAdmin } from '@/app/lib/supabase';
 import type { Message } from '@/app/types/supabase';
+import { messageLogger } from '@/app/lib';
 
 // 确定使用哪个 Supabase 客户端
 const client = typeof window === 'undefined' && supabaseAdmin ? supabaseAdmin : supabase;
@@ -58,7 +59,7 @@ export class MessageService {
       const { data: messages, error, count } = await query;
 
       if (error) {
-        console.error('获取消息列表失败:', error);
+        messageLogger.error('获取消息列表失败:', error);
         return { messages: [], total: 0 };
       }
 
@@ -78,7 +79,7 @@ export class MessageService {
         total: count || 0
       };
     } catch (error) {
-      console.error('获取消息列表异常:', error);
+      messageLogger.error('获取消息列表异常:', error);
       return { messages: [], total: 0 };
     }
   }
@@ -96,7 +97,7 @@ export class MessageService {
       .eq('is_read', false);
 
     if (error) {
-      console.error('获取未读消息数量失败:', error);
+      messageLogger.error('获取未读消息数量失败:', error);
       return 0;
     }
 
@@ -119,7 +120,7 @@ export class MessageService {
       .single();
 
     if (error) {
-      console.error('创建消息失败:', error);
+      messageLogger.error('创建消息失败:', error);
       return null;
     }
 
@@ -138,7 +139,7 @@ export class MessageService {
       .eq('id', id);
 
     if (error) {
-      console.error('标记消息为已读失败:', error);
+      messageLogger.error('标记消息为已读失败:', error);
       return false;
     }
 
@@ -158,7 +159,7 @@ export class MessageService {
       .eq('is_read', false);
 
     if (error) {
-      console.error('标记所有消息为已读失败:', error);
+      messageLogger.error('标记所有消息为已读失败:', error);
       return false;
     }
 
@@ -177,7 +178,7 @@ export class MessageService {
       .eq('id', id);
 
     if (error) {
-      console.error('删除消息失败:', error);
+      messageLogger.error('删除消息失败:', error);
       return false;
     }
 
@@ -196,7 +197,7 @@ export class MessageService {
       .in('id', ids);
 
     if (error) {
-      console.error('批量删除消息失败:', error);
+      messageLogger.error('批量删除消息失败:', error);
       return false;
     }
 

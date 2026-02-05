@@ -9,7 +9,6 @@
     "lint": "eslint app components --ext .ts,.tsx,.js,.jsx",
     "lint:pawadopt": "eslint pawadopt",
     "lint:all": "eslint",
-
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "test": "vitest run",
@@ -21,6 +20,7 @@
     "@supabase/supabase-js": "^2.91.1",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "console-log-level": "^1.4.1",
     "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.563.0",
@@ -37,6 +37,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/bcryptjs": "^3.0.0",
+    "@types/console-log-level": "^1.4.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { verifyToken } from '@/app/lib/auth'
 import { supabase } from '@/app/lib/supabase'
 import type { ApiResponse } from '@/app/types/api'
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.OK });
   } catch (error) {
-    console.error('获取用户信息接口错误:', error)
+    authLogger.error('获取用户信息接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

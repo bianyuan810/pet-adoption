@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { logger } from './logger';
 import type { ApiResponse } from '@/app/types/api';
 
 /**
@@ -60,25 +61,25 @@ const createAxiosInstance = (): AxiosInstance => {
             break;
           case 403:
             // 禁止访问
-            console.error('禁止访问该资源');
+            logger.error('禁止访问该资源');
             break;
           case 404:
             // 资源不存在
-            console.error('请求的资源不存在');
+            logger.error('请求的资源不存在');
             break;
           case 500:
             // 服务器内部错误
-            console.error('服务器内部错误');
+            logger.error('服务器内部错误');
             break;
           default:
-            console.error(data?.msg || '请求失败');
+            logger.error(data?.msg || '请求失败');
         }
       } else if (error.request) {
         // 请求已发送但没有收到响应
-        console.error('网络错误，服务器未响应');
+        logger.error('网络错误，服务器未响应');
       } else {
         // 请求配置出错
-        console.error('请求配置错误:', error.message);
+        logger.error('请求配置错误:', error.message);
       }
 
       return Promise.reject(error);

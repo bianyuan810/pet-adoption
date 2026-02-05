@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { authLogger } from '@/app/lib';
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import { supabase } from '@/app/lib/supabase'
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (checkError && checkError.code !== 'PGRST116') {
-      console.error('检查用户时出错:', checkError)
+      authLogger.error('检查用户时出错:', checkError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '服务器错误，请稍后重试'
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (insertError) {
-      console.error('创建用户时出错:', insertError)
+      authLogger.error('创建用户时出错:', insertError)
       const response: ApiResponse = {
         code: HttpStatus.INTERNAL_SERVER_ERROR,
         msg: '创建用户失败，请稍后重试'
@@ -92,7 +93,7 @@ export async function POST(request: NextRequest) {
     };
     return NextResponse.json(response, { status: HttpStatus.CREATED });
   } catch (error) {
-    console.error('注册接口错误:', error)
+    authLogger.error('注册接口错误:', error)
     const response: ApiResponse = {
       code: HttpStatus.INTERNAL_SERVER_ERROR,
       msg: '服务器错误，请稍后重试'

@@ -1,5 +1,6 @@
 import { supabase, supabaseAdmin } from '@/app/lib/supabase';
 import type { Pet, PetPhoto } from '@/app/types/supabase';
+import { petLogger } from '@/app/lib';
 
 /**
  * 宠物服务类
@@ -117,7 +118,7 @@ export class PetService {
     const { data: pets, error, count } = await query;
 
     if (error) {
-      console.error('获取宠物列表失败:', error);
+      petLogger.error('获取宠物列表失败:', error);
       return { pets: [], total: 0 };
     }
 
@@ -140,7 +141,7 @@ export class PetService {
       .single();
 
     if (error) {
-      console.error('获取宠物详情失败:', error);
+      petLogger.error('获取宠物详情失败:', error);
       return null;
     }
 
@@ -165,7 +166,7 @@ export class PetService {
       .single();
 
     if (error) {
-      console.error('创建宠物失败:', error);
+      petLogger.error('创建宠物失败:', error);
       return null;
     }
 
@@ -187,7 +188,7 @@ export class PetService {
       .single();
 
     if (error) {
-      console.error('更新宠物失败:', error);
+      petLogger.error('更新宠物失败:', error);
       return null;
     }
 
@@ -206,7 +207,7 @@ export class PetService {
       .eq('id', id);
 
     if (error) {
-      console.error('删除宠物失败:', error);
+      petLogger.error('删除宠物失败:', error);
       return false;
     }
 
@@ -227,9 +228,9 @@ export class PetService {
       .single();
 
     if (getError) {
-      console.error('获取浏览次数失败:', getError);
-      return false;
-    }
+        petLogger.error('获取浏览次数失败:', getError);
+        return false;
+      }
 
     // 更新浏览次数
     const { error: updateError } = await supabase
@@ -238,9 +239,9 @@ export class PetService {
       .eq('id', id);
 
     if (updateError) {
-      console.error('更新浏览次数失败:', updateError);
-      return false;
-    }
+        petLogger.error('更新浏览次数失败:', updateError);
+        return false;
+      }
 
     return true;
   }
@@ -259,7 +260,7 @@ export class PetService {
       
       // 上传文件到存储
       if (!supabaseAdmin) {
-        console.error('上传文件失败: 管理员客户端未初始化');
+        petLogger.error('上传文件失败: 管理员客户端未初始化');
         return null;
       }
 
@@ -268,7 +269,7 @@ export class PetService {
         .upload(fileName, file);
 
       if (uploadError) {
-        console.error('上传文件失败:', uploadError);
+        petLogger.error('上传文件失败:', uploadError);
         return null;
       }
 
@@ -287,13 +288,13 @@ export class PetService {
         .single();
 
       if (insertError) {
-        console.error('保存照片信息失败:', insertError);
+        petLogger.error('保存照片信息失败:', insertError);
         return null;
       }
 
       return photo;
     } catch (error) {
-      console.error('上传照片失败:', error);
+      petLogger.error('上传照片失败:', error);
       return null;
     }
   }
@@ -311,7 +312,7 @@ export class PetService {
       .order('is_primary', { ascending: false });
 
     if (error) {
-      console.error('获取宠物照片失败:', error);
+      petLogger.error('获取宠物照片失败:', error);
       return [];
     }
 

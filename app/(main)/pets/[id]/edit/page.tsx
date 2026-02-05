@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import PetForm from '@/app/components/pet/PetForm'
 import type { Pet } from '@/app/types/supabase'
+import { petLogger } from '@/app/lib'
 
 export default function EditPetPage() {
   const params = useParams()
@@ -20,7 +21,7 @@ export default function EditPetPage() {
           setPet(data.pet)
         }
       } catch (error) {
-        console.error('获取宠物详情失败:', error)
+        petLogger.error('获取宠物详情失败:', error)
       } finally {
         setIsLoading(false)
       }

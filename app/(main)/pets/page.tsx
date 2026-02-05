@@ -6,6 +6,7 @@ import Image from 'next/image';
 import type { Pet } from '@/app/types/supabase';
 import { Search, ChevronDown, MapPin, ArrowUpDown, Heart } from 'lucide-react';
 import { HttpStatus } from '@/app/types/api';
+import { petLogger } from '@/app/lib';
 
 // 宠物类型定义
 interface PetWithPhotos extends Pet {
@@ -93,7 +94,7 @@ export default function PetsPage() {
         setPets(petsWithCategory);
       }
     } catch (error) {
-      console.error('获取宠物列表失败:', error);
+      petLogger.error('获取宠物列表失败:', error);
     } finally {
         setIsLoading(false);
       }
