@@ -21,24 +21,7 @@ export default function LoginPage() {
         <LoginForm />
 
         <div className="mt-8 text-center">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="h-px bg-gray-100 dark:bg-white/5 flex-1"></div>
-            <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">或者通过</span>
-            <div className="h-px bg-gray-100 dark:bg-white/5 flex-1"></div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 h-12 rounded-2xl border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-              <Image src="/icons/google-favicon.ico" width={16} height={16} alt="Google" className="w-4 h-4" />
-              <span className="text-sm font-bold">Google</span>
-            </button>
-            <button className="flex items-center justify-center gap-2 h-12 rounded-2xl border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-              <MessageCircle className="text-lg" />
-              <span className="text-sm font-bold">微信</span>
-            </button>
-          </div>
-
-          <p className="mt-10 text-sm text-gray-500">
+          <p className="text-sm text-gray-500">
             还没有账号？ <Link href="/register" className="text-primary font-bold hover:underline">立即注册</Link>
           </p>
         </div>
