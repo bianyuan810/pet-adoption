@@ -39,14 +39,11 @@ export class MessageService {
     const { senderId, isRead, page = 1, limit = 10 } = params;
 
     try {
-      // 使用 SQL 形式的查询（等效于上面的 Supabase 查询）
-    
-      
       // 使用外键约束进行关联查询，同时关联发送者和接收者信息
       let query = client
         .from('messages')
         .select('*, sender:users!messages_sender_id_fkey(id, name, email, avatar_url), receiver:users!messages_receiver_id_fkey(id, name, email, avatar_url)', { count: 'exact' })
-        .eq('receiver_id', senderId);
+        .or(`receiver_id.eq.${senderId},sender_id.eq.${senderId}`);
 
       // 应用筛选条件
       if (isRead !== undefined) {
@@ -69,9 +66,10 @@ export class MessageService {
         return { messages: [], total: count || 0 };
       }
 
-      // 处理消息，添加接收者信息
+      // 处理消息，确保发送者和接收者信息正确
       const messagesWithSender = messages.map(msg => ({
         ...msg,
+        sender: msg.sender || null,
         receiver: msg.receiver || null
       }));
 
@@ -110,14 +108,14 @@ export class MessageService {
    * @param messageData 消息数据
    * @returns 创建的消息
    */
-  static async createMessage(messageData: Omit<Message, 'id' | 'created_at' | 'is_read'>): Promise<Message | null> {
+  static async createMessage(messageData: Omit<Message, 'id' | 'created_at' | 'is_read'>): Promise<MessageWithSender | null> {
     const { data: message, error } = await client
       .from('messages')
       .insert({
         ...messageData,
         is_read: false
       })
-      .select('*')
+      .select('*, sender:users!messages_sender_id_fkey(id, name, email, avatar_url), receiver:users!messages_receiver_id_fkey(id, name, email, avatar_url)')
       .single();
 
     if (error) {

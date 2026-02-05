@@ -11,6 +11,11 @@ export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
     autoRefreshToken: true,
     detectSessionInUrl: true,
   },
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
+  }
 })
 
 // 创建管理员实例（用于服务端，拥有更高权限）

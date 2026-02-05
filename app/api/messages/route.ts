@@ -39,7 +39,6 @@ export async function GET(request: NextRequest) {
       page,
       limit
     });
-      console.log("查询数据:",messages);
       
     const response: ApiResponse = {
       code: HttpStatus.OK,

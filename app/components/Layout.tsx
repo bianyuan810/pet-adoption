@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, Mail, User } from "lucide-react";
+import { PawPrint, Bell, LogIn, Lock, LogOut, Globe, Share2, Mail, User, UserX } from "lucide-react";
 import { useAuth } from "@/app/contexts/AuthContext";
 
 const Navbar: React.FC = () => {
@@ -76,13 +76,9 @@ const Navbar: React.FC = () => {
                         {user.name.charAt(0).toUpperCase()}
                       </div>
                     ) : (
-                      <Image
-                        alt="User Avatar"
-                        className="w-full h-full object-cover"
-                        src="/images/user-avatar.png"
-                        width={36}
-                        height={36}
-                      />
+                      <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-white/10">
+                        <UserX className="size-5 text-gray-400 dark:text-gray-500" />
+                      </div>
                     )}
                   </div>
 

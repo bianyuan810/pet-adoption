@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Check, X, Clock } from 'lucide-react';
+import { Check, X, Clock, UserX } from 'lucide-react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { HttpStatus } from '@/app/types/api';
 
@@ -227,14 +227,18 @@ export default function ApplicationsPage() {
                 </div>
               </div>
               <div className="flex-1 flex items-center gap-3">
-                <div className="size-10 rounded-full bg-gray-200 border border-white dark:border-white/10 overflow-hidden">
-                  <Image 
-                    src={app.applicantAvatar || `/images/user-avatar.png`} 
-                    width={40} 
-                    height={40} 
-                    alt={app.applicantName} 
-                    className="w-full h-full object-cover" 
-                  />
+                <div className="size-10 rounded-full bg-gray-200 border border-white dark:border-white/10 overflow-hidden flex items-center justify-center">
+                  {app.applicantAvatar ? (
+                    <Image 
+                      src={app.applicantAvatar} 
+                      width={40} 
+                      height={40} 
+                      alt={app.applicantName} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <UserX className="size-5 text-gray-400 dark:text-gray-500" />
+                  )}
                 </div>
                 <div>
                   <p className="text-sm font-bold text-zinc-900 dark:text-white">{app.applicantName}</p>
